@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // VITE_BASE = "/<repo-name>/" on GitHub Pages, "/" locally
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+  const env = loadEnv(mode, '.', '');
   return {
     base: env.VITE_BASE || '/',
     plugins: [react(), tailwindcss()],
