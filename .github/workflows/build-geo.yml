@@ -1,0 +1,55 @@
+name: Build Geo Data
+
+# Run manually: Actions -> Build Geo Data -> Run workflow
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  geo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Find COD-AB GeoJSON on HDX
+        id: find
+        run: |
+          META=$(curl -fsSL "https://data.humdata.org/api/3/action/package_show?id=cod-ab-tha")
+          URL=$(echo "$META" | jq -r '[.result.resources[] | select((.format // "" | ascii_downcase) == "geojson")][0].url // empty')
+          if [ -z "$URL" ]; then echo "::error::GeoJSON resource not found on HDX"; exit 1; fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "modified=$(echo "$META" | jq -r '.result.metadata_modified // ""')" >> "$GITHUB_OUTPUT"
+          echo "Source: $URL"
+
+      - name: Download and unzip
+        run: |
+          mkdir -p .geo-src
+          curl -fL --retry 3 -o .geo-src/cod.zip "${{ steps.find.outputs.url }}"
+          cd .geo-src && unzip -q -o cod.zip && rm cod.zip
+          find . -type f | head -50
+
+      - name: Install mapshaper
+        run: npm install --no-save mapshaper
+
+      - name: Build simplified boundaries + seed SQL
+        run: node scripts/build-geo.mjs .geo-src
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+          SOURCE_URL: ${{ steps.find.outputs.url }}
+          SOURCE_MODIFIED: ${{ steps.find.outputs.modified }}
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/geo supabase/seed_geo.sql
+          if git diff --cached --quiet; then echo "No changes"; else
+            git commit -m "chore: build geo data from OCHA COD-AB"
+            git push
+          fi
