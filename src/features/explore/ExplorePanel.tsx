@@ -77,11 +77,11 @@ export function ExplorePanel(p: Props) {
                 className="overflow-hidden rounded-2xl border border-line bg-surface text-left active:scale-[0.99]">
                 <RegionImage code={c.code} name={c.name} color={c.color} square />
                 <span className="block p-2">
-                  <span className="flex items-center gap-2 font-semibold">
-                    <span aria-hidden="true" className="h-3 w-3 shrink-0 rounded-full" style={{ background: c.color }} />
-                    <span className="truncate">{c.name}</span>
+                  <span className="flex items-start gap-2 font-semibold leading-tight">
+                    <span aria-hidden="true" className="mt-1 h-3 w-3 shrink-0 rounded-full" style={{ background: c.color }} />
+                    <span className="min-w-0">{c.name}</span>
                   </span>
-                  <span className="block text-xs text-muted">{c.provinceCount} จังหวัด · ไปแล้ว {c.visitedCount}</span>
+                  <span className="mt-0.5 block text-xs text-muted">{c.provinceCount} จังหวัด · ไปแล้ว {c.visitedCount}</span>
                 </span>
               </button>
             ))}

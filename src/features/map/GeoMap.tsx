@@ -30,6 +30,11 @@ type Props<P> = {
   onPointClick?: (id: string) => void;
   /** "you are here" dot (never stored, only drawn) */
   userLocation?: { lat: number; lng: number } | null;
+  /** pin-drop mode: a tap anywhere on the map reports its coordinates and shapes ignore taps */
+  pinMode?: boolean;
+  onMapClick?: (lat: number, lng: number) => void;
+  /** the pin being placed (red dot) */
+  pin?: { lat: number; lng: number } | null;
   /** show OpenStreetMap background */
   tiles?: boolean;
   /** where the +/- buttons go */
@@ -43,7 +48,7 @@ type ShapeLayer = L.Polygon & { feature?: Feature<Geometry, unknown> };
 type LabelItem = { props: unknown; area: number; marker: L.Marker };
 
 export function GeoMap<P>(props: Props<P>) {
-  const { data, fitIds, tiles = true, bare = false, zoomPosition = 'topleft', className = '' } = props;
+  const { data, fitIds, tiles = true, bare = false, zoomPosition = 'topleft', pinMode = false, className = '' } = props;
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
   const layer = useRef<L.GeoJSON | null>(null);
@@ -51,6 +56,7 @@ export function GeoMap<P>(props: Props<P>) {
   const labelGroup = useRef<L.LayerGroup | null>(null);
   const pointGroup = useRef<L.LayerGroup | null>(null);
   const locGroup = useRef<L.LayerGroup | null>(null);
+  const pinGroup = useRef<L.LayerGroup | null>(null);
   const latest = useRef(props);
   latest.current = props;
 
@@ -91,7 +97,13 @@ export function GeoMap<P>(props: Props<P>) {
     labelGroup.current = L.layerGroup().addTo(m);
     pointGroup.current = L.layerGroup().addTo(m);
     locGroup.current = L.layerGroup().addTo(m);
+    pinGroup.current = L.layerGroup().addTo(m);
     m.on('zoomend moveend', () => layoutRef.current());
+    // a tap on the map (shapes let the event through) -> coordinates, only while placing a pin
+    m.on('click', (e: L.LeafletMouseEvent) => {
+      const cur = latest.current;
+      if (cur.pinMode && cur.onMapClick) cur.onMapClick(e.latlng.lat, e.latlng.lng);
+    });
     map.current = m;
     const ro = new ResizeObserver(() => m.invalidateSize());
     ro.observe(el.current);
@@ -103,6 +115,7 @@ export function GeoMap<P>(props: Props<P>) {
       labelGroup.current = null;
       pointGroup.current = null;
       locGroup.current = null;
+      pinGroup.current = null;
       labels.current = [];
     };
     // tiles / zoomPosition are fixed for the lifetime of the map
@@ -129,6 +142,7 @@ export function GeoMap<P>(props: Props<P>) {
         lyr.bindTooltip(() => latest.current.getTooltip(p), { sticky: true, direction: 'top', className: 'geo-tip' });
         lyr.on('click', () => {
           const cur = latest.current;
+          if (cur.pinMode) return; // placing a pin: the map handler takes the tap
           const id = cur.getId(p);
           if (id === cur.selectedId) cur.onOpen?.(id);
           else cur.onSelect?.(id);
@@ -201,6 +215,18 @@ export function GeoMap<P>(props: Props<P>) {
     grp.addLayer(L.circleMarker([u.lat, u.lng], { radius: 8, color: '#ffffff', weight: 3, fillColor: '#2563EB', fillOpacity: 1, interactive: false }));
   }, [locKey]);
 
+  // the pin being placed (red)
+  const pinKey = props.pin ? `${props.pin.lat},${props.pin.lng}` : '';
+  useEffect(() => {
+    const grp = pinGroup.current;
+    if (!grp) return;
+    grp.clearLayers();
+    const p = latest.current.pin;
+    if (!p) return;
+    grp.addLayer(L.circleMarker([p.lat, p.lng], { radius: 18, stroke: false, fillColor: '#DC2626', fillOpacity: 0.2, interactive: false }));
+    grp.addLayer(L.circleMarker([p.lat, p.lng], { radius: 8, color: '#ffffff', weight: 3, fillColor: '#DC2626', fillOpacity: 1, interactive: false }));
+  }, [pinKey]);
+
   // fit bounds
   const fitKey = fitIds?.join(',') ?? '';
   useEffect(() => {
@@ -222,7 +248,7 @@ export function GeoMap<P>(props: Props<P>) {
   return (
     <div
       ref={el}
-      className={`geo-map relative z-0 w-full overflow-hidden ${bare ? '' : 'rounded-2xl border border-line'} ${tiles ? '' : 'no-tiles'} ${className}`}
+      className={`geo-map relative z-0 w-full overflow-hidden ${bare ? '' : 'rounded-2xl border border-line'} ${tiles ? '' : 'no-tiles'} ${pinMode ? 'cursor-crosshair! [&_.leaflet-interactive]:cursor-crosshair!' : ''} ${className}`}
     />
   );
 }

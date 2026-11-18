@@ -1,13 +1,21 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { LogIn, Mail, UserRound } from 'lucide-react';
+import { Cloud, LogIn, Lock, Mail, UserRound, Users } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { t } from '../../i18n/th';
 import { useAuth } from './AuthProvider';
+import { LoginArt } from './LoginArt';
+import { PasswordField } from './PasswordField';
 import { useToast } from '../../components/ui/Toast';
 import { Button } from '../../components/ui/Button';
 
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+const BENEFITS = [
+  { Icon: Cloud, text: 'ซิงก์ข้ามเครื่อง' },
+  { Icon: Lock, text: 'รูปเป็นส่วนตัว' },
+  { Icon: Users, text: 'วางแผนร่วมกัน' },
+];
 
 export function LoginPage() {
   const { user } = useAuth();
@@ -46,33 +54,38 @@ export function LoginPage() {
   };
 
   return (
-    <div className="mx-auto max-w-sm space-y-6 py-6">
+    <div className="mx-auto max-w-sm space-y-5 py-2">
+      <LoginArt />
+
       <div className="text-center">
-        <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-on-primary">
-          <LogIn size={30} />
-        </div>
         <h1 className="text-2xl font-bold">{t.auth.login}</h1>
+        <p className="mt-1 text-sm text-muted">เพื่อบันทึกทริปและความทรงจำของคุณ</p>
       </div>
+
+      <ul className="flex flex-wrap justify-center gap-2" aria-label="ประโยชน์ของการเข้าสู่ระบบ">
+        {BENEFITS.map(({ Icon, text }) => (
+          <li key={text} className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1.5 text-xs">
+            <Icon size={14} className="text-primary" /> {text}
+          </li>
+        ))}
+      </ul>
+
       <form onSubmit={onSubmit} className="space-y-3">
         <label className="block text-sm">
           {t.auth.email}
-          <input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
-            className="input mt-1" />
+          <input type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input mt-1" />
         </label>
-        <label className="block text-sm">
-          {t.auth.password}
-          <input type="password" autoComplete="current-password" value={password}
-            onChange={(e) => setPassword(e.target.value)} className="input mt-1" />
-        </label>
+        <PasswordField label={t.auth.password} value={password} onChange={setPassword} autoComplete="current-password" />
         <Button type="submit" disabled={busy} className="w-full" icon={<LogIn size={20} />}>
           {busy ? t.common.loading : t.auth.login}
         </Button>
       </form>
+
       <div className="flex justify-between text-sm">
-        <button type="button" onClick={onForgot} className="flex items-center gap-1 text-primary">
+        <button type="button" onClick={onForgot} className="flex min-h-11 items-center gap-1 text-primary">
           <Mail size={16} /> {t.auth.forgot}
         </button>
-        <button type="button" onClick={() => nav('/')} className="flex items-center gap-1 text-muted">
+        <button type="button" onClick={() => nav('/')} className="flex min-h-11 items-center gap-1 text-muted">
           <UserRound size={16} /> {t.auth.guest}
         </button>
       </div>

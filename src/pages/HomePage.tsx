@@ -1,188 +1,163 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import type { FeatureCollection, Geometry } from 'geojson';
-import { ArrowRight, MapPin, Search, Trophy, X } from 'lucide-react';
-import { GeoMap } from '../features/map/GeoMap';
-import { Legend } from '../features/map/Legend';
-import { loadProvinceShapes, type ProvinceGeoProps } from '../features/map/geoLoader';
-import { primaryColor, statusColor } from '../features/map/colors';
-import { statusOf, useProvinceStats, useReference, type Province } from '../features/provinces/useGeoData';
-import { useDebounce } from '../hooks/useDebounce';
-import { escapeHtml } from '../lib/escapeHtml';
-import { Button } from '../components/ui/Button';
+import { Link } from 'react-router-dom';
+import { Bookmark, Camera, CalendarDays, ChevronRight, Compass, LogIn, Luggage, MapPinPlus, Users } from 'lucide-react';
+import { useAuth } from '../features/auth/AuthProvider';
+import { useCart } from '../features/cart/CartProvider';
+import { useProvinceStats, useReference } from '../features/provinces/useGeoData';
+import { useWantList } from '../features/explore/useWantList';
+import { regionCards } from '../features/explore/exploreModel';
+import { listTrips, type TripSummary } from '../features/trips/tripsApi';
+import { fmtDateTh, todayIso } from '../features/routing/time';
+import {
+  TOTAL_PROVINCES, countdownText, displayName, greetingForHour, percent, pickNextTrip, provinceProgress, sumStats,
+} from '../features/home/homeModel';
 import { Skeleton } from '../components/ui/Skeleton';
-import { EmptyState } from '../components/ui/EmptyState';
+
+const PRIMARY_LINK =
+  'inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 font-medium text-on-primary hover:opacity-90';
+const OUTLINE_LINK =
+  'inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-primary px-4 font-medium text-primary';
+
+function ProgressRing({ pct }: { pct: number }) {
+  const r = 34;
+  const c = 2 * Math.PI * r;
+  return (
+    <div className="relative h-20 w-20 shrink-0" role="img" aria-label={`ไปแล้ว ${pct}%`}>
+      <svg viewBox="0 0 84 84" className="h-full w-full -rotate-90" aria-hidden="true">
+        <circle cx="42" cy="42" r={r} fill="none" strokeWidth="9" stroke="var(--surface-2)" />
+        <circle cx="42" cy="42" r={r} fill="none" strokeWidth="9" strokeLinecap="round" stroke="var(--primary)"
+          strokeDasharray={c} strokeDashoffset={c * (1 - pct / 100)} className="transition-[stroke-dashoffset] duration-700" />
+      </svg>
+      <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center text-sm font-bold">{pct}%</span>
+    </div>
+  );
+}
 
 export function HomePage() {
-  const nav = useNavigate();
-  const { regions, provinces, error: refError, loading } = useReference();
+  const { user, profile, loading: authLoading } = useAuth();
+  const { regions, provinces, error: refError, loading: refLoading } = useReference();
   const stats = useProvinceStats();
-  const [shapes, setShapes] = useState<FeatureCollection<Geometry, ProvinceGeoProps> | null>(null);
-  const [geoError, setGeoError] = useState<string | null>(null);
-  const [region, setRegion] = useState<string>('all');
-  const [query, setQuery] = useState('');
-  const q = useDebounce(query.trim().toLowerCase(), 250);
-  const [selected, setSelected] = useState<string | null>(null); // pcode
+  const cart = useCart();
+  const want = useWantList();
+  const [trips, setTrips] = useState<TripSummary[] | null>(null);
+  const [tripError, setTripError] = useState<string | null>(null);
+  const uid = user?.id ?? null;
 
   useEffect(() => {
-    loadProvinceShapes().then(setShapes).catch((e: Error) => setGeoError(e.message));
-  }, []);
+    if (!uid) { setTrips(null); setTripError(null); return; }
+    let alive = true;
+    listTrips()
+      .then((t) => { if (alive) { setTrips(t); setTripError(null); } })
+      .catch((e: Error) => { if (alive) setTripError(e.message); });
+    return () => { alive = false; };
+  }, [uid]);
 
-  const byPcode = useMemo(() => new Map(provinces.map((p) => [p.pcode, p])), [provinces]);
-  const regionById = useMemo(() => new Map(regions.map((r) => [r.id, r])), [regions]);
-  const regionCodeOf = (p?: Province) => (p ? regionById.get(p.region_id)?.code : undefined);
-  const inRegion = (p?: Province) => region === 'all' || regionCodeOf(p) === region;
+  const next = useMemo(() => (trips ? pickNextTrip(trips, todayIso()) : null), [trips]);
+  const cards = useMemo(() => regionCards(regions, provinces, stats), [regions, provinces, stats]);
+  const progress = useMemo(() => provinceProgress(provinces.map((p) => p.id), stats), [provinces, stats]);
+  const totals = useMemo(() => sumStats(stats), [stats]);
 
-  const matches = useMemo(
-    () => (q ? provinces.filter((p) => inRegion(p) && (p.name_th.includes(q) || p.name_en.toLowerCase().includes(q))).slice(0, 8) : []),
-    [q, provinces, region, regionById],
-  );
-  const fitIds = region === 'all' ? null : provinces.filter((p) => regionCodeOf(p) === region).map((p) => p.pcode);
+  const name = displayName(profile?.display_name, user?.email);
+  const greeting = greetingForHour(new Date().getHours());
 
-  const totals = useMemo(() => {
-    let total = 0, planned = 0, visited = 0, provVisited = 0;
-    Object.values(stats).forEach((s) => {
-      total += s.total; planned += s.planned; visited += s.visited;
-      if (s.visited > 0) provVisited++;
-    });
-    return { total, planned, visited, provVisited };
-  }, [stats]);
-  const pct = Math.round((totals.provVisited / 77) * 100);
-
-  const sel = selected ? byPcode.get(selected) : undefined;
-  const selStat = sel ? stats[sel.id] : undefined;
-  const open = (pcode: string) => {
-    const p = byPcode.get(pcode);
-    if (p) nav(`/province/${p.slug}`);
-  };
+  const tiles = [
+    { to: '/explore', Icon: Bookmark, label: 'ที่สนใจ', sub: user ? `${want.items.length} แห่ง` : 'เข้าสู่ระบบเพื่อใช้' },
+    { to: '/cart', Icon: Luggage, label: 'ตะกร้าทริป', sub: `${cart.items.length} แห่ง` },
+    { to: '/memories', Icon: Camera, label: 'ความทรงจำ', sub: user ? `ไปแล้ว ${totals.visited} แห่ง` : 'เข้าสู่ระบบเพื่อใช้' },
+    { to: '/my-places', Icon: MapPinPlus, label: 'สถานที่ส่วนตัว', sub: 'เพิ่มที่ของคุณเอง' },
+  ];
 
   return (
     <div className="space-y-4">
-      {/* search */}
-      <div className="relative">
-        <Search size={20} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="ค้นหาจังหวัด"
-          aria-label="ค้นหาจังหวัด"
-          className="input pl-10 pr-10"
-        />
-        {query && (
-          <button type="button" aria-label="ล้างคำค้น" onClick={() => setQuery('')}
-            className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-muted">
-            <X size={18} />
-          </button>
-        )}
-        {matches.length > 0 && (
-          <ul className="absolute inset-x-0 top-full z-[600] mt-1 overflow-hidden rounded-xl border border-line bg-surface shadow-lg">
-            {matches.map((p) => (
-              <li key={p.id}>
-                <button type="button" onClick={() => { setQuery(''); setSelected(p.pcode); nav(`/province/${p.slug}`); }}
-                  className="flex min-h-12 w-full items-center gap-2 px-3 text-left hover:bg-surface-2">
-                  <MapPin size={18} className="text-primary" />
-                  <span className="flex-1">{p.name_th}</span>
-                  <span className="text-xs text-muted">{regionById.get(p.region_id)?.name_th}</span>
-                </button>
+      <header>
+        <h1 className="text-2xl font-bold">{greeting}{name ? ` ${name}` : ''}</h1>
+        <p className="text-sm text-muted">วันนี้อยากไปไหนดี</p>
+      </header>
+
+      {/* progress + the one primary action */}
+      <section aria-label="ความคืบหน้า" className="space-y-4 rounded-2xl border border-line bg-surface p-4">
+        <div className="flex items-center gap-4">
+          <ProgressRing pct={progress.pct} />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm text-muted">ไปแล้ว</p>
+            <p className="text-2xl font-bold">{progress.done}/{TOTAL_PROVINCES} <span className="text-base font-normal">จังหวัด</span></p>
+            <p className="text-sm text-muted">{totals.visited} สถานที่ที่เคยไป · ในระบบ {totals.total} แห่ง</p>
+          </div>
+        </div>
+
+        {refLoading ? (
+          <Skeleton className="h-28" />
+        ) : cards.length > 0 ? (
+          <ul className="space-y-2.5" aria-label="ความคืบหน้าแต่ละภาค">
+            {cards.map((c) => (
+              <li key={c.code}>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="flex items-center gap-2">
+                    <span aria-hidden="true" className="h-3 w-3 rounded-full" style={{ background: c.color }} />{c.name}
+                  </span>
+                  <span className="text-muted">{c.visitedCount}/{c.provinceCount}</span>
+                </div>
+                <div className="mt-1 h-2.5 overflow-hidden rounded-full bg-surface-2">
+                  <div className="h-full rounded-full" style={{ width: `${percent(c.visitedCount, c.provinceCount)}%`, background: c.color }} />
+                </div>
               </li>
             ))}
           </ul>
+        ) : (
+          <p className="rounded-xl bg-amber-100 p-3 text-sm text-amber-900">
+            {refError ?? 'ยังไม่มีรายชื่อจังหวัดในฐานข้อมูล — รัน supabase/seed_geo.sql ใน Supabase SQL Editor'}
+          </p>
         )}
-        {q && matches.length === 0 && !loading && (
-          <p className="mt-1 text-sm text-muted">ไม่พบจังหวัด “{query}”</p>
-        )}
-      </div>
 
-      {/* region chips */}
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
-        {[{ code: 'all', name_th: 'ทั้งหมด' }, ...regions].map((r) => (
-          <button key={r.code} type="button" onClick={() => { setRegion(r.code); setSelected(null); }}
-            className={`min-h-10 shrink-0 rounded-full border px-4 text-sm ${region === r.code ? 'border-primary bg-primary text-on-primary' : 'border-line bg-surface'}`}>
-            {r.name_th}
-          </button>
-        ))}
-      </div>
-
-      {/* map */}
-      {geoError ? (
-        <EmptyState icon={<MapPin size={40} />} title="ยังไม่มีไฟล์แผนที่"
-          text="ไปที่ GitHub → Actions → Build Geo Data → Run workflow แล้วรอ Deploy ใหม่" />
-      ) : !shapes ? (
-        <Skeleton className="h-[65vh] min-h-[360px]" />
-      ) : (
-        <GeoMap<ProvinceGeoProps>
-          data={shapes}
-          tiles={false}
-          className="h-[65vh] min-h-[360px] max-h-[760px]"
-          getId={(p) => p.pcode}
-          selectedId={selected}
-          fitIds={fitIds}
-          onSelect={setSelected}
-          onOpen={open}
-          getLabel={(g) => (inRegion(byPcode.get(g.pcode)) ? g.name_th : null)}
-          getTooltip={(g) => {
-            const p = byPcode.get(g.pcode);
-            const r = p ? regionById.get(p.region_id)?.name_th : '';
-            return `<b>${escapeHtml(g.name_th)}</b><br/>${escapeHtml(r ?? '')}`;
-          }}
-          getStyle={(g, isSel) => {
-            const p = byPcode.get(g.pcode);
-            const dim = !inRegion(p);
-            return {
-              fillColor: statusColor(statusOf(p ? stats[p.id] : undefined)),
-              fillOpacity: dim ? 0.15 : 0.85,
-              color: isSel ? primaryColor() : '#ffffff',
-              weight: isSel ? 3 : 1,
-              opacity: dim ? 0.5 : 1,
-            };
-          }}
-        />
-      )}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <Legend />
-        <p className="text-xs text-muted">ซูมเข้าเพื่อดูชื่อจังหวัดครบ · แตะ 2 ครั้งเพื่อเปิด</p>
-      </div>
-
-      {refError && <p className="text-sm text-red-600">{refError}</p>}
-      {!loading && !refError && provinces.length === 0 && (
-        <p className="rounded-xl bg-amber-100 p-3 text-sm text-amber-900">
-          ยังไม่มีรายชื่อจังหวัดในฐานข้อมูล — รันไฟล์ supabase/seed_geo.sql ใน Supabase SQL Editor
-        </p>
-      )}
-
-      {/* selected province card */}
-      {sel && (
-        <section className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4">
-          <div className="min-w-0 flex-1">
-            <p className="text-lg font-bold">{sel.name_th}</p>
-            <p className="text-sm text-muted">
-              {regionById.get(sel.region_id)?.name_th} · {selStat?.total ?? 0} สถานที่ · ไปแล้ว {selStat?.visited ?? 0}
-            </p>
-          </div>
-          <Button icon={<ArrowRight size={20} />} onClick={() => nav(`/province/${sel.slug}`)}>ดูจังหวัด</Button>
-        </section>
-      )}
-
-      {/* summary */}
-      <section className="grid grid-cols-3 gap-2 text-center">
-        {[
-          { n: totals.total, l: 'สถานที่ทั้งหมด' },
-          { n: totals.planned, l: 'เลือกไว้' },
-          { n: totals.visited, l: 'ไปแล้ว' },
-        ].map((s) => (
-          <div key={s.l} className="rounded-2xl border border-line bg-surface p-3">
-            <p className="text-2xl font-bold text-primary">{s.n}</p>
-            <p className="text-xs text-muted">{s.l}</p>
-          </div>
-        ))}
+        <Link to="/explore" className={PRIMARY_LINK}><Compass size={20} /> เริ่มสำรวจ</Link>
       </section>
-      <section className="rounded-2xl border border-line bg-surface p-4">
-        <p className="mb-2 flex items-center gap-2 font-semibold">
-          <Trophy size={18} className="text-amber-500" /> ไปแล้ว {totals.provVisited}/77 จังหวัด ({pct}%)
-        </p>
-        <div className="h-3 overflow-hidden rounded-full bg-surface-2">
-          <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} />
-        </div>
+
+      {/* next trip */}
+      <section aria-label="ทริปที่กำลังจะไป" className="space-y-2">
+        <h2 className="font-semibold">ทริปที่กำลังจะไป</h2>
+        {authLoading ? (
+          <Skeleton className="h-24" />
+        ) : !user ? (
+          <div className="space-y-3 rounded-2xl border border-line bg-surface p-4">
+            <p className="text-sm text-muted">เข้าสู่ระบบเพื่อบันทึกทริป ความทรงจำ และความคืบหน้า 77 จังหวัดของคุณ</p>
+            <Link to="/auth/login" className={OUTLINE_LINK}><LogIn size={18} /> เข้าสู่ระบบ</Link>
+          </div>
+        ) : tripError ? (
+          <p className="rounded-2xl border border-line bg-surface p-4 text-sm text-red-600">{tripError}</p>
+        ) : trips === null ? (
+          <Skeleton className="h-24" />
+        ) : next ? (
+          <Link to={`/trips/${next.trip.id}`} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary text-on-primary"><Luggage size={22} /></span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate font-semibold">{next.trip.name}</span>
+              <span className="flex flex-wrap items-center gap-x-3 text-xs text-muted">
+                <span className="inline-flex items-center gap-1"><CalendarDays size={12} /> {fmtDateTh(next.trip.start_date)} – {fmtDateTh(next.trip.end_date, true)}</span>
+                <span className="inline-flex items-center gap-1"><Users size={12} /> {next.trip.travelers} คน</span>
+              </span>
+              <span className="mt-1 inline-block rounded-full bg-surface-2 px-2 py-0.5 text-xs font-medium text-primary">{countdownText(next)}</span>
+            </span>
+            <ChevronRight className="shrink-0 text-muted" />
+          </Link>
+        ) : (
+          <div className="space-y-2 rounded-2xl border border-line bg-surface p-4">
+            <p className="text-sm text-muted">ยังไม่มีทริปที่กำลังจะไป — เลือกสถานที่แล้วกด “จัดทริป” ในหน้าสำรวจ</p>
+            {cart.items.length > 0 && <Link to="/cart" className="inline-block text-sm text-primary underline">ดูตะกร้า ({cart.items.length} แห่ง)</Link>}
+          </div>
+        )}
+      </section>
+
+      {/* shortcuts */}
+      <section aria-label="ทางลัด" className="grid grid-cols-2 gap-3">
+        {tiles.map(({ to, Icon, label, sub }) => (
+          <Link key={label} to={to} className="flex min-h-20 items-center gap-3 rounded-2xl border border-line bg-surface p-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-primary"><Icon size={22} /></span>
+            <span className="min-w-0">
+              <span className="block truncate font-medium">{label}</span>
+              <span className="block truncate text-xs text-muted">{sub}</span>
+            </span>
+          </Link>
+        ))}
       </section>
     </div>
   );

@@ -12,6 +12,8 @@ type Props = {
   open: boolean;
   place: UserPlace | null;
   categories: Category[];
+  /** coordinates to start with when adding a NEW place (e.g. a point tapped on the map) */
+  initialCoords?: string;
   onClose: () => void;
   onSave: (v: UserPlaceInput, id: string | null) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
@@ -24,7 +26,7 @@ const numOrNull = (s: string) => {
   return Number.isFinite(v) && v >= 0 ? v : NaN;
 };
 
-export function UserPlaceSheet({ open, place, categories, onClose, onSave, onDelete }: Props) {
+export function UserPlaceSheet({ open, place, categories, initialCoords, onClose, onSave, onDelete }: Props) {
   const { provinces } = useReference();
   const [name, setName] = useState('');
   const [nameEn, setNameEn] = useState('');
@@ -50,7 +52,7 @@ export function UserPlaceSheet({ open, place, categories, onClose, onSave, onDel
     setName(place?.name_th ?? '');
     setNameEn(place?.name_en ?? '');
     setCat(place?.category_id ?? categories.find((c) => c.slug === 'other')?.id ?? '');
-    setCoords(place?.lat != null && place?.lng != null ? `${place.lat}, ${place.lng}` : '');
+    setCoords(place?.lat != null && place?.lng != null ? `${place.lat}, ${place.lng}` : initialCoords ?? '');
     setProvinceId(place?.province_id ?? '');
     setDistrict(place?.district_id ? { id: place.district_id, name_th: '' } : null);
     setDesc(place?.short_description ?? '');
@@ -62,7 +64,7 @@ export function UserPlaceSheet({ open, place, categories, onClose, onSave, onDel
     setSubmit(place?.submission === 'submitted');
     setLocInfo(null);
     setErr(null);
-  }, [open, place, categories]);
+  }, [open, place, categories, initialCoords]);
 
   // auto-detect province/district from coordinates (point-in-polygon on the boundary files)
   useEffect(() => {

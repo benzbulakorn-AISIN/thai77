@@ -1,21 +1,28 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { FeatureCollection, Geometry } from 'geojson';
-import { ArrowLeft, ChevronRight, LocateFixed, Maximize2, MapPin, Minimize2, PanelRightClose, PanelRightOpen, Route } from 'lucide-react';
-import { GeoMap } from '../features/map/GeoMap';
+import {
+  ArrowLeft, ChevronRight, Crosshair, LocateFixed, MapPin, MapPinPlus, Maximize2, Minimize2, PanelRightClose, PanelRightOpen, Route,
+} from 'lucide-react';
+import { GeoMap, type MapPoint } from '../features/map/GeoMap';
 import { geometryArea } from '../features/map/labelPoint';
 import { loadProvinceShapes, type ProvinceGeoProps } from '../features/map/geoLoader';
 import { locatePoint } from '../features/map/locate';
 import { primaryColor, statusColor } from '../features/map/colors';
 import { statusOf, useProvinceStats, useReference } from '../features/provinces/useGeoData';
 import { regionColor } from '../features/covers/regionColors';
+import { useAuth } from '../features/auth/AuthProvider';
 import { useCart } from '../features/cart/CartProvider';
 import { useWantList } from '../features/explore/useWantList';
 import { ExplorePanel } from '../features/explore/ExplorePanel';
 import {
   crumbs, pickLabelHolders, provinceRegionMap, provinceRows, regionCards, searchProvinces,
 } from '../features/explore/exploreModel';
+import { shortRegionLabel } from '../features/explore/labels';
+import { normalizePoint, type LatLng } from '../features/explore/pin';
 import type { Snap } from '../features/explore/sheetSnap';
+import { listMyPlaces, type UserPlace } from '../features/myplaces/userPlacesApi';
+import { PinPlaceSheet } from '../features/myplaces/PinPlaceSheet';
 import type { Place } from '../features/places/types';
 import { BottomSheet3 } from '../components/ui/BottomSheet3';
 import { Button } from '../components/ui/Button';
@@ -27,12 +34,14 @@ import { escapeHtml } from '../lib/escapeHtml';
 
 const PANEL_KEY = 'thai77.explore.panel';
 const readPanel = () => { try { return localStorage.getItem(PANEL_KEY) !== '0'; } catch { return true; } };
+const MY_PIN_COLOR = '#9333EA';
 
 type Selected = { region: string | null; pcode: string } | null;
 
 export function ExplorePage() {
   const nav = useNavigate();
   const toast = useToast();
+  const { user } = useAuth();
   const cart = useCart();
   const want = useWantList();
   const [params, setParams] = useSearchParams();
@@ -52,6 +61,13 @@ export function ExplorePage() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [wrapH, setWrapH] = useState(560);
 
+  // pin-drop ("ปักหมุดเอง")
+  const [pinMode, setPinMode] = useState(false);
+  const [pin, setPin] = useState<LatLng | null>(null);
+  const [pinSheet, setPinSheet] = useState(false);
+  const savedSnap = useRef<Snap>('half');
+  const [mine, setMine] = useState<UserPlace[]>([]);
+
   useEffect(() => { loadProvinceShapes().then(setShapes).catch((e: Error) => setGeoError(e.message)); }, []);
   useEffect(() => { try { localStorage.setItem(PANEL_KEY, panelOpen ? '1' : '0'); } catch { /* private mode */ } }, [panelOpen]);
   useEffect(() => {
@@ -70,6 +86,19 @@ export function ExplorePage() {
     document.body.style.overflow = 'hidden';
     return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
   }, [full]);
+
+  // my personal places are drawn as purple dots
+  const uid = user?.id ?? null;
+  useEffect(() => {
+    if (!uid) { setMine([]); return; }
+    let alive = true;
+    listMyPlaces(uid).then((d) => { if (alive) setMine(d); }).catch(() => { if (alive) setMine([]); });
+    return () => { alive = false; };
+  }, [uid]);
+  const myPoints = useMemo<MapPoint[]>(
+    () => mine.filter((p) => p.lat != null && p.lng != null).map((p) => ({ id: p.id, lat: p.lat as number, lng: p.lng as number, color: MY_PIN_COLOR, title: p.name_th })),
+    [mine],
+  );
 
   // ---------- level (from the URL: #/explore?region=east) ----------
   const regionParam = params.get('region');
@@ -138,6 +167,37 @@ export function ExplorePage() {
     );
   };
 
+  // ---------- pin-drop ----------
+  const startPin = () => {
+    if (!user) { toast('เข้าสู่ระบบก่อนปักหมุด', 'info'); nav('/auth/login'); return; }
+    savedSnap.current = snap;
+    setSnap('hidden'); // get the sheet out of the way of the map
+    setPin(null);
+    setPinMode(true);
+  };
+  const cancelPin = () => { setPinMode(false); setPin(null); setPinSheet(false); setSnap(savedSnap.current); };
+  const onMapClick = (lat: number, lng: number) => {
+    const p = normalizePoint(lat, lng);
+    if (!p) return;
+    setPin(p);
+    setPinSheet(true);
+  };
+  const onPinSaved = (place: UserPlace) => {
+    setMine((xs) => [place, ...xs]);
+    setPinMode(false);
+    setPin(null);
+    setSnap(savedSnap.current);
+    toast(`เพิ่ม “${place.name_th}” แล้ว`, 'success');
+  };
+  useEffect(() => {
+    if (!pinMode || pinSheet) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') cancelPin(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // cancelPin only uses setters and a ref
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pinMode, pinSheet]);
+
   const planIds = useMemo(() => new Set([...want.items.map((w) => w.id), ...cart.items.map((c) => c.id)]), [want.items, cart.items]);
   const planTrip = () => {
     want.items.forEach((w) => cart.add(w as Place));
@@ -155,8 +215,8 @@ export function ExplorePage() {
         ? 'fixed inset-0 z-[900] bg-bg lg:flex'
         : 'relative h-[calc(100dvh-3.5rem-4rem-env(safe-area-inset-bottom))] overflow-hidden lg:flex lg:h-[calc(100dvh-3.5rem)]'}
     >
-      {/* ---------- map ---------- */}
-      <div className="absolute inset-0 lg:static lg:h-full lg:min-w-0 lg:flex-1">
+      {/* ---------- map (lg:relative keeps the overlay buttons inside the map, not over the side panel) ---------- */}
+      <div className="absolute inset-0 lg:relative lg:h-full lg:min-w-0 lg:flex-1">
         {geoError ? (
           <div className="flex h-full items-center justify-center p-6">
             <EmptyState icon={<MapPin size={40} />} title="ยังไม่มีไฟล์แผนที่" text="ไปที่ GitHub → Actions → Build Geo Data → Run workflow แล้วรอ Deploy ใหม่" />
@@ -174,10 +234,15 @@ export function ExplorePage() {
             selectedId={level === 2 ? selectedPcode : null}
             fitIds={fitIds}
             userLocation={me}
+            points={myPoints}
+            onPointClick={() => nav('/my-places')}
+            pinMode={pinMode}
+            onMapClick={onMapClick}
+            pin={pin}
             onSelect={onMapSelect}
             onOpen={onMapOpen}
             getLabel={(g) => {
-              if (level === 1) return labelHolders.has(g.pcode) ? regionName(pcodeRegion.get(g.pcode)) : null;
+              if (level === 1) return labelHolders.has(g.pcode) ? shortRegionLabel(regionName(pcodeRegion.get(g.pcode))) : null;
               return pcodeRegion.get(g.pcode) === regionCode ? g.name_th : null;
             }}
             getTooltip={(g) => `<b>${escapeHtml(g.name_th)}</b><br/>${escapeHtml(regionName(pcodeRegion.get(g.pcode)))}`}
@@ -199,26 +264,39 @@ export function ExplorePage() {
 
         {/* overlays: back button, status bar, map buttons */}
         <div className="pointer-events-none absolute inset-0 z-10">
-          {level === 2 && (
+          {level === 2 && !pinMode && (
             <button type="button" aria-label="กลับไปเลือกภาค" onClick={leaveRegion} className={`${mapBtn} absolute left-2 top-2`}>
               <ArrowLeft size={22} />
             </button>
           )}
-          <div role="status" aria-live="polite"
-            className={`pointer-events-auto absolute right-14 top-2 flex min-h-12 items-center gap-1 overflow-hidden rounded-full bg-surface/95 px-4 text-sm shadow-md backdrop-blur ${level === 2 ? 'left-16' : 'left-2'}`}>
-            {steps.map((s, i) => (
-              <span key={`${s.text}-${i}`} className="flex min-w-0 items-center gap-1">
-                {i > 0 && <ChevronRight size={14} className="shrink-0 text-muted" />}
-                <span className={`truncate ${s.state === 'now' ? 'font-semibold text-fg' : 'text-muted'}`}>{s.text}</span>
-              </span>
-            ))}
-          </div>
-          <div className="absolute left-2 top-16 flex flex-col gap-2">
+          {pinMode ? (
+            <div role="status" aria-live="polite"
+              className="pointer-events-auto absolute left-2 right-14 top-2 flex min-h-12 items-center gap-2 overflow-hidden rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md">
+              <Crosshair size={18} className="shrink-0" />
+              <span className="min-w-0 flex-1 truncate">แตะแผนที่ตรงที่ตั้งสถานที่</span>
+              <button type="button" onClick={cancelPin} className="min-h-10 shrink-0 rounded-full px-3 underline">ยกเลิก</button>
+            </div>
+          ) : (
+            <div role="status" aria-live="polite"
+              className={`pointer-events-auto absolute right-14 top-2 flex min-h-12 items-center gap-1 overflow-hidden rounded-full bg-surface/95 px-4 text-sm shadow-md backdrop-blur ${level === 2 ? 'left-16' : 'left-2'}`}>
+              {steps.map((s, i) => (
+                <span key={`${s.text}-${i}`} className="flex min-w-0 items-center gap-1">
+                  {i > 0 && <ChevronRight size={14} className="shrink-0 text-muted" />}
+                  <span className={`truncate ${s.state === 'now' ? 'font-semibold text-fg' : 'text-muted'}`}>{s.text}</span>
+                </span>
+              ))}
+            </div>
+          )}
+          <div className="absolute left-2 top-16 flex flex-col items-start gap-2">
             <button type="button" aria-label="ตำแหน่งของฉัน" disabled={locating} onClick={locate} className={mapBtn}>
               <LocateFixed size={22} className={locating ? 'animate-pulse text-primary' : ''} />
             </button>
             <button type="button" aria-label={full ? 'ออกจากเต็มจอ' : 'แผนที่เต็มจอ'} onClick={() => setFull((v) => !v)} className={mapBtn}>
               {full ? <Minimize2 size={22} /> : <Maximize2 size={22} />}
+            </button>
+            <button type="button" aria-pressed={pinMode} onClick={pinMode ? cancelPin : startPin}
+              className={`pointer-events-auto flex min-h-12 items-center gap-2 rounded-full border px-4 text-sm font-medium shadow-md ${pinMode ? 'border-primary bg-primary text-on-primary' : 'border-line bg-surface text-fg hover:bg-surface-2'}`}>
+              <MapPinPlus size={20} /> ปักหมุดเอง
             </button>
             {!full && !panelOpen && (
               <button type="button" aria-label="แสดงแผง" onClick={() => setPanelOpen(true)} className={`${mapBtn} max-lg:hidden`}>
@@ -279,6 +357,8 @@ export function ExplorePage() {
           )}
         </BottomSheet3>
       )}
+
+      <PinPlaceSheet open={pinSheet} point={pin} userId={uid ?? ''} onClose={() => { setPinSheet(false); setPin(null); }} onSaved={onPinSaved} />
     </div>
   );
 }
