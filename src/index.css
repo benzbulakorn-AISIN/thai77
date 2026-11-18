@@ -59,6 +59,41 @@ body { font-family: var(--font-sans); -webkit-tap-highlight-color: transparent; 
   }
 }
 
+/* ---------- Map ---------- */
+.geo-map.no-tiles { background: var(--surface-2); }
+.geo-map.faded-tiles .geo-tiles { opacity: 0.45; filter: saturate(0.4); }
+.geo-map .leaflet-container { font-family: var(--font-sans); }
+
+/* permanent shape labels */
+.geo-label { pointer-events: none !important; }
+.geo-label span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #0f172a;
+  text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 2px #fff, 0 0 1px #fff;
+}
+.geo-label span.is-selected {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+}
+.dark .geo-label span {
+  color: #f1f5f9;
+  text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 2px #000, 0 0 1px #000;
+}
+@media (min-width: 1024px) {
+  .geo-label span { font-size: 13px; }
+}
+
+/* hover/tap tooltip: bigger, easier to read */
+.geo-tip { font-size: 15px; padding: 6px 10px; border-radius: 10px; }
+
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }

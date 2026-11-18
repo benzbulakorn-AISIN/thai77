@@ -86,19 +86,20 @@ export function ProvincePage() {
       {geoError ? (
         <p className="rounded-xl bg-amber-100 p-3 text-sm text-amber-900">ยังไม่มีไฟล์ขอบเขตอำเภอของจังหวัดนี้</p>
       ) : !shapes ? (
-        <Skeleton className="h-[50vh] min-h-[300px]" />
+        <Skeleton className="h-[55vh] min-h-[320px]" />
       ) : (
         <GeoMap<DistrictGeoProps>
           data={shapes}
-          className="h-[50vh] min-h-[300px] max-h-[600px]"
+          className="faded-tiles h-[55vh] min-h-[320px] max-h-[640px]"
           getId={(p) => p.pcode}
           selectedId={selected}
           onSelect={toggle}
           onOpen={toggle}
+          getLabel={(p) => p.name_th}
           getTooltip={(p) => `<b>${escapeHtml(p.name_th)}</b>`}
           getStyle={(p, isSel) => ({
             fillColor: PALETTE[colorIdx.get(p.pcode) ?? 0],
-            fillOpacity: selected && !isSel ? 0.25 : 0.7,
+            fillOpacity: selected && !isSel ? 0.3 : 0.8,
             color: isSel ? primaryColor() : '#334155',
             weight: isSel ? 3.5 : 1,
           })}

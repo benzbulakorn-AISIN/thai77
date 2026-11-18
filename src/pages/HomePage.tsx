@@ -31,8 +31,8 @@ export function HomePage() {
   const byPcode = useMemo(() => new Map(provinces.map((p) => [p.pcode, p])), [provinces]);
   const regionById = useMemo(() => new Map(regions.map((r) => [r.id, r])), [regions]);
   const regionCodeOf = (p?: Province) => (p ? regionById.get(p.region_id)?.code : undefined);
-
   const inRegion = (p?: Province) => region === 'all' || regionCodeOf(p) === region;
+
   const matches = useMemo(
     () => (q ? provinces.filter((p) => inRegion(p) && (p.name_th.includes(q) || p.name_en.toLowerCase().includes(q))).slice(0, 8) : []),
     [q, provinces, region, regionById],
@@ -108,16 +108,18 @@ export function HomePage() {
         <EmptyState icon={<MapPin size={40} />} title="ยังไม่มีไฟล์แผนที่"
           text="ไปที่ GitHub → Actions → Build Geo Data → Run workflow แล้วรอ Deploy ใหม่" />
       ) : !shapes ? (
-        <Skeleton className="h-[60vh] min-h-[320px]" />
+        <Skeleton className="h-[65vh] min-h-[360px]" />
       ) : (
         <GeoMap<ProvinceGeoProps>
           data={shapes}
-          className="h-[60vh] min-h-[320px] max-h-[720px]"
+          tiles={false}
+          className="h-[65vh] min-h-[360px] max-h-[760px]"
           getId={(p) => p.pcode}
           selectedId={selected}
           fitIds={fitIds}
           onSelect={setSelected}
           onOpen={open}
+          getLabel={(g) => (inRegion(byPcode.get(g.pcode)) ? g.name_th : null)}
           getTooltip={(g) => {
             const p = byPcode.get(g.pcode);
             const r = p ? regionById.get(p.region_id)?.name_th : '';
@@ -128,15 +130,18 @@ export function HomePage() {
             const dim = !inRegion(p);
             return {
               fillColor: statusColor(statusOf(p ? stats[p.id] : undefined)),
-              fillOpacity: dim ? 0.12 : 0.75,
+              fillOpacity: dim ? 0.15 : 0.85,
               color: isSel ? primaryColor() : '#ffffff',
-              weight: isSel ? 3 : 0.8,
-              opacity: dim ? 0.4 : 1,
+              weight: isSel ? 3 : 1,
+              opacity: dim ? 0.5 : 1,
             };
           }}
         />
       )}
-      <Legend />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Legend />
+        <p className="text-xs text-muted">ซูมเข้าเพื่อดูชื่อจังหวัดครบ · แตะ 2 ครั้งเพื่อเปิด</p>
+      </div>
 
       {refError && <p className="text-sm text-red-600">{refError}</p>}
       {!loading && !refError && provinces.length === 0 && (
