@@ -1,8 +1,8 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  Accessibility, ArrowLeft, Baby, Banknote, CalendarX, Car, Clock, ExternalLink, Globe, Info, Map as MapIcon,
-  MapPin, Phone, Timer,
+  Accessibility, ArrowLeft, Baby, Banknote, CalendarX, Camera, Car, ChevronRight, Clock, ExternalLink, Globe, Info,
+  Map as MapIcon, MapPin, Phone, Timer,
 } from 'lucide-react';
 import { fetchCategories, fetchPlace } from '../features/places/placesApi';
 import { useMyPlaces } from '../features/places/useMyPlaces';
@@ -11,11 +11,18 @@ import { VerificationBadge } from '../features/places/VerificationBadge';
 import { StatusControl } from '../features/places/StatusControl';
 import { CartButton } from '../features/cart/CartButton';
 import { formatOpeningHoursTh } from '../features/routing/openingHours';
+import { fmtDateTh } from '../features/routing/time';
 import { useReference } from '../features/provinces/useGeoData';
+import { useAuth } from '../features/auth/AuthProvider';
+import { listVisitsForPlace, type Visit } from '../features/memories/memoriesApi';
+import { VisitSheet } from '../features/memories/VisitSheet';
+import { Stars } from '../features/memories/StarRating';
 import { supabase } from '../lib/supabase';
 import type { Category, Place, PlaceSource } from '../features/places/types';
+import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
+import { useToast } from '../components/ui/Toast';
 
 type Facilities = {
   has_toilet: boolean | null; has_parking: boolean | null; elderly_friendly: boolean | null;
@@ -47,6 +54,8 @@ function Row({ icon, label, children }: { icon: ReactNode; label: string; childr
 export function PlaceDetailPage() {
   const { id } = useParams();
   const nav = useNavigate();
+  const toast = useToast();
+  const { user } = useAuth();
   const my = useMyPlaces();
   const { provinces } = useReference();
   const [data, setData] = useState<{ place: Place; sources: PlaceSource[] } | null | undefined>(undefined);
@@ -54,6 +63,14 @@ export function PlaceDetailPage() {
   const [district, setDistrict] = useState<string | null>(null);
   const [fac, setFac] = useState<Facilities | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [visits, setVisits] = useState<Visit[]>([]);
+  const [visitOpen, setVisitOpen] = useState(false);
+
+  const loadVisits = useCallback(() => {
+    if (!id || !user) { setVisits([]); return; }
+    listVisitsForPlace(id).then(setVisits).catch(() => setVisits([]));
+  }, [id, user]);
+  useEffect(() => { loadVisits(); }, [loadVisits]);
 
   useEffect(() => {
     if (!id) return;
@@ -124,6 +141,32 @@ export function PlaceDetailPage() {
         </div>
         <CartButton place={p} />
       </div>
+
+      {/* my visits */}
+      <section className="rounded-2xl border border-line bg-surface p-4">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="font-semibold">การไปของฉัน {visits.length > 0 && <span className="text-sm font-normal text-muted">({visits.length} ครั้ง)</span>}</h2>
+          <Button variant="secondary" className="min-h-10 text-sm" icon={<Camera size={16} />}
+            onClick={() => (user ? setVisitOpen(true) : nav('/auth/login'))}>
+            บันทึกการไป
+          </Button>
+        </div>
+        {visits.length === 0 ? (
+          <p className="mt-2 text-sm text-muted">ไปมาแล้ว? บันทึกวันที่ รูป และความประทับใจไว้ได้เลย</p>
+        ) : (
+          <ul className="mt-2 divide-y divide-line">
+            {visits.map((v) => (
+              <li key={v.id}>
+                <Link to={`/memories/${v.id}`} className="flex min-h-11 items-center gap-2 py-1 text-sm">
+                  <span className="flex-1">{fmtDateTh(v.visited_on, true)}</span>
+                  <Stars value={v.rating} />
+                  <ChevronRight size={16} className="text-muted" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       {p.short_description && <p>{p.short_description}</p>}
       {p.highlights.length > 0 && (
@@ -207,6 +250,14 @@ export function PlaceDetailPage() {
         {p.verified_at && <p className="mt-2 text-xs text-muted">ตรวจสอบข้อมูลล่าสุด {fmtDate(p.verified_at)}</p>}
         <p className="mt-2 text-xs text-muted">เวลาเปิด-ปิดและราคาอาจเปลี่ยนแปลง ควรตรวจสอบก่อนเดินทาง</p>
       </section>
+
+      <VisitSheet open={visitOpen} target={{ placeId: p.id, userPlaceId: null, provinceId: p.province_id, name: p.name_th }}
+        onClose={() => setVisitOpen(false)}
+        onSaved={(_, failed) => {
+          toast(failed ? `บันทึกแล้ว แต่อัปโหลดรูปไม่สำเร็จ ${failed} รูป` : 'บันทึกความทรงจำแล้ว 🎉', failed ? 'error' : 'success');
+          loadVisits();
+          void my.setStatus(p.id, 'visited').catch(() => undefined);
+        }} />
     </div>
   );
 }

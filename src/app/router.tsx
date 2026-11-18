@@ -7,7 +7,10 @@ import { CartPage } from '../pages/CartPage';
 import { TripsPage } from '../pages/TripsPage';
 import { TripPage } from '../pages/TripPage';
 import { BudgetPage } from '../pages/BudgetPage';
-import { ExplorePage, MemoriesPage } from '../pages/Placeholders';
+import { MemoriesPage } from '../pages/MemoriesPage';
+import { MemoryDetailPage } from '../pages/MemoryDetailPage';
+import { MyPlacesPage } from '../pages/MyPlacesPage';
+import { ExplorePage } from '../pages/Placeholders';
 import { ProfilePage } from '../pages/ProfilePage';
 import { LoginPage } from '../features/auth/LoginPage';
 import { ResetPasswordPage } from '../features/auth/ResetPasswordPage';
@@ -31,8 +34,10 @@ export const router = createHashRouter([
       { path: '/trips', element: <TripsPage /> },
       { path: '/trips/:id', element: <TripPage /> },
       { path: '/trips/:id/budget', element: <BudgetPage /> },
-      { path: '/explore', element: <ExplorePage /> },
       { path: '/memories', element: <MemoriesPage /> },
+      { path: '/memories/:id', element: <MemoryDetailPage /> },
+      { path: '/my-places', element: <MyPlacesPage /> },
+      { path: '/explore', element: <ExplorePage /> },
       { path: '/profile', element: <ProfilePage /> },
       { path: '/auth/login', element: <LoginPage /> },
       { path: '/auth/reset', element: <ResetPasswordPage /> },
