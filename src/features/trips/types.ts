@@ -21,6 +21,7 @@ export type Trip = {
   reserve_pct: number;
   fuel_km_per_l: number | null;
   fuel_price_per_l: number | null;
+  meal_cost_pp: number | null;
   road_factor: number;
   notes: string | null;
 };

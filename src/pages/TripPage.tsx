@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  ArrowLeft, CalendarDays, Copy, Coffee, List, Map as MapIcon, Plus, Route, Settings, TriangleAlert, Users, Rows3,
+  ArrowLeft, CalendarDays, Copy, Coffee, List, Map as MapIcon, Plus, Route, Settings, TriangleAlert, Users, Rows3, Wallet,
 } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthProvider';
 import {
@@ -177,13 +177,15 @@ export function TripPage() {
             <span className="inline-flex items-center gap-1"><Users size={12} /> {trip.travelers} คน · {MODE_LABEL[trip.mode]}</span>
           </p>
         </div>
+        <Link to={`/trips/${trip.id}/budget`} aria-label="งบประมาณ" className="flex h-12 w-12 items-center justify-center rounded-xl hover:bg-surface-2"><Wallet /></Link>
         <button type="button" aria-label="ตั้งค่าทริป" onClick={() => setSettings(true)} className="flex h-12 w-12 items-center justify-center rounded-xl hover:bg-surface-2"><Settings /></button>
       </header>
 
-      <section className="grid grid-cols-3 gap-2 text-center">
+      <section className="grid grid-cols-4 gap-2 text-center">
         <div className="rounded-2xl border border-line bg-surface p-2"><p className="text-lg font-bold text-primary">~{totalKm.toFixed(0)}</p><p className="text-xs text-muted">กม. รวม</p></div>
         <div className="rounded-2xl border border-line bg-surface p-2"><p className="text-lg font-bold text-primary">{fmtDuration(totalTravel)}</p><p className="text-xs text-muted">เดินทางรวม</p></div>
         <div className="rounded-2xl border border-line bg-surface p-2"><p className={`text-lg font-bold ${warnCount ? 'text-red-600' : 'text-green-600'}`}>{warnCount}</p><p className="text-xs text-muted">คำเตือน</p></div>
+        <Link to={`/trips/${trip.id}/budget`} className="rounded-2xl border border-line bg-surface p-2"><p className="flex justify-center text-lg font-bold text-primary"><Wallet size={22} /></p><p className="text-xs text-muted">งบประมาณ</p></Link>
       </section>
       <p className="text-xs text-muted">ⓘ เส้นทางแนะนำเบื้องต้น — {speedNote(trip.mode, Number(trip.road_factor) || 1.3)} ไม่ใช่เส้นทางถนนจริง</p>
 
@@ -305,7 +307,7 @@ export function TripPage() {
       <TripSettingsSheet open={settings} trip={trip} isOwner={isOwner} onClose={() => setSettings(false)} onSave={saveSettings}
         onDelete={async () => { await deleteTrip(trip.id); toast('ลบทริปแล้ว', 'success'); nav('/trips', { replace: true }); }} />
       <ConfirmDialog open={confirmReplan} busy={busy} title="จัดเส้นทางและสร้างแผนเที่ยวใหม่?" confirmText="จัดใหม่"
-        message={'ระบบจะเรียงสถานที่ทั้งหมดใหม่และกระจายไปแต่ละวัน\n• มื้ออาหารอัตโนมัติจะถูกสร้างใหม่\n• กิจกรรมที่เพิ่มเองจะอยู่วันเดิม (ที่ล็อกเวลาไว้จะถูกแทรกตามเวลา)'}
+        message={'ระบบจะเรียงสถานที่ทั้งหมดใหม่และกระจายไปแต่ละวัน\n• มื้ออาหารอัตโนมัติจะถูกสร้างใหม่\n• กิจกรรมที่เพิ่มเองจะอยู่วันเดิม (ที่ล็อกเวลาไว้จะถูกแทรกตามเวลา)\n• กด “คำนวณจากแผน” ในหน้างบเพื่ออัปเดตค่าใช้จ่าย'}
         onCancel={() => setConfirmReplan(false)} onConfirm={() => void doReplan()} />
     </div>
   );

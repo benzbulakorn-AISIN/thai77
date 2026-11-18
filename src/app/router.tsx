@@ -6,6 +6,7 @@ import { PlaceDetailPage } from '../pages/PlaceDetailPage';
 import { CartPage } from '../pages/CartPage';
 import { TripsPage } from '../pages/TripsPage';
 import { TripPage } from '../pages/TripPage';
+import { BudgetPage } from '../pages/BudgetPage';
 import { ExplorePage, MemoriesPage } from '../pages/Placeholders';
 import { ProfilePage } from '../pages/ProfilePage';
 import { LoginPage } from '../features/auth/LoginPage';
@@ -29,6 +30,7 @@ export const router = createHashRouter([
       { path: '/cart', element: <CartPage /> },
       { path: '/trips', element: <TripsPage /> },
       { path: '/trips/:id', element: <TripPage /> },
+      { path: '/trips/:id/budget', element: <BudgetPage /> },
       { path: '/explore', element: <ExplorePage /> },
       { path: '/memories', element: <MemoriesPage /> },
       { path: '/profile', element: <ProfilePage /> },
