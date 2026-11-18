@@ -10,6 +10,7 @@ import { BudgetPage } from '../pages/BudgetPage';
 import { MemoriesPage } from '../pages/MemoriesPage';
 import { MemoryDetailPage } from '../pages/MemoryDetailPage';
 import { MyPlacesPage } from '../pages/MyPlacesPage';
+import { BackupPage } from '../pages/BackupPage';
 import { ExplorePage } from '../pages/Placeholders';
 import { ProfilePage } from '../pages/ProfilePage';
 import { AdminShell } from '../pages/admin/AdminShell';
@@ -44,6 +45,7 @@ export const router = createHashRouter([
       { path: '/memories', element: <MemoriesPage /> },
       { path: '/memories/:id', element: <MemoryDetailPage /> },
       { path: '/my-places', element: <MyPlacesPage /> },
+      { path: '/backup', element: <BackupPage /> },
       { path: '/explore', element: <ExplorePage /> },
       { path: '/profile', element: <ProfilePage /> },
       {

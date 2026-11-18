@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Camera, ChevronRight, LogIn, LogOut, MapPinPlus, Palette, ShieldCheck } from 'lucide-react';
+import { Camera, ChevronRight, DatabaseBackup, LogIn, LogOut, MapPinPlus, Palette, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthProvider';
 import { ThemePicker } from '../features/settings/ThemePicker';
 import { Button } from '../components/ui/Button';
@@ -12,6 +12,7 @@ export function ProfilePage() {
   const menu = [
     { to: '/my-places', label: 'สถานที่ส่วนตัว', Icon: MapPinPlus },
     { to: '/memories', label: 'ความทรงจำของฉัน', Icon: Camera },
+    { to: '/backup', label: 'สำรอง / กู้คืนข้อมูล', Icon: DatabaseBackup },
     ...(isAdmin ? [{ to: '/admin', label: 'จัดการข้อมูล (Admin)', Icon: ShieldCheck }] : []),
   ];
 
