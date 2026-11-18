@@ -1,0 +1,84 @@
+{
+  "province_pcode": "TH43",
+  "province_th": "หนองคาย",
+  "note": "Demo Data — names & categories curated by hand; coordinates/district/contact come from OpenStreetMap via scripts/build-places.mjs",
+  "places": [
+    {
+      "key": "nong-khai-01",
+      "name_th": "ศาลาแก้วกู่",
+      "name_en": "Sala Kaew Ku",
+      "category": "culture",
+      "short_description": "สวนประติมากรรมปูนปั้นขนาดใหญ่"
+    },
+    {
+      "key": "nong-khai-02",
+      "name_th": "สะพานมิตรภาพไทย-ลาว",
+      "name_en": "Thai-Lao Friendship Bridge",
+      "category": "photo-spot",
+      "short_description": "สะพานข้ามแม่น้ำโขงแห่งแรก"
+    },
+    {
+      "key": "nong-khai-03",
+      "name_th": "วัดโพธิ์ชัย",
+      "name_en": "Wat Pho Chai",
+      "category": "temple",
+      "short_description": "วัดที่ประดิษฐานหลวงพ่อพระใส"
+    },
+    {
+      "key": "nong-khai-04",
+      "name_th": "ตลาดท่าเสด็จ",
+      "name_en": "Tha Sadet Market",
+      "category": "market",
+      "short_description": "ตลาดริมโขงสินค้าไทย-ลาว"
+    },
+    {
+      "key": "nong-khai-05",
+      "name_th": "วัดผาตากเสื้อ",
+      "name_en": "Wat Pha Tak Suea",
+      "category": "viewpoint",
+      "short_description": "จุดชมวิวแม่น้ำโขงมุมสูง อำเภอสังคม"
+    },
+    {
+      "key": "nong-khai-06",
+      "name_th": "วัดหินหมากเป้ง",
+      "name_en": "Wat Hin Mak Peng",
+      "category": "temple",
+      "short_description": "วัดป่าริมโขง อำเภอศรีเชียงใหม่"
+    },
+    {
+      "key": "nong-khai-07",
+      "name_th": "พระธาตุหล้าหนอง",
+      "name_en": "Phra That Nong Khai",
+      "category": "temple",
+      "short_description": "พระธาตุที่จมอยู่ในแม่น้ำโขง"
+    },
+    {
+      "key": "nong-khai-08",
+      "name_th": "อนุสาวรีย์ปราบฮ่อ",
+      "name_en": "Prap Ho Monument",
+      "category": "historic",
+      "short_description": "อนุสาวรีย์หน้าศาลากลางหลังเก่า"
+    },
+    {
+      "key": "nong-khai-09",
+      "name_th": "วัดศรีชมภูองค์ตื้อ",
+      "name_en": "Wat Si Chomphu Ong Tue",
+      "category": "temple",
+      "short_description": "วัดที่ประดิษฐานพระเจ้าองค์ตื้อ"
+    },
+    {
+      "key": "nong-khai-10",
+      "name_th": "วัดพระธาตุบังพวน",
+      "name_en": "Wat Phra That Bang Phuan",
+      "category": "temple",
+      "short_description": "พระธาตุเก่าแก่ อำเภอเมืองหนองคาย"
+    },
+    {
+      "key": "nong-khai-11",
+      "name_th": "หาดจอมมณี",
+      "name_en": "Chom Manee Beach",
+      "category": "river",
+      "short_description": "หาดทรายริมโขงที่โผล่ในหน้าแล้ง"
+    }
+  ]
+}

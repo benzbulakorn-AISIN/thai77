@@ -1,0 +1,105 @@
+{
+  "province_pcode": "TH20",
+  "province_th": "ชลบุรี",
+  "note": "Demo Data — names & categories curated by hand; coordinates/district/contact come from OpenStreetMap via scripts/build-places.mjs",
+  "places": [
+    {
+      "key": "chon-buri-01",
+      "name_th": "ปราสาทสัจธรรม",
+      "name_en": "Sanctuary of Truth",
+      "category": "culture",
+      "short_description": "ปราสาทไม้แกะสลักริมทะเลนาเกลือ พัทยา"
+    },
+    {
+      "key": "chon-buri-02",
+      "name_th": "สวนนงนุชพัทยา",
+      "name_en": "Nong Nooch Tropical Garden",
+      "category": "flower-garden",
+      "short_description": "สวนพฤกษศาสตร์และสวนจัดแต่งขนาดใหญ่ มีการแสดงวัฒนธรรม"
+    },
+    {
+      "key": "chon-buri-03",
+      "name_th": "เกาะล้าน",
+      "name_en": "Ko Lan",
+      "category": "island",
+      "short_description": "เกาะใกล้ฝั่งพัทยา มีหาดหลายหาด นั่งเรือจากท่าแหลมบาลีฮาย"
+    },
+    {
+      "key": "chon-buri-04",
+      "name_th": "หาดจอมเทียน",
+      "name_en": "Jomtien Beach",
+      "category": "beach",
+      "short_description": "หาดยาวทางใต้ของพัทยา บรรยากาศสงบกว่าหาดพัทยา"
+    },
+    {
+      "key": "chon-buri-05",
+      "name_th": "หาดพัทยา",
+      "name_en": "Pattaya Beach",
+      "category": "beach",
+      "short_description": "หาดหลักกลางเมืองพัทยา ใกล้ร้านอาหารและที่พัก"
+    },
+    {
+      "key": "chon-buri-06",
+      "name_th": "วอล์กกิ้งสตรีทพัทยา",
+      "name_en": "Walking Street Pattaya",
+      "category": "nightlife",
+      "short_description": "ถนนท่องเที่ยวยามค่ำคืนของพัทยา"
+    },
+    {
+      "key": "chon-buri-07",
+      "name_th": "เขาชีจรรย์",
+      "name_en": "Khao Chi Chan",
+      "category": "viewpoint",
+      "short_description": "ภาพพระพุทธรูปลายเส้นบนหน้าผาเขา อำเภอสัตหีบ"
+    },
+    {
+      "key": "chon-buri-08",
+      "name_th": "วัดญาณสังวรารามวรมหาวิหาร",
+      "name_en": "Wat Yansangwararam",
+      "category": "temple",
+      "short_description": "พระอารามหลวงบนพื้นที่กว้าง มีอาคารสถาปัตยกรรมหลายแบบ"
+    },
+    {
+      "key": "chon-buri-09",
+      "name_th": "ตลาดน้ำ 4 ภาค พัทยา",
+      "name_en": "Pattaya Floating Market",
+      "category": "floating-market",
+      "short_description": "ตลาดน้ำจำลองสินค้าและอาหารจาก 4 ภาค"
+    },
+    {
+      "key": "chon-buri-10",
+      "name_th": "สวนสัตว์เปิดเขาเขียว",
+      "name_en": "Khao Kheow Open Zoo",
+      "category": "family",
+      "short_description": "สวนสัตว์เปิดขนาดใหญ่ เหมาะกับครอบครัว"
+    },
+    {
+      "key": "chon-buri-11",
+      "name_th": "เกาะสีชัง",
+      "name_en": "Ko Si Chang",
+      "category": "island",
+      "short_description": "เกาะใกล้ศรีราชา มีจุดชมวิวและพระจุฑาธุชราชฐาน"
+    },
+    {
+      "key": "chon-buri-12",
+      "name_th": "ตลาดหนองมน",
+      "name_en": "Nong Mon Market",
+      "category": "market",
+      "short_description": "ตลาดของฝากขึ้นชื่อของชลบุรี"
+    },
+    {
+      "key": "chon-buri-13",
+      "name_th": "หาดบางแสน",
+      "name_en": "Bang Saen Beach",
+      "category": "beach",
+      "short_description": "หาดใกล้กรุงเทพฯ นิยมไปเที่ยววันเดียว"
+    },
+    {
+      "key": "chon-buri-14",
+      "name_th": "จุดชมวิวเขาพระตำหนัก",
+      "name_en": "Pattaya Viewpoint",
+      "category": "viewpoint",
+      "short_description": "จุดชมวิวอ่าวพัทยามุมสูง"
+    }
+  ]
+}

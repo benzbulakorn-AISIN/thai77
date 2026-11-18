@@ -1,0 +1,98 @@
+{
+  "province_pcode": "TH83",
+  "province_th": "ภูเก็ต",
+  "note": "Demo Data — names & categories curated by hand; coordinates/district/contact come from OpenStreetMap via scripts/build-places.mjs",
+  "places": [
+    {
+      "key": "phuket-01",
+      "name_th": "หาดป่าตอง",
+      "name_en": "Patong Beach",
+      "category": "beach",
+      "short_description": "หาดที่คึกคักที่สุดของภูเก็ต"
+    },
+    {
+      "key": "phuket-02",
+      "name_th": "หาดกะตะ",
+      "name_en": "Kata Beach",
+      "category": "beach",
+      "short_description": "หาดทรายยาวฝั่งตะวันตก"
+    },
+    {
+      "key": "phuket-03",
+      "name_th": "แหลมพรหมเทพ",
+      "name_en": "Promthep Cape",
+      "category": "viewpoint",
+      "short_description": "จุดชมพระอาทิตย์ตกปลายเกาะ"
+    },
+    {
+      "key": "phuket-04",
+      "name_th": "พระพุทธมิ่งมงคลเอกนาคคีรี",
+      "name_en": "Big Buddha Phuket",
+      "category": "temple",
+      "short_description": "พระใหญ่บนยอดเขานาคเกิด"
+    },
+    {
+      "key": "phuket-05",
+      "name_th": "วัดไชยธาราราม (วัดฉลอง)",
+      "name_en": "Wat Chalong",
+      "category": "temple",
+      "short_description": "วัดที่ชาวภูเก็ตนับถือมาก"
+    },
+    {
+      "key": "phuket-06",
+      "name_th": "ย่านเมืองเก่าภูเก็ต",
+      "name_en": "Phuket Old Town",
+      "category": "historic",
+      "short_description": "ย่านอาคารชิโน-โปรตุกีส ถนนถลาง"
+    },
+    {
+      "key": "phuket-07",
+      "name_th": "ถนนบางลา",
+      "name_en": "Bangla Road",
+      "category": "nightlife",
+      "short_description": "ถนนท่องเที่ยวยามค่ำคืนในป่าตอง"
+    },
+    {
+      "key": "phuket-08",
+      "name_th": "จุดชมวิวเขารัง",
+      "name_en": "Khao Rang Viewpoint",
+      "category": "viewpoint",
+      "short_description": "จุดชมวิวเมืองภูเก็ต"
+    },
+    {
+      "key": "phuket-09",
+      "name_th": "หาดในหาน",
+      "name_en": "Nai Harn Beach",
+      "category": "beach",
+      "short_description": "หาดเงียบสงบใกล้แหลมพรหมเทพ"
+    },
+    {
+      "key": "phuket-10",
+      "name_th": "เกาะเฮ",
+      "name_en": "Coral Island",
+      "category": "island",
+      "short_description": "เกาะใกล้ภูเก็ต นิยมดำน้ำตื้น"
+    },
+    {
+      "key": "phuket-11",
+      "name_th": "อนุสาวรีย์ท้าวเทพกระษัตรี ท้าวศรีสุนทร",
+      "name_en": "Heroines Monument",
+      "category": "culture",
+      "short_description": "อนุสาวรีย์วีรสตรีเมืองถลาง"
+    },
+    {
+      "key": "phuket-12",
+      "name_th": "อุทยานแห่งชาติสิรินาถ",
+      "name_en": "Sirinat National Park",
+      "category": "national-park",
+      "short_description": "อุทยานทางทะเลฝั่งตะวันตกเฉียงเหนือ"
+    },
+    {
+      "key": "phuket-13",
+      "name_th": "ถนนคนเดินหลาดใหญ่",
+      "name_en": "Lard Yai Walking Street",
+      "category": "walking-street",
+      "short_description": "ถนนคนเดินเย็นวันอาทิตย์ย่านเมืองเก่า"
+    }
+  ]
+}

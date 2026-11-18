@@ -1,0 +1,98 @@
+{
+  "province_pcode": "TH71",
+  "province_th": "กาญจนบุรี",
+  "note": "Demo Data — names & categories curated by hand; coordinates/district/contact come from OpenStreetMap via scripts/build-places.mjs",
+  "places": [
+    {
+      "key": "kanchanaburi-01",
+      "name_th": "สะพานข้ามแม่น้ำแคว",
+      "name_en": "Bridge on the River Kwai",
+      "category": "historic",
+      "short_description": "สะพานรถไฟประวัติศาสตร์สมัยสงครามโลกครั้งที่ 2"
+    },
+    {
+      "key": "kanchanaburi-02",
+      "name_th": "อุทยานแห่งชาติเอราวัณ",
+      "name_en": "Erawan National Park",
+      "category": "national-park",
+      "short_description": "อุทยานที่มีชื่อเสียงจากน้ำตกเอราวัณ"
+    },
+    {
+      "key": "kanchanaburi-03",
+      "name_th": "น้ำตกเอราวัณ",
+      "name_en": "Erawan Waterfall",
+      "category": "waterfall",
+      "short_description": "น้ำตกหินปูน 7 ชั้น น้ำสีเขียวมรกต"
+    },
+    {
+      "key": "kanchanaburi-04",
+      "name_th": "ถ้ำกระแซ",
+      "name_en": "Tham Krasae",
+      "category": "cave",
+      "short_description": "ถ้ำริมทางรถไฟสายมรณะ"
+    },
+    {
+      "key": "kanchanaburi-05",
+      "name_th": "สุสานทหารสัมพันธมิตรดอนรัก",
+      "name_en": "Kanchanaburi War Cemetery",
+      "category": "historic",
+      "short_description": "สุสานทหารสัมพันธมิตรกลางเมือง"
+    },
+    {
+      "key": "kanchanaburi-06",
+      "name_th": "พิพิธภัณฑ์สงครามอักษะ JEATH",
+      "name_en": "JEATH War Museum",
+      "category": "museum",
+      "short_description": "พิพิธภัณฑ์เรื่องราวทางรถไฟสายมรณะ"
+    },
+    {
+      "key": "kanchanaburi-07",
+      "name_th": "อุทยานประวัติศาสตร์เมืองสิงห์",
+      "name_en": "Prasat Mueang Singh Historical Park",
+      "category": "historic",
+      "short_description": "โบราณสถานศิลปะเขมรริมแม่น้ำแควน้อย"
+    },
+    {
+      "key": "kanchanaburi-08",
+      "name_th": "เขื่อนศรีนครินทร์",
+      "name_en": "Srinagarind Dam",
+      "category": "dam",
+      "short_description": "เขื่อนขนาดใหญ่บนแม่น้ำแควใหญ่"
+    },
+    {
+      "key": "kanchanaburi-09",
+      "name_th": "เขื่อนวชิราลงกรณ",
+      "name_en": "Vajiralongkorn Dam",
+      "category": "dam",
+      "short_description": "เขื่อนบนแม่น้ำแควน้อย อำเภอทองผาภูมิ"
+    },
+    {
+      "key": "kanchanaburi-10",
+      "name_th": "สะพานมอญ",
+      "name_en": "Mon Bridge",
+      "category": "community",
+      "short_description": "สะพานไม้ยาวในอำเภอสังขละบุรี"
+    },
+    {
+      "key": "kanchanaburi-11",
+      "name_th": "ช่องเขาขาด",
+      "name_en": "Hellfire Pass",
+      "category": "historic",
+      "short_description": "ช่องเขาที่ขุดสร้างทางรถไฟสายมรณะ"
+    },
+    {
+      "key": "kanchanaburi-12",
+      "name_th": "น้ำตกไทรโยคน้อย",
+      "name_en": "Sai Yok Noi Waterfall",
+      "category": "waterfall",
+      "short_description": "น้ำตกใกล้ถนน เดินทางสะดวก"
+    },
+    {
+      "key": "kanchanaburi-13",
+      "name_th": "วัดถ้ำเสือ",
+      "name_en": "Wat Tham Suea",
+      "category": "temple",
+      "short_description": "วัดบนเขามีพระพุทธรูปองค์ใหญ่ มองเห็นทุ่งนา"
+    }
+  ]
+}

@@ -23,10 +23,15 @@ type Props<P> = {
   onOpen?: (id: string) => void;
   /** fit view to these ids (null/empty = all features) */
   fitIds?: string[] | null;
+  /** place pins drawn above shapes */
+  points?: MapPoint[];
+  onPointClick?: (id: string) => void;
   /** show OpenStreetMap background */
   tiles?: boolean;
   className?: string;
 };
+
+export type MapPoint = { id: string; lat: number; lng: number; color: string; title: string; highlight?: boolean };
 
 type ShapeLayer = L.Polygon & { feature?: Feature<Geometry, unknown> };
 type LabelItem = { id: string; props: unknown; area: number; marker: L.Marker };
@@ -38,6 +43,7 @@ export function GeoMap<P>(props: Props<P>) {
   const layer = useRef<L.GeoJSON | null>(null);
   const labels = useRef<LabelItem[]>([]);
   const labelGroup = useRef<L.LayerGroup | null>(null);
+  const pointGroup = useRef<L.LayerGroup | null>(null);
   const latest = useRef(props);
   latest.current = props;
 
@@ -74,6 +80,7 @@ export function GeoMap<P>(props: Props<P>) {
     m.attributionControl.addAttribution(GEO_ATTR);
     m.fitBounds(THAILAND);
     labelGroup.current = L.layerGroup().addTo(m);
+    pointGroup.current = L.layerGroup().addTo(m);
     m.on('zoomend moveend', () => layoutRef.current());
     map.current = m;
     const ro = new ResizeObserver(() => m.invalidateSize());
@@ -84,6 +91,7 @@ export function GeoMap<P>(props: Props<P>) {
       map.current = null;
       layer.current = null;
       labelGroup.current = null;
+      pointGroup.current = null;
       labels.current = [];
     };
     // tiles is fixed for the lifetime of the map
@@ -148,6 +156,27 @@ export function GeoMap<P>(props: Props<P>) {
     });
     layoutLabels();
   });
+
+  // place pins
+  const pointsKey = (props.points ?? []).map((p) => `${p.id}:${p.color}:${p.highlight ? 1 : 0}`).join('|');
+  useEffect(() => {
+    const grp = pointGroup.current;
+    if (!grp) return;
+    grp.clearLayers();
+    (latest.current.points ?? []).forEach((pt) => {
+      const mk = L.circleMarker([pt.lat, pt.lng], {
+        radius: pt.highlight ? 10 : 7,
+        color: '#ffffff',
+        weight: 2,
+        fillColor: pt.color,
+        fillOpacity: 1,
+        bubblingMouseEvents: false,
+      });
+      mk.bindTooltip(escapeHtml(pt.title), { direction: 'top', className: 'geo-tip' });
+      mk.on('click', () => latest.current.onPointClick?.(pt.id));
+      grp.addLayer(mk);
+    });
+  }, [pointsKey]);
 
   // fit bounds
   const fitKey = fitIds?.join(',') ?? '';

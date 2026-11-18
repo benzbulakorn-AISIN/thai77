@@ -58,23 +58,26 @@ export function useProvinceStats() {
 
       if (user) {
         const [st, vis] = await Promise.all([
-          supabase.from('user_place_status').select('status, places(province_id)').not('place_id', 'is', null),
+          supabase.from('user_place_status').select('place_id, status, places(province_id)').not('place_id', 'is', null),
           supabase.from('visited_places').select('province_id, place_id, place_name'),
         ]);
-        type StRow = { status: string; places: { province_id: string } | null };
+        const visitedKeys = new Set<string>();
+        const markVisited = (provinceId: string, key: string) => {
+          const k = `${provinceId}:${key}`;
+          if (visitedKeys.has(k)) return;
+          visitedKeys.add(k);
+          get(provinceId).visited++;
+        };
+        type StRow = { place_id: string; status: string; places: { province_id: string } | null };
         ((st.data ?? []) as unknown as StRow[]).forEach((r) => {
           const pid = r.places?.province_id;
           if (!pid) return;
           if (r.status === 'planned') get(pid).planned++;
           if (r.status === 'want' || r.status === 'planned' || r.status === 'visited') get(pid).target++;
+          if (r.status === 'visited') markVisited(pid, r.place_id);
         });
-        const seen = new Set<string>();
         ((vis.data ?? []) as { province_id: string | null; place_id: string | null; place_name: string }[]).forEach((r) => {
-          if (!r.province_id) return;
-          const key = `${r.province_id}:${r.place_id ?? r.place_name}`;
-          if (seen.has(key)) return;
-          seen.add(key);
-          get(r.province_id).visited++;
+          if (r.province_id) markVisited(r.province_id, r.place_id ?? r.place_name);
         });
       }
       if (alive) setStats(acc);

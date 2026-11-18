@@ -1,43 +1,49 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import type { FeatureCollection, Geometry } from 'geojson';
-import { ArrowLeft, CalendarDays, Landmark, MapPinned } from 'lucide-react';
+import { ArrowLeft, CalendarDays, Landmark, MapPin, MapPinned } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { escapeHtml } from '../lib/escapeHtml';
-import { GeoMap } from '../features/map/GeoMap';
+import { GeoMap, type MapPoint } from '../features/map/GeoMap';
 import { loadDistrictShapes, type DistrictGeoProps } from '../features/map/geoLoader';
 import { primaryColor } from '../features/map/colors';
 import { useReference, type District } from '../features/provinces/useGeoData';
+import { fetchCategories, fetchPlacesByProvince } from '../features/places/placesApi';
+import { useMyPlaces } from '../features/places/useMyPlaces';
+import { PlaceList } from '../features/places/PlaceList';
+import type { Category, Place } from '../features/places/types';
 import { Skeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 
-const PALETTE = ['#93C5FD', '#86EFAC', '#FDE68A', '#FDBA74', '#C4B5FD', '#F9A8D4', '#99F6E4', '#BEF264'];
+const PALETTE = ['#DBEAFE', '#DCFCE7', '#FEF9C3', '#FFEDD5', '#EDE9FE', '#FCE7F3', '#CCFBF1', '#ECFCCB'];
 
 export function ProvincePage() {
   const { slug } = useParams();
   const { provinces, regions, loading } = useReference();
   const province = provinces.find((p) => p.slug === slug);
   const region = regions.find((r) => r.id === province?.region_id);
+  const my = useMyPlaces();
 
   const [districts, setDistricts] = useState<District[] | null>(null);
-  const [counts, setCounts] = useState<Record<string, number>>({});
+  const [places, setPlaces] = useState<Place[] | null>(null);
+  const [placesError, setPlacesError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [shapes, setShapes] = useState<FeatureCollection<Geometry, DistrictGeoProps> | null>(null);
   const [geoError, setGeoError] = useState(false);
   const [selected, setSelected] = useState<string | null>(null); // district pcode
+  const [highlight, setHighlight] = useState<string | null>(null); // place id
+
+  useEffect(() => { fetchCategories().then(setCategories).catch(() => setCategories([])); }, []);
 
   useEffect(() => {
     if (!province) return;
     let alive = true;
-    setDistricts(null); setShapes(null); setGeoError(false); setSelected(null);
+    setDistricts(null); setShapes(null); setGeoError(false); setSelected(null); setPlaces(null); setPlacesError(null);
     supabase.from('districts').select('id,pcode,name_th,name_en').eq('province_id', province.id).order('name_th')
       .then(({ data }) => alive && setDistricts((data ?? []) as District[]));
-    supabase.from('places').select('district_id').eq('province_id', province.id)
-      .then(({ data }) => {
-        if (!alive) return;
-        const c: Record<string, number> = {};
-        ((data ?? []) as { district_id: string | null }[]).forEach((r) => { if (r.district_id) c[r.district_id] = (c[r.district_id] ?? 0) + 1; });
-        setCounts(c);
-      });
+    fetchPlacesByProvince(province.id)
+      .then((d) => alive && setPlaces(d))
+      .catch((e: Error) => alive && setPlacesError(e.message));
     loadDistrictShapes(province.pcode).then((d) => alive && setShapes(d)).catch(() => alive && setGeoError(true));
     return () => { alive = false; };
   }, [province]);
@@ -47,6 +53,22 @@ export function ProvincePage() {
     shapes?.features.forEach((f, i) => m.set(f.properties.pcode, i % PALETTE.length));
     return m;
   }, [shapes]);
+  const districtByPcode = useMemo(() => new Map((districts ?? []).map((d) => [d.pcode, d])), [districts]);
+  const districtNames = useMemo(() => new Map((districts ?? []).map((d) => [d.id, d.name_th])), [districts]);
+  const catById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
+  const counts = useMemo(() => {
+    const c: Record<string, number> = {};
+    (places ?? []).forEach((p) => { if (p.district_id) c[p.district_id] = (c[p.district_id] ?? 0) + 1; });
+    return c;
+  }, [places]);
+
+  const selectedDistrictId = selected ? districtByPcode.get(selected)?.id ?? null : null;
+  const points: MapPoint[] = useMemo(() => (places ?? [])
+    .filter((p) => p.lat != null && p.lng != null && (!selectedDistrictId || p.district_id === selectedDistrictId))
+    .map((p) => ({
+      id: p.id, lat: p.lat as number, lng: p.lng as number, title: p.name_th,
+      color: catById.get(p.category_id)?.color ?? '#64748B', highlight: p.id === highlight,
+    })), [places, selectedDistrictId, catById, highlight]);
 
   if (loading) return <Skeleton className="h-96" />;
   if (!province) {
@@ -56,8 +78,11 @@ export function ProvincePage() {
     );
   }
 
-  const selDistrict = districts?.find((d) => d.pcode === selected);
   const toggle = (pcode: string) => setSelected((cur) => (cur === pcode ? null : pcode));
+  const focusPlace = (id: string) => {
+    setHighlight(id);
+    document.getElementById(`place-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
 
   return (
     <div className="space-y-4">
@@ -71,14 +96,18 @@ export function ProvincePage() {
         </div>
       </header>
 
-      <section className="grid grid-cols-2 gap-2">
+      <section className="grid grid-cols-3 gap-2">
         <div className="rounded-2xl border border-line bg-surface p-3">
           <p className="flex items-center gap-1 text-xs text-muted"><CalendarDays size={14} /> ช่วงที่เหมาะ</p>
           <p className="font-semibold">{province.best_season ?? 'รอข้อมูล'}</p>
         </div>
         <div className="rounded-2xl border border-line bg-surface p-3">
           <p className="flex items-center gap-1 text-xs text-muted"><Landmark size={14} /> อำเภอ</p>
-          <p className="font-semibold">{districts ? `${districts.length} อำเภอ` : '…'}</p>
+          <p className="font-semibold">{districts ? districts.length : '…'}</p>
+        </div>
+        <div className="rounded-2xl border border-line bg-surface p-3">
+          <p className="flex items-center gap-1 text-xs text-muted"><MapPin size={14} /> สถานที่</p>
+          <p className="font-semibold">{places ? places.length : '…'}</p>
         </div>
       </section>
       {province.summary && <p className="text-sm">{province.summary}</p>}
@@ -95,11 +124,13 @@ export function ProvincePage() {
           selectedId={selected}
           onSelect={toggle}
           onOpen={toggle}
+          points={points}
+          onPointClick={focusPlace}
           getLabel={(p) => p.name_th}
           getTooltip={(p) => `<b>${escapeHtml(p.name_th)}</b>`}
           getStyle={(p, isSel) => ({
             fillColor: PALETTE[colorIdx.get(p.pcode) ?? 0],
-            fillOpacity: selected && !isSel ? 0.3 : 0.8,
+            fillOpacity: selected && !isSel ? 0.3 : 0.75,
             color: isSel ? primaryColor() : '#334155',
             weight: isSel ? 3.5 : 1,
           })}
@@ -107,28 +138,34 @@ export function ProvincePage() {
       )}
 
       <section>
-        <h2 className="mb-2 font-semibold">
-          {selDistrict ? `อำเภอ${selDistrict.name_th.replace(/^อำเภอ/, '')}` : 'อำเภอทั้งหมด'}
-        </h2>
+        <h2 className="mb-2 font-semibold">อำเภอ <span className="text-xs font-normal text-muted">แตะเพื่อกรองสถานที่</span></h2>
         {!districts ? (
-          <Skeleton className="h-40" />
+          <Skeleton className="h-24" />
         ) : districts.length === 0 ? (
           <p className="text-sm text-muted">ยังไม่มีรายชื่ออำเภอ — รัน supabase/seed_geo.sql</p>
         ) : (
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
             {districts.map((d) => (
               <button key={d.id} type="button" onClick={() => toggle(d.pcode)}
-                className={`flex min-h-12 items-center justify-between gap-2 rounded-xl border px-3 text-left text-sm
+                className={`flex min-h-10 shrink-0 items-center gap-2 rounded-full border px-3 text-sm
                   ${selected === d.pcode ? 'border-primary bg-primary text-on-primary' : 'border-line bg-surface'}`}>
-                <span className="truncate">{d.name_th}</span>
-                <span className="shrink-0 rounded-full bg-black/10 px-2 text-xs">{counts[d.id] ?? 0}</span>
+                {d.name_th}
+                <span className="rounded-full bg-black/10 px-2 text-xs">{counts[d.id] ?? 0}</span>
               </button>
             ))}
           </div>
         )}
       </section>
 
-      <EmptyState icon={<MapPinned size={36} />} title="สถานที่ท่องเที่ยว" text="รายการสถานที่ ตัวกรอง และการเลือกเข้าทริป จะมาใน Part 4.2" />
+      {placesError ? (
+        <p className="text-sm text-red-600">{placesError}</p>
+      ) : !places ? (
+        <div className="space-y-3"><Skeleton className="h-32" /><Skeleton className="h-32" /></div>
+      ) : (
+        <PlaceList places={places} categories={categories} districtNames={districtNames}
+          districtFilter={selectedDistrictId} onClearDistrict={() => setSelected(null)}
+          my={my} highlightId={highlight} />
+      )}
     </div>
   );
 }

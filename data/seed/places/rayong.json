@@ -1,0 +1,91 @@
+{
+  "province_pcode": "TH21",
+  "province_th": "ระยอง",
+  "note": "Demo Data — names & categories curated by hand; coordinates/district/contact come from OpenStreetMap via scripts/build-places.mjs",
+  "places": [
+    {
+      "key": "rayong-01",
+      "name_th": "เกาะเสม็ด",
+      "name_en": "Ko Samet",
+      "category": "island",
+      "short_description": "เกาะทรายขาวในเขตอุทยานแห่งชาติ นั่งเรือจากบ้านเพ"
+    },
+    {
+      "key": "rayong-02",
+      "name_th": "อุทยานแห่งชาติเขาแหลมหญ้า-หมู่เกาะเสม็ด",
+      "name_en": "Khao Laem Ya - Mu Ko Samet National Park",
+      "category": "national-park",
+      "short_description": "อุทยานทางทะเลที่ครอบคลุมเกาะเสม็ดและแหลมหญ้า"
+    },
+    {
+      "key": "rayong-03",
+      "name_th": "หาดแม่รำพึง",
+      "name_en": "Mae Ramphueng Beach",
+      "category": "beach",
+      "short_description": "หาดยาวริมถนนเลียบชายฝั่ง"
+    },
+    {
+      "key": "rayong-04",
+      "name_th": "ตลาดบ้านเพ",
+      "name_en": "Ban Phe Market",
+      "category": "market",
+      "short_description": "ตลาดอาหารทะเลแห้งและของฝากใกล้ท่าเรือ"
+    },
+    {
+      "key": "rayong-05",
+      "name_th": "สวนศรีเมือง",
+      "name_en": "Suan Si Mueang",
+      "category": "nature",
+      "short_description": "สวนสาธารณะริมแม่น้ำระยองกลางเมือง"
+    },
+    {
+      "key": "rayong-06",
+      "name_th": "อนุสาวรีย์สุนทรภู่",
+      "name_en": "Sunthorn Phu Monument",
+      "category": "culture",
+      "short_description": "อนุสรณ์กวีเอกสุนทรภู่ อำเภอแกลง"
+    },
+    {
+      "key": "rayong-07",
+      "name_th": "วัดป่าประดู่",
+      "name_en": "Wat Pa Pradu",
+      "category": "temple",
+      "short_description": "วัดกลางเมืองระยองที่มีพระนอนตะแคงซ้าย"
+    },
+    {
+      "key": "rayong-08",
+      "name_th": "อุทยานแห่งชาติเขาชะเมา-เขาวง",
+      "name_en": "Khao Chamao - Khao Wong National Park",
+      "category": "national-park",
+      "short_description": "ป่าและน้ำตกในเขตเทือกเขาชะเมา"
+    },
+    {
+      "key": "rayong-09",
+      "name_th": "เกาะมันใน",
+      "name_en": "Ko Man Nai",
+      "category": "island",
+      "short_description": "เกาะเล็กที่เป็นศูนย์อนุรักษ์เต่าทะเล"
+    },
+    {
+      "key": "rayong-10",
+      "name_th": "หาดสวนสน",
+      "name_en": "Suan Son Beach",
+      "category": "beach",
+      "short_description": "หาดร่มสนบรรยากาศสบาย ๆ"
+    },
+    {
+      "key": "rayong-11",
+      "name_th": "หาดแหลมแม่พิมพ์",
+      "name_en": "Laem Mae Phim Beach",
+      "category": "beach",
+      "short_description": "หาดฝั่งตะวันออกของระยอง ติดเขตแกลง"
+    },
+    {
+      "key": "rayong-12",
+      "name_th": "สวนพฤกษศาสตร์ระยอง",
+      "name_en": "Rayong Botanical Garden",
+      "category": "nature",
+      "short_description": "สวนพฤกษศาสตร์ป่าเสม็ดขาวและพื้นที่ชุ่มน้ำ"
+    }
+  ]
+}

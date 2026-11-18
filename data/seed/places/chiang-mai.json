@@ -1,0 +1,105 @@
+{
+  "province_pcode": "TH50",
+  "province_th": "เชียงใหม่",
+  "note": "Demo Data — names & categories curated by hand; coordinates/district/contact come from OpenStreetMap via scripts/build-places.mjs",
+  "places": [
+    {
+      "key": "chiang-mai-01",
+      "name_th": "วัดพระธาตุดอยสุเทพราชวรวิหาร",
+      "name_en": "Wat Phra That Doi Suthep",
+      "category": "temple",
+      "short_description": "วัดบนดอยสุเทพ มีพระธาตุและจุดชมเมือง"
+    },
+    {
+      "key": "chiang-mai-02",
+      "name_th": "วัดเจดีย์หลวงวรวิหาร",
+      "name_en": "Wat Chedi Luang",
+      "category": "temple",
+      "short_description": "วัดกลางเมืองเก่าที่มีเจดีย์ขนาดใหญ่"
+    },
+    {
+      "key": "chiang-mai-03",
+      "name_th": "วัดพระสิงห์วรมหาวิหาร",
+      "name_en": "Wat Phra Singh",
+      "category": "temple",
+      "short_description": "วัดสำคัญในเขตคูเมืองเชียงใหม่"
+    },
+    {
+      "key": "chiang-mai-04",
+      "name_th": "อุทยานแห่งชาติดอยอินทนนท์",
+      "name_en": "Doi Inthanon National Park",
+      "category": "national-park",
+      "short_description": "อุทยานที่มียอดดอยสูงสุดของไทย"
+    },
+    {
+      "key": "chiang-mai-05",
+      "name_th": "ถนนคนเดินวันอาทิตย์ ท่าแพ",
+      "name_en": "Sunday Walking Street",
+      "category": "walking-street",
+      "short_description": "ถนนคนเดินเย็นวันอาทิตย์ในเมืองเก่า"
+    },
+    {
+      "key": "chiang-mai-06",
+      "name_th": "ไนท์บาซาร์เชียงใหม่",
+      "name_en": "Chiang Mai Night Bazaar",
+      "category": "market",
+      "short_description": "ย่านตลาดกลางคืน ถนนช้างคลาน"
+    },
+    {
+      "key": "chiang-mai-07",
+      "name_th": "ตลาดวโรรส",
+      "name_en": "Warorot Market",
+      "category": "market",
+      "short_description": "กาดหลวง ตลาดของฝากและอาหารพื้นเมือง"
+    },
+    {
+      "key": "chiang-mai-08",
+      "name_th": "พระตำหนักภูพิงคราชนิเวศน์",
+      "name_en": "Bhubing Palace",
+      "category": "culture",
+      "short_description": "พระตำหนักและสวนดอกไม้บนดอยบวกห้า"
+    },
+    {
+      "key": "chiang-mai-09",
+      "name_th": "วัดอุโมงค์",
+      "name_en": "Wat Umong",
+      "category": "temple",
+      "short_description": "วัดในป่าที่มีอุโมงค์โบราณ"
+    },
+    {
+      "key": "chiang-mai-10",
+      "name_th": "ม่อนแจ่ม",
+      "name_en": "Mon Jam",
+      "category": "viewpoint",
+      "short_description": "จุดชมวิวบนดอยในอำเภอแม่ริม"
+    },
+    {
+      "key": "chiang-mai-11",
+      "name_th": "น้ำตกแม่สา",
+      "name_en": "Mae Sa Waterfall",
+      "category": "waterfall",
+      "short_description": "น้ำตกหลายชั้นในอำเภอแม่ริม"
+    },
+    {
+      "key": "chiang-mai-12",
+      "name_th": "ถนนนิมมานเหมินท์",
+      "name_en": "Nimmanhaemin Road",
+      "category": "cafe",
+      "short_description": "ย่านคาเฟ่และร้านอาหาร"
+    },
+    {
+      "key": "chiang-mai-13",
+      "name_th": "ประตูท่าแพ",
+      "name_en": "Tha Phae Gate",
+      "category": "historic",
+      "short_description": "ประตูเมืองเก่าด้านตะวันออก"
+    },
+    {
+      "key": "chiang-mai-14",
+      "name_th": "ดอยหลวงเชียงดาว",
+      "name_en": "Doi Luang Chiang Dao",
+      "category": "viewpoint",
+      "short_description": "ภูเขาหินปูนสูงในอำเภอเชียงดาว"
+    }
+  ]
+}
