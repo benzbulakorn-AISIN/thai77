@@ -1,6 +1,7 @@
 import { createHashRouter, Link } from 'react-router-dom';
 import { AppShell } from '../components/layout/AppShell';
 import { HomePage } from '../pages/HomePage';
+import { ExplorePage } from '../pages/ExplorePage';
 import { ProvincePage } from '../pages/ProvincePage';
 import { PlaceDetailPage } from '../pages/PlaceDetailPage';
 import { CartPage } from '../pages/CartPage';
@@ -11,7 +12,6 @@ import { MemoriesPage } from '../pages/MemoriesPage';
 import { MemoryDetailPage } from '../pages/MemoryDetailPage';
 import { MyPlacesPage } from '../pages/MyPlacesPage';
 import { BackupPage } from '../pages/BackupPage';
-import { ExplorePage } from '../pages/Placeholders';
 import { ProfilePage } from '../pages/ProfilePage';
 import { AdminShell } from '../pages/admin/AdminShell';
 import { AdminDashboard } from '../pages/admin/AdminDashboard';
@@ -36,6 +36,7 @@ export const router = createHashRouter([
     element: <AppShell />,
     children: [
       { path: '/', element: <HomePage /> },
+      { path: '/explore', element: <ExplorePage /> },
       { path: '/province/:slug', element: <ProvincePage /> },
       { path: '/place/:id', element: <PlaceDetailPage /> },
       { path: '/cart', element: <CartPage /> },
@@ -46,7 +47,6 @@ export const router = createHashRouter([
       { path: '/memories/:id', element: <MemoryDetailPage /> },
       { path: '/my-places', element: <MyPlacesPage /> },
       { path: '/backup', element: <BackupPage /> },
-      { path: '/explore', element: <ExplorePage /> },
       { path: '/profile', element: <ProfilePage /> },
       {
         path: '/admin',

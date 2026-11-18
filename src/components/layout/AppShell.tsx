@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ChevronsLeft, ChevronsRight, MapPinned, User, WifiOff } from 'lucide-react';
 import { NAV_ITEMS } from './navItems';
 import { t } from '../../i18n/th';
@@ -49,8 +49,11 @@ function ProfileButton() {
 export function AppShell() {
   const online = useOnline();
   const { items } = useCart();
+  const { pathname } = useLocation();
   const [collapsed, toggle] = useCollapsed();
   const cartCount = items.length;
+  // the Explore page fills the whole area between the top bar and the bottom menu (map + sheet)
+  const bleed = pathname === '/explore';
 
   return (
     <div className="min-h-dvh bg-bg text-fg lg:flex" style={{ '--nav-w': collapsed ? '72px' : '240px' } as CSSProperties}>
@@ -104,12 +107,14 @@ export function AppShell() {
             ยังไม่ได้ตั้งค่า VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
           </div>
         )}
-        <main className={`mx-auto w-full max-w-5xl flex-1 px-4 pt-4 lg:pb-8 ${cartCount ? 'pb-52 lg:pb-24' : 'pb-32'}`}>
+        <main className={bleed
+          ? 'w-full flex-1'
+          : `mx-auto w-full max-w-5xl flex-1 px-4 pt-4 lg:pb-8 ${cartCount ? 'pb-52 lg:pb-24' : 'pb-32'}`}>
           <Outlet />
         </main>
       </div>
 
-      <CartBar />
+      {!bleed && <CartBar />}
 
       {/* ---------- Mobile bottom menu (center "ทริป" button is raised) ---------- */}
       <nav aria-label={t.nav.main}
