@@ -25,7 +25,15 @@ export function LoginPage() {
     setBusy(true);
     const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
     setBusy(false);
-    if (error) { toast(t.auth.loginFailed, 'error'); return; }
+    if (error) {
+      const msg = error.message.includes('Email not confirmed')
+        ? 'อีเมลยังไม่ได้ยืนยัน'
+        : error.message.includes('Invalid login')
+          ? t.auth.loginFailed
+          : `เข้าสู่ระบบไม่สำเร็จ: ${error.message}`;
+      toast(msg, 'error');
+      return;
+    }
     toast('ยินดีต้อนรับ', 'success');
     nav('/', { replace: true });
   };

@@ -1,6 +1,7 @@
 import { createHashRouter, Link } from 'react-router-dom';
 import { AppShell } from '../components/layout/AppShell';
 import { HomePage } from '../pages/HomePage';
+import { ProvincePage } from '../pages/ProvincePage';
 import { ExplorePage, MemoriesPage, TripsPage } from '../pages/Placeholders';
 import { ProfilePage } from '../pages/ProfilePage';
 import { LoginPage } from '../features/auth/LoginPage';
@@ -19,6 +20,7 @@ export const router = createHashRouter([
     element: <AppShell />,
     children: [
       { path: '/', element: <HomePage /> },
+      { path: '/province/:slug', element: <ProvincePage /> },
       { path: '/explore', element: <ExplorePage /> },
       { path: '/trips', element: <TripsPage /> },
       { path: '/memories', element: <MemoriesPage /> },
