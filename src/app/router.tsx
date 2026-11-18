@@ -12,6 +12,12 @@ import { MemoryDetailPage } from '../pages/MemoryDetailPage';
 import { MyPlacesPage } from '../pages/MyPlacesPage';
 import { ExplorePage } from '../pages/Placeholders';
 import { ProfilePage } from '../pages/ProfilePage';
+import { AdminShell } from '../pages/admin/AdminShell';
+import { AdminDashboard } from '../pages/admin/AdminDashboard';
+import { AdminPlacesPage } from '../pages/admin/AdminPlacesPage';
+import { AdminPlaceEditPage } from '../pages/admin/AdminPlaceEditPage';
+import { AdminCategoriesPage } from '../pages/admin/AdminCategoriesPage';
+import { AdminReviewPage } from '../pages/admin/AdminReviewPage';
 import { LoginPage } from '../features/auth/LoginPage';
 import { ResetPasswordPage } from '../features/auth/ResetPasswordPage';
 
@@ -39,6 +45,18 @@ export const router = createHashRouter([
       { path: '/my-places', element: <MyPlacesPage /> },
       { path: '/explore', element: <ExplorePage /> },
       { path: '/profile', element: <ProfilePage /> },
+      {
+        path: '/admin',
+        element: <AdminShell />,
+        children: [
+          { index: true, element: <AdminDashboard /> },
+          { path: 'places', element: <AdminPlacesPage /> },
+          { path: 'places/new', element: <AdminPlaceEditPage /> },
+          { path: 'places/:id', element: <AdminPlaceEditPage /> },
+          { path: 'categories', element: <AdminCategoriesPage /> },
+          { path: 'review', element: <AdminReviewPage /> },
+        ],
+      },
       { path: '/auth/login', element: <LoginPage /> },
       { path: '/auth/reset', element: <ResetPasswordPage /> },
       { path: '*', element: <NotFound /> },

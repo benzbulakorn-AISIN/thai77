@@ -86,7 +86,7 @@ export async function listPlaces(f: PlaceFilter, cutoff: string): Promise<{ rows
   const from = f.page * PAGE_SIZE;
   const { data, error, count } = await q.order('updated_at', { ascending: false }).range(from, from + PAGE_SIZE - 1);
   if (error) fail('โหลดรายการสถานที่ไม่สำเร็จ', error);
-  return { rows: ((data ?? []) as unknown as Record<string, unknown>[]).map((r) => ({ ...(r as unknown as AdminPlaceRow), lat: num(r.lat) })), count: count ?? 0 };
+  return { rows: ((data ?? []) as Record<string, unknown>[]).map((r) => ({ ...(r as unknown as AdminPlaceRow), lat: num(r.lat) })), count: count ?? 0 };
 }
 
 const FULL_COLS =
@@ -112,7 +112,7 @@ export async function getPlaceFull(id: string): Promise<{ place: PlaceInput & { 
   ]);
   if (p.error) fail('โหลดสถานที่ไม่สำเร็จ', p.error);
   if (!p.data) return null;
-  const r = p.data as unknown as Record<string, unknown>;
+  const r = p.data as Record<string, unknown>;
   const place = {
     ...(r as unknown as PlaceInput & { id: string; updated_at: string }),
     lat: num(r.lat), lng: num(r.lng), fee_thai: num(r.fee_thai), fee_foreigner: num(r.fee_foreigner),
@@ -218,7 +218,7 @@ export type Submission = {
 export async function listSubmissions(): Promise<Submission[]> {
   const { data, error } = await supabase.rpc('admin_list_submissions');
   if (error) fail('โหลดรายการเสนอไม่สำเร็จ (รัน Migration 007 แล้วหรือยัง?)', error);
-  return ((data ?? []) as unknown as Record<string, unknown>[]).map((r) => ({
+  return ((data ?? []) as Record<string, unknown>[]).map((r) => ({
     ...(r as unknown as Submission), lat: num(r.lat), lng: num(r.lng), est_cost_per_person: num(r.est_cost_per_person),
   }));
 }

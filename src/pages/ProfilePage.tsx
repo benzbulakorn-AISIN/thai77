@@ -6,14 +6,14 @@ import { Button } from '../components/ui/Button';
 import { useToast } from '../components/ui/Toast';
 import { t } from '../i18n/th';
 
-const MENU = [
-  { to: '/my-places', label: 'สถานที่ส่วนตัว', Icon: MapPinPlus },
-  { to: '/memories', label: 'ความทรงจำของฉัน', Icon: Camera },
-];
-
 export function ProfilePage() {
   const { user, profile, isAdmin, signOut } = useAuth();
   const toast = useToast();
+  const menu = [
+    { to: '/my-places', label: 'สถานที่ส่วนตัว', Icon: MapPinPlus },
+    { to: '/memories', label: 'ความทรงจำของฉัน', Icon: Camera },
+    ...(isAdmin ? [{ to: '/admin', label: 'จัดการข้อมูล (Admin)', Icon: ShieldCheck }] : []),
+  ];
 
   return (
     <div className="space-y-6">
@@ -40,7 +40,7 @@ export function ProfilePage() {
 
       {user && (
         <nav className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
-          {MENU.map(({ to, label, Icon }) => (
+          {menu.map(({ to, label, Icon }) => (
             <Link key={to} to={to} className="flex min-h-14 items-center gap-3 px-4 hover:bg-surface-2">
               <Icon size={20} className="text-primary" />
               <span className="flex-1">{label}</span>

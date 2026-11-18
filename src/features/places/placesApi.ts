@@ -20,6 +20,11 @@ export function fetchCategories(): Promise<Category[]> {
   return catCache;
 }
 
+/** call after Admin edits categories */
+export function clearCategoryCache() {
+  catCache = null;
+}
+
 export async function fetchPlacesByProvince(provinceId: string): Promise<Place[]> {
   const { data, error } = await supabase.from('places').select(PLACE_COLS).eq('province_id', provinceId)
     .order('popularity', { ascending: false }).order('name_th').range(0, 999);
