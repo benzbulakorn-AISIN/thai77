@@ -18,6 +18,7 @@ import { AdminPlacesPage } from '../pages/admin/AdminPlacesPage';
 import { AdminPlaceEditPage } from '../pages/admin/AdminPlaceEditPage';
 import { AdminCategoriesPage } from '../pages/admin/AdminCategoriesPage';
 import { AdminReviewPage } from '../pages/admin/AdminReviewPage';
+import { AdminImportPage } from '../pages/admin/AdminImportPage';
 import { LoginPage } from '../features/auth/LoginPage';
 import { ResetPasswordPage } from '../features/auth/ResetPasswordPage';
 
@@ -53,6 +54,7 @@ export const router = createHashRouter([
           { path: 'places', element: <AdminPlacesPage /> },
           { path: 'places/new', element: <AdminPlaceEditPage /> },
           { path: 'places/:id', element: <AdminPlaceEditPage /> },
+          { path: 'import', element: <AdminImportPage /> },
           { path: 'categories', element: <AdminCategoriesPage /> },
           { path: 'review', element: <AdminReviewPage /> },
         ],
