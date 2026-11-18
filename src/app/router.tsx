@@ -3,7 +3,10 @@ import { AppShell } from '../components/layout/AppShell';
 import { HomePage } from '../pages/HomePage';
 import { ProvincePage } from '../pages/ProvincePage';
 import { PlaceDetailPage } from '../pages/PlaceDetailPage';
-import { ExplorePage, MemoriesPage, TripsPage } from '../pages/Placeholders';
+import { CartPage } from '../pages/CartPage';
+import { TripsPage } from '../pages/TripsPage';
+import { TripPage } from '../pages/TripPage';
+import { ExplorePage, MemoriesPage } from '../pages/Placeholders';
 import { ProfilePage } from '../pages/ProfilePage';
 import { LoginPage } from '../features/auth/LoginPage';
 import { ResetPasswordPage } from '../features/auth/ResetPasswordPage';
@@ -23,8 +26,10 @@ export const router = createHashRouter([
       { path: '/', element: <HomePage /> },
       { path: '/province/:slug', element: <ProvincePage /> },
       { path: '/place/:id', element: <PlaceDetailPage /> },
-      { path: '/explore', element: <ExplorePage /> },
+      { path: '/cart', element: <CartPage /> },
       { path: '/trips', element: <TripsPage /> },
+      { path: '/trips/:id', element: <TripPage /> },
+      { path: '/explore', element: <ExplorePage /> },
       { path: '/memories', element: <MemoriesPage /> },
       { path: '/profile', element: <ProfilePage /> },
       { path: '/auth/login', element: <LoginPage /> },

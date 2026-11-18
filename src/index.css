@@ -62,7 +62,7 @@ body { font-family: var(--font-sans); -webkit-tap-highlight-color: transparent; 
 /* ---------- Map ---------- */
 .geo-map.no-tiles { background: var(--surface-2); }
 .geo-map.faded-tiles .geo-tiles { opacity: 0.45; filter: saturate(0.4); }
-.geo-map .leaflet-container { font-family: var(--font-sans); }
+.leaflet-container { font-family: var(--font-sans); }
 
 /* permanent shape labels */
 .geo-label { pointer-events: none !important; }
@@ -93,6 +93,22 @@ body { font-family: var(--font-sans); -webkit-tap-highlight-color: transparent; 
 
 /* hover/tap tooltip: bigger, easier to read */
 .geo-tip { font-size: 15px; padding: 6px 10px; border-radius: 10px; }
+
+/* numbered route pins (trip map) */
+.route-pin { background: transparent; border: 0; }
+.route-pin span {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
+}
 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }

@@ -5,6 +5,7 @@ import { router } from './app/router';
 import { ErrorBoundary } from './app/ErrorBoundary';
 import { AuthProvider } from './features/auth/AuthProvider';
 import { ThemeProvider } from './features/settings/ThemeProvider';
+import { CartProvider } from './features/cart/CartProvider';
 import { ToastProvider } from './components/ui/Toast';
 import './index.css';
 
@@ -14,7 +15,9 @@ createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <ThemeProvider>
           <ToastProvider>
-            <RouterProvider router={router} />
+            <CartProvider>
+              <RouterProvider router={router} />
+            </CartProvider>
           </ToastProvider>
         </ThemeProvider>
       </AuthProvider>

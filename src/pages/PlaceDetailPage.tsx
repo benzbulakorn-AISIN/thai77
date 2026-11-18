@@ -9,6 +9,8 @@ import { useMyPlaces } from '../features/places/useMyPlaces';
 import { CategoryIcon } from '../features/places/categoryIcons';
 import { VerificationBadge } from '../features/places/VerificationBadge';
 import { StatusControl } from '../features/places/StatusControl';
+import { CartButton } from '../features/cart/CartButton';
+import { formatOpeningHoursTh } from '../features/routing/openingHours';
 import { useReference } from '../features/provinces/useGeoData';
 import { supabase } from '../lib/supabase';
 import type { Category, Place, PlaceSource } from '../features/places/types';
@@ -86,6 +88,7 @@ export function PlaceDetailPage() {
   const gmaps = p.google_maps_url ?? (hasCoords ? `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}` : null);
   const osm = hasCoords ? `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lng}#map=16/${p.lat}/${p.lng}` : null;
   const state = my.get(p.id);
+  const hours = formatOpeningHoursTh(p.opening_hours_text);
 
   return (
     <div className="space-y-4">
@@ -101,7 +104,7 @@ export function PlaceDetailPage() {
           <h1 className="text-xl font-bold leading-tight">{p.name_th}</h1>
           {p.name_en && <p className="text-sm text-muted">{p.name_en}</p>}
           <p className="mt-1 text-xs text-muted">
-            {cat?.name_th}{district ? ` · ${district}` : ''}{province ? ` · ` : ''}
+            {cat?.name_th}{district ? ` · ${district}` : ''}{province ? ' · ' : ''}
             {province && <Link to={`/province/${province.slug}`} className="text-primary underline">{province.name_th}</Link>}
           </p>
         </div>
@@ -114,8 +117,13 @@ export function PlaceDetailPage() {
         </p>
       )}
 
-      <StatusControl state={state} signedIn={my.signedIn}
-        onStatus={(s) => my.setStatus(p.id, s)} onFavorite={() => my.toggleFavorite(p.id)} />
+      <div className="flex gap-2">
+        <div className="flex-1">
+          <StatusControl state={state} signedIn={my.signedIn}
+            onStatus={(s) => my.setStatus(p.id, s)} onFavorite={() => my.toggleFavorite(p.id)} />
+        </div>
+        <CartButton place={p} />
+      </div>
 
       {p.short_description && <p>{p.short_description}</p>}
       {p.highlights.length > 0 && (
@@ -123,7 +131,7 @@ export function PlaceDetailPage() {
       )}
 
       <section className="divide-y divide-line rounded-2xl border border-line bg-surface px-4">
-        <Row icon={<Clock size={18} />} label="เวลาเปิด-ปิด">{p.opening_hours_text ?? PENDING}</Row>
+        <Row icon={<Clock size={18} />} label="เวลาเปิด-ปิด">{hours ?? PENDING}</Row>
         <Row icon={<CalendarX size={18} />} label="วันหยุด">{p.closed_days_text ?? PENDING}</Row>
         <Row icon={<Banknote size={18} />} label="ค่าเข้าชม">
           คนไทย {baht(p.fee_thai)} · ต่างชาติ {baht(p.fee_foreigner)}
