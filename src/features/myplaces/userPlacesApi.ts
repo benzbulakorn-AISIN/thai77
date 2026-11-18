@@ -35,13 +35,13 @@ const norm = (r: Record<string, unknown>): UserPlace => ({
 export async function listMyPlaces(userId: string): Promise<UserPlace[]> {
   const { data, error } = await supabase.from('user_places').select(COLS).eq('owner_id', userId).order('created_at', { ascending: false });
   if (error) fail('โหลดสถานที่ส่วนตัวไม่สำเร็จ', error);
-  return ((data ?? []) as Record<string, unknown>[]).map(norm);
+  return ((data ?? []) as unknown as Record<string, unknown>[]).map(norm);
 }
 
 export async function createMyPlace(userId: string, v: UserPlaceInput): Promise<UserPlace> {
   const { data, error } = await supabase.from('user_places').insert({ ...v, owner_id: userId }).select(COLS).single();
   if (error || !data) fail('บันทึกไม่สำเร็จ', error);
-  return norm(data as Record<string, unknown>);
+  return norm(data as unknown as Record<string, unknown>);
 }
 
 export async function updateMyPlace(id: string, v: UserPlaceInput): Promise<void> {

@@ -83,7 +83,7 @@ export async function listVisits(): Promise<VisitRow[]> {
 export async function listVisitsForPlace(placeId: string): Promise<Visit[]> {
   const { data, error } = await supabase.from('visited_places').select(COLS).eq('place_id', placeId).order('visited_on', { ascending: false });
   if (error) fail('โหลดประวัติการไปไม่สำเร็จ', error);
-  return ((data ?? []) as Record<string, unknown>[]).map(toVisit);
+  return ((data ?? []) as unknown as Record<string, unknown>[]).map(toVisit);
 }
 
 /** cover (or first) photo URL for each visit */
@@ -117,7 +117,7 @@ export async function getVisit(id: string): Promise<{ visit: Visit; photos: Phot
   if (!v.data) return null;
   const raw = (p.data ?? []) as Omit<Photo, 'url'>[];
   const urls = await signUrls(raw.map((r) => r.storage_path));
-  return { visit: toVisit(v.data as Record<string, unknown>), photos: raw.map((r) => ({ ...r, url: urls.get(r.storage_path) ?? null })) };
+  return { visit: toVisit(v.data as unknown as Record<string, unknown>), photos: raw.map((r) => ({ ...r, url: urls.get(r.storage_path) ?? null })) };
 }
 
 // ---------- status sync ----------
