@@ -6,6 +6,7 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { Button } from '../../components/ui/Button';
 import { PlaceCard } from './PlaceCard';
 import { haversineKm } from './geo';
+import { usePlaceCovers } from '../placeImages/usePlaceCovers';
 import type { Category, MyPlaceState, Place, UserStatus } from './types';
 
 export type StatusFilter = 'all' | 'none' | 'want' | 'planned' | 'visited' | 'favorite';
@@ -97,6 +98,10 @@ export function PlaceList({ places, categories, districtNames, districtFilter, o
     [places, q, cat, status, districtFilter, sort, me, my.get],
   );
 
+  // covers are fetched only for the cards that are on screen
+  const visible = list.slice(0, limit);
+  const covers = usePlaceCovers(visible.map((p) => p.id));
+
   const onSort = (k: SortKey) => {
     if (k === 'distance' && !me) {
       if (!navigator.geolocation) { toast('อุปกรณ์นี้หาตำแหน่งไม่ได้', 'error'); return; }
@@ -166,16 +171,17 @@ export function PlaceList({ places, categories, districtNames, districtFilter, o
       {sort === 'season' && <p className="text-xs text-muted">ใช้ข้อมูลฤดูกาลเท่าที่มี สถานที่ที่ยังไม่มีข้อมูลจะอยู่ท้ายรายการ</p>}
 
       {places.length === 0 ? (
-        <EmptyState icon={<MapPinned size={36} />} title="ยังไม่มีสถานที่ในจังหวัดนี้" text="Admin เพิ่มได้ในหน้า Admin (Phase 5)" />
+        <EmptyState icon={<MapPinned size={36} />} title="ยังไม่มีสถานที่ในจังหวัดนี้" text="Admin เพิ่มได้ในหน้า Admin" />
       ) : list.length === 0 ? (
         <EmptyState icon={<Search size={36} />} title="ไม่พบสถานที่ตามตัวกรอง"
           action={<Button variant="secondary" onClick={resetAll}>ล้างตัวกรอง</Button>} />
       ) : (
         <div className="grid gap-3 md:grid-cols-2">
-          {list.slice(0, limit).map((p) => (
+          {visible.map((p) => (
             <PlaceCard key={p.id} place={p} category={catById.get(p.category_id)}
               districtName={p.district_id ? districtNames.get(p.district_id) : undefined}
               distanceKm={me && p.lat != null && p.lng != null ? haversineKm(me, { lat: p.lat, lng: p.lng }) : null}
+              cover={covers.get(p.id) ?? null}
               state={my.get(p.id)} signedIn={my.signedIn}
               onStatus={(s) => my.setStatus(p.id, s)} onFavorite={() => my.toggleFavorite(p.id)}
               highlighted={highlightId === p.id} />

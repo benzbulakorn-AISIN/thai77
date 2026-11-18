@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  Accessibility, ArrowLeft, Baby, Banknote, CalendarX, Camera, Car, ChevronRight, Clock, ExternalLink, Globe, Info,
+  Accessibility, Baby, Banknote, CalendarX, Camera, Car, ChevronRight, Clock, ExternalLink, Globe, ImagePlus, Info,
   Map as MapIcon, MapPin, Phone, Timer,
 } from 'lucide-react';
 import { fetchCategories, fetchPlace } from '../features/places/placesApi';
@@ -17,6 +17,10 @@ import { useAuth } from '../features/auth/AuthProvider';
 import { listVisitsForPlace, type Visit } from '../features/memories/memoriesApi';
 import { VisitSheet } from '../features/memories/VisitSheet';
 import { Stars } from '../features/memories/StarRating';
+import { orderWithCoverFirst, type PlaceImage } from '../features/placeImages/imageModel';
+import { fetchPlaceImageSet } from '../features/placeImages/placeImagesApi';
+import { ImageCredit, PlaceThumb } from '../features/placeImages/PlaceImage';
+import { PlaceHero } from '../features/placeImages/PlaceHero';
 import { supabase } from '../lib/supabase';
 import type { Category, Place, PlaceSource } from '../features/places/types';
 import { Button } from '../components/ui/Button';
@@ -55,7 +59,7 @@ export function PlaceDetailPage() {
   const { id } = useParams();
   const nav = useNavigate();
   const toast = useToast();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const my = useMyPlaces();
   const { provinces } = useReference();
   const [data, setData] = useState<{ place: Place; sources: PlaceSource[] } | null | undefined>(undefined);
@@ -65,6 +69,8 @@ export function PlaceDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [visits, setVisits] = useState<Visit[]>([]);
   const [visitOpen, setVisitOpen] = useState(false);
+  const [images, setImages] = useState<PlaceImage[]>([]);
+  const [active, setActive] = useState(0);
 
   const loadVisits = useCallback(() => {
     if (!id || !user) { setVisits([]); return; }
@@ -75,11 +81,15 @@ export function PlaceDetailPage() {
   useEffect(() => {
     if (!id) return;
     let alive = true;
-    setData(undefined);
+    setData(undefined); setImages([]); setActive(0);
     fetchPlace(id).then(async (d) => {
       if (!alive) return;
       setData(d);
       if (!d) return;
+      // pictures are optional: if loading fails the generated cover is shown
+      fetchPlaceImageSet(d.place.id)
+        .then((s) => { if (alive) setImages(orderWithCoverFirst(s.images, s.coverId)); })
+        .catch(() => undefined);
       const cats = await fetchCategories();
       if (alive) setCat(cats.find((c) => c.id === d.place.category_id));
       if (d.place.district_id) {
@@ -94,7 +104,7 @@ export function PlaceDetailPage() {
   }, [id]);
 
   if (error) return <p className="text-red-600">{error}</p>;
-  if (data === undefined) return <div className="space-y-3"><Skeleton className="h-28" /><Skeleton className="h-64" /></div>;
+  if (data === undefined) return <div className="space-y-3"><Skeleton className="h-56" /><Skeleton className="h-64" /></div>;
   if (data === null) {
     return <EmptyState icon={<MapPin size={40} />} title="ไม่พบสถานที่นี้" action={<Link to="/" className="text-primary underline">กลับหน้าแรก</Link>} />;
   }
@@ -106,26 +116,38 @@ export function PlaceDetailPage() {
   const osm = hasCoords ? `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lng}#map=16/${p.lat}/${p.lng}` : null;
   const state = my.get(p.id);
   const hours = formatOpeningHoursTh(p.opening_hours_text);
+  const current = images[Math.min(active, images.length - 1)] ?? null;
+  const goBack = () => (window.history.length > 1 ? nav(-1) : nav(province ? `/province/${province.slug}` : '/'));
 
   return (
     <div className="space-y-4">
-      <header className="flex items-start gap-2">
-        <button type="button" aria-label="กลับ" onClick={() => (window.history.length > 1 ? nav(-1) : nav(province ? `/province/${province.slug}` : '/'))}
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl hover:bg-surface-2">
-          <ArrowLeft />
-        </button>
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: cat?.color ?? '#64748B' }}>
-          <CategoryIcon name={cat?.icon} size={24} />
+      <PlaceHero
+        image={current} placeName={p.name_th} subtitle={p.name_en ?? undefined} seed={p.id}
+        color={cat?.color} icon={cat?.icon} onBack={goBack}
+        actions={isAdmin && (
+          <Link to={`/admin/places/${p.id}/images`} aria-label="จัดการรูป"
+            className="inline-flex min-h-12 items-center gap-2 rounded-full bg-black/50 px-4 text-sm text-white backdrop-blur hover:bg-black/65">
+            <ImagePlus size={18} /> จัดการรูป
+          </Link>
+        )}
+      />
+      {images.length > 1 && (
+        <div className="-mt-2 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="รูปทั้งหมด">
+          {images.map((im, i) => (
+            <button key={im.id} type="button" aria-label={`ดูรูปที่ ${i + 1}`} aria-pressed={i === active} onClick={() => setActive(i)}
+              className={`h-14 w-20 shrink-0 overflow-hidden rounded-lg border-2 ${i === active ? 'border-primary' : 'border-transparent opacity-80'}`}>
+              <PlaceThumb image={im} />
+            </button>
+          ))}
         </div>
-        <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-bold leading-tight">{p.name_th}</h1>
-          {p.name_en && <p className="text-sm text-muted">{p.name_en}</p>}
-          <p className="mt-1 text-xs text-muted">
-            {cat?.name_th}{district ? ` · ${district}` : ''}{province ? ' · ' : ''}
-            {province && <Link to={`/province/${province.slug}`} className="text-primary underline">{province.name_th}</Link>}
-          </p>
-        </div>
-      </header>
+      )}
+      <ImageCredit image={current} className="-mt-2" />
+
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
+        <span className="inline-flex items-center gap-1" style={{ color: cat?.color }}><CategoryIcon name={cat?.icon} size={16} /> <span className="text-fg">{cat?.name_th}</span></span>
+        {district && <span>· {district}</span>}
+        {province && <span>· <Link to={`/province/${province.slug}`} className="text-primary underline">{province.name_th}</Link></span>}
+      </div>
 
       <VerificationBadge place={p} />
       {p.state !== 'active' && (
@@ -249,6 +271,7 @@ export function PlaceDetailPage() {
         )}
         {p.verified_at && <p className="mt-2 text-xs text-muted">ตรวจสอบข้อมูลล่าสุด {fmtDate(p.verified_at)}</p>}
         <p className="mt-2 text-xs text-muted">เวลาเปิด-ปิดและราคาอาจเปลี่ยนแปลง ควรตรวจสอบก่อนเดินทาง</p>
+        {images.length === 0 && <p className="mt-2 text-xs text-muted">ภาพปกด้านบนเป็นภาพประกอบที่สร้างอัตโนมัติ ไม่ใช่รูปจริงของสถานที่</p>}
       </section>
 
       <VisitSheet open={visitOpen} target={{ placeId: p.id, userPlaceId: null, provinceId: p.province_id, name: p.name_th }}

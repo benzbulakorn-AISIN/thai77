@@ -17,6 +17,7 @@ import { AdminShell } from '../pages/admin/AdminShell';
 import { AdminDashboard } from '../pages/admin/AdminDashboard';
 import { AdminPlacesPage } from '../pages/admin/AdminPlacesPage';
 import { AdminPlaceEditPage } from '../pages/admin/AdminPlaceEditPage';
+import { AdminPlaceImagesPage } from '../pages/admin/AdminPlaceImagesPage';
 import { AdminCategoriesPage } from '../pages/admin/AdminCategoriesPage';
 import { AdminReviewPage } from '../pages/admin/AdminReviewPage';
 import { AdminImportPage } from '../pages/admin/AdminImportPage';
@@ -55,6 +56,7 @@ export const router = createHashRouter([
           { index: true, element: <AdminDashboard /> },
           { path: 'places', element: <AdminPlacesPage /> },
           { path: 'places/new', element: <AdminPlaceEditPage /> },
+          { path: 'places/:id/images', element: <AdminPlaceImagesPage /> },
           { path: 'places/:id', element: <AdminPlaceEditPage /> },
           { path: 'import', element: <AdminImportPage /> },
           { path: 'categories', element: <AdminCategoriesPage /> },
