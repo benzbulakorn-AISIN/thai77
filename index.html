@@ -4,11 +4,84 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0369A1" />
+    <meta name="description" content="วางแผนเที่ยวไทยให้ครบ 77 จังหวัด จัดเส้นทาง Timeline งบประมาณ และเก็บความทรงจำ" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>เที่ยวไทย 77 จังหวัด</title>
+
+    <!-- ตั้งธีม/โหมดมืดก่อน React โหลด เพื่อไม่ให้หน้าจอกะพริบสีผิดตอนเปิดเว็บ -->
+    <script>
+      (function () {
+        try {
+          var THEMES = ['ocean', 'forest', 'sunset', 'sakura', 'midnight', 'thai'];
+          var v = JSON.parse(localStorage.getItem('thai77.theme') || '{}');
+          var theme = THEMES.indexOf(v.theme) >= 0 ? v.theme : 'ocean';
+          var mode = v.mode === 'light' || v.mode === 'dark' ? v.mode : 'system';
+          var dark = mode === 'dark' || (mode === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          root.setAttribute('data-theme', theme);
+          if (dark) root.classList.add('dark');
+        } catch (e) { /* ใช้ค่าเริ่มต้น */ }
+      })();
+    </script>
+
+    <!-- Skeleton ตอนโหลดครั้งแรก (React จะแทนที่เองเมื่อพร้อม) -->
+    <style>
+      .boot { min-height: 100vh; min-height: 100dvh; display: flex; background: var(--bg, #f0f9ff); color: var(--fg, #0f172a); }
+      .boot-side { display: none; width: 240px; flex-shrink: 0; padding: 16px; background: var(--surface, #fff); border-right: 1px solid var(--line, #d9e0e8); }
+      .boot-main { flex: 1; min-width: 0; }
+      .boot-top { height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: var(--surface, #fff); border-bottom: 1px solid var(--line, #d9e0e8); }
+      .boot-body { max-width: 64rem; margin: 0 auto; padding: 16px 16px 96px; }
+      .boot-bottom { position: fixed; left: 0; right: 0; bottom: 0; height: 64px; display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; justify-items: center; background: var(--surface, #fff); border-top: 1px solid var(--line, #d9e0e8); }
+      .bk { background: var(--surface-2, #e5ebf1); border-radius: 16px; animation: bootPulse 1.4s ease-in-out infinite; }
+      .bk-row { display: flex; gap: 8px; margin: 12px 0; }
+      .bk-circle { width: 28px; height: 28px; border-radius: 9999px; }
+      @keyframes bootPulse { 50% { opacity: 0.55; } }
+      @media (min-width: 1024px) { .boot-side { display: block; } .boot-bottom { display: none; } .boot-body { padding-bottom: 32px; } }
+      @media (prefers-reduced-motion: reduce) { .bk { animation: none; } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot" aria-hidden="true">
+        <div class="boot-side">
+          <div class="bk" style="height: 28px; width: 70%; margin-bottom: 24px"></div>
+          <div class="bk" style="height: 44px; margin-bottom: 8px"></div>
+          <div class="bk" style="height: 44px; margin-bottom: 8px"></div>
+          <div class="bk" style="height: 44px; margin-bottom: 8px"></div>
+          <div class="bk" style="height: 44px; margin-bottom: 8px"></div>
+        </div>
+        <div class="boot-main">
+          <div class="boot-top">
+            <div class="bk bk-circle"></div>
+            <div class="bk" style="height: 20px; width: 140px"></div>
+            <div style="flex: 1"></div>
+            <div class="bk bk-circle" style="width: 40px; height: 40px"></div>
+          </div>
+          <div class="boot-body">
+            <div class="bk" style="height: 48px"></div>
+            <div class="bk-row">
+              <div class="bk" style="height: 40px; width: 72px; border-radius: 9999px"></div>
+              <div class="bk" style="height: 40px; width: 72px; border-radius: 9999px"></div>
+              <div class="bk" style="height: 40px; width: 72px; border-radius: 9999px"></div>
+            </div>
+            <div class="bk" style="height: 52vh; min-height: 320px"></div>
+            <div class="bk-row">
+              <div class="bk" style="height: 72px; flex: 1"></div>
+              <div class="bk" style="height: 72px; flex: 1"></div>
+              <div class="bk" style="height: 72px; flex: 1"></div>
+            </div>
+          </div>
+        </div>
+        <div class="boot-bottom">
+          <div class="bk bk-circle"></div>
+          <div class="bk bk-circle"></div>
+          <div class="bk bk-circle" style="width: 48px; height: 48px"></div>
+          <div class="bk bk-circle"></div>
+          <div class="bk bk-circle"></div>
+        </div>
+      </div>
+    </div>
+    <noscript>ต้องเปิด JavaScript เพื่อใช้งานเว็บนี้</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
