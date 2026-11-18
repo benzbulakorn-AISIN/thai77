@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+/* class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Tokens -> Tailwind utilities: bg-primary, text-muted, border-line ... */
+@theme inline {
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --color-on-primary: var(--on-primary);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --font-sans: "Noto Sans Thai", "IBM Plex Sans Thai", "Leelawadee UI", Tahoma, system-ui, sans-serif;
+}
+
+/* ---------- Light (default) ---------- */
+:root {
+  --on-primary: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #eef2f6;
+  --fg: #0f172a;
+  --muted: #475569;
+  --line: #d9e0e8;
+}
+:root, [data-theme="ocean"]  { --primary: #0369A1; --accent: #06B6D4; --bg: #F0F9FF; }
+[data-theme="forest"]        { --primary: #15803D; --accent: #84CC16; --bg: #F0FDF4; }
+[data-theme="sunset"]        { --primary: #C2410C; --accent: #F59E0B; --bg: #FFF7ED; }
+[data-theme="sakura"]        { --primary: #BE185D; --accent: #F9A8D4; --bg: #FDF2F8; }
+[data-theme="midnight"]      { --primary: #4F46E5; --accent: #22D3EE; --bg: #F8FAFC; }
+[data-theme="thai"]          { --primary: #7C2D12; --accent: #B8860B; --bg: #FBF7EF; }
+
+/* ---------- Dark ---------- */
+.dark {
+  --on-primary: #0b0f1a;
+  --surface: #131a24;
+  --surface-2: #1e2733;
+  --fg: #e5edf5;
+  --muted: #9fb0c2;
+  --line: #2a3542;
+}
+.dark, .dark[data-theme="ocean"] { --primary: #38BDF8; --bg: #0B1720; }
+.dark[data-theme="forest"]       { --primary: #4ADE80; --bg: #0C1A12; }
+.dark[data-theme="sunset"]       { --primary: #FB923C; --bg: #1C120B; }
+.dark[data-theme="sakura"]       { --primary: #F472B6; --bg: #1E0F17; }
+.dark[data-theme="midnight"]     { --primary: #818CF8; --bg: #0B0F1A; }
+.dark[data-theme="thai"]         { --primary: #E0A84F; --bg: #1A1410; }
+
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--font-sans); -webkit-tap-highlight-color: transparent; }
+
+@layer components {
+  .input {
+    @apply block w-full min-h-12 rounded-xl border border-line bg-surface px-3 text-base text-fg
+      focus:outline-2 focus:outline-primary;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

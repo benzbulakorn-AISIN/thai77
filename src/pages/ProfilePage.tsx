@@ -1,0 +1,46 @@
+import { Link } from 'react-router-dom';
+import { LogIn, LogOut, Palette, ShieldCheck } from 'lucide-react';
+import { useAuth } from '../features/auth/AuthProvider';
+import { ThemePicker } from '../features/settings/ThemePicker';
+import { Button } from '../components/ui/Button';
+import { useToast } from '../components/ui/Toast';
+import { t } from '../i18n/th';
+
+export function ProfilePage() {
+  const { user, profile, isAdmin, signOut } = useAuth();
+  const toast = useToast();
+
+  return (
+    <div className="space-y-6">
+      <section className="rounded-2xl border border-line bg-surface p-4">
+        {user ? (
+          <div className="space-y-3">
+            <div>
+              <p className="font-semibold">{profile?.display_name ?? user.email}</p>
+              <p className="text-sm text-muted">{user.email}</p>
+            </div>
+            {isAdmin && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-900">
+                <ShieldCheck size={16} /> Admin
+              </span>
+            )}
+            <Button variant="secondary" icon={<LogOut size={20} />} className="w-full"
+              onClick={async () => { await signOut(); toast('ออกจากระบบแล้ว', 'success'); }}>
+              {t.auth.logout}
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-muted">โหมดผู้เยี่ยมชม — ข้อมูลจะเก็บในเครื่องนี้เท่านั้น</p>
+            <Link to="/auth/login"><Button className="w-full" icon={<LogIn size={20} />}>{t.auth.login}</Button></Link>
+          </div>
+        )}
+      </section>
+
+      <section className="rounded-2xl border border-line bg-surface p-4">
+        <h2 className="mb-3 flex items-center gap-2 font-semibold"><Palette size={18} /> ธีม</h2>
+        <ThemePicker />
+      </section>
+    </div>
+  );
+}
