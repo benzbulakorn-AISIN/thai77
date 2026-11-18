@@ -1,7 +1,8 @@
 // Sanity checks on the production build.   Run after `npm run build`:  node scripts/check-build.mjs [dist]
-//   VITE_BASE=/thai77/            -> asset URLs must start with this (GitHub Pages sub-path)
+//   VITE_BASE=/thai77/            -> absolute asset URLs must start with this (GitHub Pages sub-path)
 //   VITE_SUPABASE_URL=...         -> must be baked into the bundle (else the site shows the red "not configured" banner)
 //   REQUIRE_SUPABASE_ENV=1        -> fail instead of warn when the Supabase variables are missing
+// Every failure is also printed as a GitHub annotation, so the reason shows on the run's Summary page.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -29,10 +30,14 @@ if (!fs.existsSync(indexPath)) {
   fails.push(`ไม่พบ ${indexPath} — Build ไม่สำเร็จหรือโฟลเดอร์ผิด`);
 } else {
   const html = fs.readFileSync(indexPath, 'utf8');
-  const urls = [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((m) => m[1]).filter((u) => !/^(https?:|data:|#|mailto:)/.test(u));
-  const bad = urls.filter((u) => !u.startsWith(BASE));
+  const urls = [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((m) => m[1]).filter((u) => !/^(https?:|data:|#|mailto:|\/\/)/.test(u));
+  const absolute = urls.filter((u) => u.startsWith('/'));
+  const relative = urls.filter((u) => !u.startsWith('/'));
+  const bad = absolute.filter((u) => !u.startsWith(BASE));
   if (bad.length) fails.push(`ลิงก์ไฟล์ใน index.html ไม่ขึ้นต้นด้วย base "${BASE}": ${bad.slice(0, 3).join(', ')} (ตั้ง VITE_BASE ผิด → เว็บจะหน้าขาวบน GitHub Pages)`);
-  else ok.push(`base path ถูกต้อง (${BASE}) · ${urls.length} ลิงก์`);
+  else ok.push(`base path ถูกต้อง (${BASE}) · ${absolute.length} ลิงก์`);
+  // "./file" links still work (resolved relative to the page), so they are only a warning
+  if (relative.length) warns.push(`index.html มีลิงก์แบบ relative: ${relative.slice(0, 3).join(', ')} — ใช้งานได้ แต่แนะนำให้ใช้ /ชื่อไฟล์ (เช่น /favicon.svg) เพื่อให้ Vite ใส่ base ให้`);
   if (!/<html[^>]*lang="th"/.test(html)) warns.push('index.html ไม่มี lang="th"');
 }
 
@@ -62,7 +67,7 @@ if (!leaked) ok.push('ไม่พบ Secret Key ในไฟล์ที่ Bui
 // 4) Supabase env injected?
 const bundle = js.map((x) => fs.readFileSync(x.f, 'utf8')).join('\n');
 if (!URL_ENV || !KEY_ENV) {
-  (REQUIRE ? fails : warns).push('ยังไม่ได้ตั้ง VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (GitHub → Settings → Secrets and variables → Actions → Variables)');
+  (REQUIRE ? fails : warns).push('ยังไม่ได้ตั้ง VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (GitHub → Settings → Secrets and variables → Actions → แท็บ Variables)');
 } else {
   if (!bundle.includes(URL_ENV)) fails.push('VITE_SUPABASE_URL ไม่ได้ถูกฝังใน Build — เว็บจะขึ้นแถบแดง "ยังไม่ได้ตั้งค่า"');
   else ok.push('VITE_SUPABASE_URL ถูกฝังใน Build แล้ว');
@@ -83,8 +88,10 @@ else {
 }
 if (!fs.existsSync(path.join(DIST, 'favicon.svg'))) warns.push('ไม่พบ favicon.svg');
 
+const gh = process.env.GITHUB_ACTIONS === 'true';
+const esc = (s) => s.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
 for (const m of ok) console.log(`✓ ${m}`);
-for (const m of warns) console.log(`⚠ ${m}`);
-for (const m of fails) console.error(`✗ ${m}`);
+for (const m of warns) { console.log(`⚠ ${m}`); if (gh) console.log(`::warning title=ตรวจ Build::${esc(m)}`); }
+for (const m of fails) { console.error(`✗ ${m}`); if (gh) console.log(`::error title=ตรวจ Build ไม่ผ่าน::${esc(m)}`); }
 if (fails.length) { console.error(`\nตรวจ Build ไม่ผ่าน ${fails.length} ข้อ`); process.exit(1); }
 console.log('\nตรวจ Build ผ่าน');
