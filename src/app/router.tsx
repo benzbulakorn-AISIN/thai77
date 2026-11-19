@@ -16,6 +16,7 @@ import { MemoryDetailPage } from '../pages/MemoryDetailPage';
 import { MyPlacesPage } from '../pages/MyPlacesPage';
 import { BackupPage } from '../pages/BackupPage';
 import { ProfilePage } from '../pages/ProfilePage';
+import { InstallPage } from '../pages/InstallPage';
 import { AdminShell } from '../pages/admin/AdminShell';
 import { AdminDashboard } from '../pages/admin/AdminDashboard';
 import { AdminPlacesPage } from '../pages/admin/AdminPlacesPage';
@@ -56,6 +57,7 @@ export const router = createHashRouter([
       { path: '/my-places', element: <MyPlacesPage /> },
       { path: '/backup', element: <BackupPage /> },
       { path: '/profile', element: <ProfilePage /> },
+      { path: '/install', element: <InstallPage /> },
       {
         path: '/admin',
         element: <AdminShell />,

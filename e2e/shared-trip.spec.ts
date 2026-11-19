@@ -72,10 +72,12 @@ test.describe('หน้าผู้ดู #/s/<token> (มือถือ)', ()
   test('ไม่ให้เสิร์ชเอนจินเก็บ และไม่ส่ง Referer', async ({ page }) => {
     await mockApi(page, [{ body: sample() }]);
     await page.goto(`/#/s/${TOKEN}`);
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
+    await expect(page.locator('meta[name="robots"]').first()).toHaveAttribute('content', 'noindex,nofollow');
     await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content', 'no-referrer');
     await page.goto('/#/');
-    await expect(page.locator('meta[name="robots"]')).toHaveCount(0);          // ถอดออกเมื่อออกจากหน้านี้
+    // noindex ของทั้งเว็บ (index.html) ยังอยู่ แต่ meta ที่หน้าแชร์เพิ่มเองถูกถอดเมื่อออกจากหน้านี้
+    await expect(page.locator('meta[name="robots"]')).toHaveCount(1);
+    await expect(page.locator('meta[name="referrer"]')).toHaveCount(0);
   });
 
   test('ซ่อนวันที่: แสดงเป็นจำนวนวัน ไม่มีวันที่', async ({ page }) => {

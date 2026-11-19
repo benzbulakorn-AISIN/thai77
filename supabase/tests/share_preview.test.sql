@@ -85,7 +85,10 @@ begin
   values (v_a, 'SECRET_TRIPNAME', 'SECRET_TRIPNOTE', array[v_p1], '2030-05-01', '2030-05-02', 37, 'car', 13,
       '{"label":"SECRET_HOME","lat":13.123456,"lng":100.654321}', '{"label":"SECRET_HOME_END","lat":13.222222,"lng":100.333333}',
       424242.42, 313131.31, 'SECRET_COVER/x.webp', gen_random_uuid(), '07:00', '20:00', 1.35) returning id into v_trip;
-  insert into public.trip_members (trip_id, user_id, role) values (v_trip, v_a, 'owner'), (v_trip, v_e, 'editor');
+  -- ฐานข้อมูลจริงเพิ่มเจ้าของเข้า trip_members ให้เองผ่าน trigger (on_trip_created) จึงไม่ต้องใส่ owner เอง
+  -- เพิ่มเฉพาะ Editor (on conflict กันไว้เผื่อบางสภาพแวดล้อมไม่มี trigger)
+  insert into public.trip_members (trip_id, user_id, role) values (v_trip, v_a, 'owner') on conflict (trip_id, user_id) do nothing;
+  insert into public.trip_members (trip_id, user_id, role) values (v_trip, v_e, 'editor') on conflict (trip_id, user_id) do nothing;
   insert into public.trips (owner_id, name, start_date, end_date) values (v_b, 'ทริปของคนอื่น', '2030-08-01', '2030-08-02') returning id into v_trip_other;
 
   insert into public.trip_days (trip_id, day_index, date, start_time, is_rest_day, title, notes) values (v_trip, 1, '2030-05-01', '07:30', false, 'SECRET_DAYTITLE', 'SECRET_DAYNOTE') returning id into v_d1;

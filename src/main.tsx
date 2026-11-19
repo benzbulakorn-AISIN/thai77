@@ -11,8 +11,15 @@ import { AuthProvider } from './features/auth/AuthProvider';
 import { ThemeProvider } from './features/settings/ThemeProvider';
 import { CartProvider } from './features/cart/CartProvider';
 import { GuestMigrationDialog } from './features/guest/GuestMigrationDialog';
+import { UpdateBanner } from './features/pwa/UpdateBanner';
+import './features/pwa/installStore'; // starts listening for the browser's "install" offer before the page finishes loading
+import { startPwa } from './features/pwa/registerSW';
+import { watchThemeColor } from './features/pwa/themeColor';
 import { ToastProvider } from './components/ui/Toast';
 import './index.css';
+
+startPwa();
+watchThemeColor();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -23,6 +30,7 @@ createRoot(document.getElementById('root')!).render(
             <CartProvider>
               <RouterProvider router={router} />
               <GuestMigrationDialog />
+              <UpdateBanner />
             </CartProvider>
           </ToastProvider>
         </ThemeProvider>
