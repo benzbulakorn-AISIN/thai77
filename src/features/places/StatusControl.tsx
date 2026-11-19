@@ -1,10 +1,12 @@
 import { Bookmark, CircleCheck, CircleDashed, Heart } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../components/ui/Toast';
+import { AUTH_LOADING_ERROR, GUEST_FULL_ERROR, GUEST_NOTICE, MAX_GUEST_ENTRIES } from '../guest/guestModel';
+import { guestStore } from '../guest/guestStore';
 import type { MyPlaceState, UserStatus } from './types';
 
 type Props = {
   state: MyPlaceState;
+  /** false = guest: saving still works, but only on this device */
   signedIn: boolean;
   onStatus: (s: UserStatus) => Promise<void>;
   onFavorite: () => Promise<boolean>;
@@ -17,14 +19,26 @@ const OPTIONS: { s: UserStatus; label: string; Icon: typeof Bookmark }[] = [
   { s: 'visited', label: 'ไปมาแล้ว', Icon: CircleCheck },
 ];
 
+// the long explanation is shown once per page load; later saves only show a short message
+let guestNoticeShown = false;
+
 /** Segmented status + favorite heart. "อยู่ในแผนทริป" is set by the Trip Cart (Part 4.3). */
 export function StatusControl({ state, signedIn, onStatus, onFavorite, compact = false }: Props) {
   const toast = useToast();
-  const nav = useNavigate();
 
   const guard = async (fn: () => Promise<unknown>, ok?: string) => {
-    if (!signedIn) { toast('เข้าสู่ระบบก่อนเพื่อบันทึก', 'info'); nav('/auth/login'); return; }
-    try { await fn(); if (ok) toast(ok, 'success'); } catch { toast('บันทึกไม่สำเร็จ ลองใหม่', 'error'); }
+    try {
+      await fn();
+      if (signedIn) { if (ok) toast(ok, 'success'); return; }
+      if (!guestStore.getSnapshot().persisted) { toast('เครื่องนี้ไม่ยอมให้บันทึกถาวร — ข้อมูลจะหายเมื่อปิดหน้านี้ เข้าสู่ระบบเพื่อเก็บถาวร', 'info'); return; }
+      if (!guestNoticeShown) { guestNoticeShown = true; toast(GUEST_NOTICE, 'info'); return; }
+      if (ok) toast(ok, 'success');
+    } catch (e) {
+      const m = (e as Error)?.message;
+      if (m === AUTH_LOADING_ERROR) toast('กำลังตรวจสอบบัญชี รอสักครู่แล้วลองใหม่', 'info');
+      else if (m === GUEST_FULL_ERROR) toast(`เก็บในเครื่องได้สูงสุด ${MAX_GUEST_ENTRIES} แห่ง — เข้าสู่ระบบเพื่อเก็บเพิ่ม`, 'error');
+      else toast('บันทึกไม่สำเร็จ ลองใหม่', 'error');
+    }
   };
 
   const h = compact ? 'min-h-10 text-xs' : 'min-h-12 text-sm';

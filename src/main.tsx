@@ -10,6 +10,7 @@ import { ErrorBoundary } from './app/ErrorBoundary';
 import { AuthProvider } from './features/auth/AuthProvider';
 import { ThemeProvider } from './features/settings/ThemeProvider';
 import { CartProvider } from './features/cart/CartProvider';
+import { GuestMigrationDialog } from './features/guest/GuestMigrationDialog';
 import { ToastProvider } from './components/ui/Toast';
 import './index.css';
 
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')!).render(
           <ToastProvider>
             <CartProvider>
               <RouterProvider router={router} />
+              <GuestMigrationDialog />
             </CartProvider>
           </ToastProvider>
         </ThemeProvider>

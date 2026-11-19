@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { Bookmark, Camera, CalendarDays, ChevronRight, Compass, LogIn, Luggage, MapPinPlus, Users } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthProvider';
 import { useCart } from '../features/cart/CartProvider';
-import { useProvinceStats, useReference } from '../features/provinces/useGeoData';
+import { useReference } from '../features/provinces/useGeoData';
+import { useProvinceStatsWithGuest as useProvinceStats } from '../features/guest/useStatsWithGuest';
 import { useWantList } from '../features/explore/useWantList';
 import { regionCards } from '../features/explore/exploreModel';
 import { listTrips, type TripSummary } from '../features/trips/tripsApi';
@@ -61,7 +62,7 @@ export function HomePage() {
   const greeting = greetingForHour(new Date().getHours());
 
   const tiles = [
-    { to: '/explore', Icon: Bookmark, label: 'ที่สนใจ', sub: user ? `${want.items.length} แห่ง` : 'เข้าสู่ระบบเพื่อใช้' },
+    { to: '/explore', Icon: Bookmark, label: 'ที่สนใจ', sub: `${want.items.length} แห่ง${user ? '' : ' · ในเครื่องนี้'}` },
     { to: '/cart', Icon: Luggage, label: 'ตะกร้าทริป', sub: `${cart.items.length} แห่ง` },
     { to: '/memories', Icon: Camera, label: 'ความทรงจำ', sub: user ? `ไปแล้ว ${totals.visited} แห่ง` : 'เข้าสู่ระบบเพื่อใช้' },
     { to: '/my-places', Icon: MapPinPlus, label: 'สถานที่ส่วนตัว', sub: 'เพิ่มที่ของคุณเอง' },
@@ -82,6 +83,9 @@ export function HomePage() {
             <p className="text-sm text-muted">ไปแล้ว</p>
             <p className="text-2xl font-bold">{progress.done}/{TOTAL_PROVINCES} <span className="text-base font-normal">จังหวัด</span></p>
             <p className="text-sm text-muted">{totals.visited} สถานที่ที่เคยไป · ในระบบ {totals.total} แห่ง</p>
+            {!authLoading && !user && totals.visited > 0 && (
+              <p className="mt-1 text-xs text-muted">นับจากที่บันทึกไว้ในเครื่องนี้ · เข้าสู่ระบบเพื่อเก็บถาวร</p>
+            )}
           </div>
         </div>
 

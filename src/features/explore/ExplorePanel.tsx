@@ -22,6 +22,7 @@ type Props = {
   onPickProvince: (pcode: string) => void;
   onOpenProvince: (slug: string) => void;
   onPickResult: (pcode: string) => void;
+  /** signedIn = false -> the list is the guest's, kept on this device */
   want: { items: WantPlace[]; loading: boolean; error: string | null; signedIn: boolean };
   provinceName: (provinceId: string) => string;
   inCart: (placeId: string) => boolean;
@@ -32,6 +33,7 @@ type Props = {
 export function ExplorePanel(p: Props) {
   const selected = p.rows.find((r) => r.pcode === p.selectedPcode) ?? null;
   const searching = p.query.trim() !== '';
+  const guest = !p.want.signedIn;
 
   return (
     <div className="space-y-5 pt-2">
@@ -120,31 +122,36 @@ export function ExplorePanel(p: Props) {
       {/* interested places */}
       <section aria-label="ที่สนใจ" className="space-y-2">
         <h3 className="font-semibold">ที่สนใจ <span className="text-sm font-normal text-muted">({p.want.items.length})</span></h3>
-        {!p.want.signedIn ? (
-          <p className="rounded-xl bg-surface-2 p-3 text-sm text-muted">
-            <Link to="/auth/login" className="text-primary underline">เข้าสู่ระบบ</Link> เพื่อเก็บรายการที่อยากไป
-            (ใส่ทริปได้เลยโดยไม่ต้องเข้าสู่ระบบ)
-          </p>
-        ) : p.want.loading ? (
+        {p.want.loading && p.want.items.length === 0 ? (
           <Skeleton className="h-14" />
         ) : p.want.error ? (
           <p className="text-sm text-red-600">{p.want.error}</p>
         ) : p.want.items.length === 0 ? (
-          <p className="text-sm text-muted">ยังไม่มี — เปิดหน้าจังหวัด แล้วกด “อยากไป” ที่สถานที่ที่สนใจ</p>
+          <p className="text-sm text-muted">
+            ยังไม่มี — เปิดหน้าจังหวัด แล้วกด “อยากไป” ที่สถานที่ที่สนใจ
+            {guest && <> (บันทึกไว้ในเครื่องนี้ได้เลย · <Link to="/auth/login" className="text-primary underline">เข้าสู่ระบบ</Link> เพื่อเก็บถาวร)</>}
+          </p>
         ) : (
-          <ul className="divide-y divide-line overflow-hidden rounded-2xl border border-line">
-            {p.want.items.slice(0, 30).map((w) => (
-              <li key={w.id} className="flex items-center gap-1 pl-3">
-                <Link to={`/place/${w.id}`} className="min-w-0 flex-1 py-2">
-                  <span className="block truncate font-medium">{w.name_th}</span>
-                  <span className="block truncate text-xs text-muted">{p.provinceName(w.province_id)}</span>
-                </Link>
-                {p.inCart(w.id) && <span className="inline-flex items-center gap-1 text-xs text-green-700"><Check size={14} /> ในตะกร้า</span>}
-                <button type="button" aria-label={`เอา ${w.name_th} ออกจากที่สนใจ`} onClick={() => p.onRemoveWant(w.id)}
-                  className="flex h-12 w-12 shrink-0 items-center justify-center text-muted"><X size={18} /></button>
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className="divide-y divide-line overflow-hidden rounded-2xl border border-line">
+              {p.want.items.slice(0, 30).map((w) => (
+                <li key={w.id} className="flex items-center gap-1 pl-3">
+                  <Link to={`/place/${w.id}`} className="min-w-0 flex-1 py-2">
+                    <span className="block truncate font-medium">{w.name_th}</span>
+                    <span className="block truncate text-xs text-muted">{p.provinceName(w.province_id)}</span>
+                  </Link>
+                  {p.inCart(w.id) && <span className="inline-flex items-center gap-1 text-xs text-green-700"><Check size={14} /> ในตะกร้า</span>}
+                  <button type="button" aria-label={`เอา ${w.name_th} ออกจากที่สนใจ`} onClick={() => p.onRemoveWant(w.id)}
+                    className="flex h-12 w-12 shrink-0 items-center justify-center text-muted"><X size={18} /></button>
+                </li>
+              ))}
+            </ul>
+            {guest && (
+              <p className="text-xs text-muted">
+                บันทึกไว้ในเครื่องนี้ · <Link to="/auth/login" className="text-primary underline">เข้าสู่ระบบ</Link> เพื่อเก็บถาวรและใช้ข้ามเครื่อง (ข้อมูลจะถูกย้ายให้)
+              </p>
+            )}
+          </>
         )}
       </section>
 
