@@ -9,6 +9,7 @@ import { CartPage } from '../pages/CartPage';
 import { TripsPage } from '../pages/TripsPage';
 import { CalendarPage } from '../pages/CalendarPage';
 import { TripPage } from '../pages/TripPage';
+import { SharedTripPage } from '../pages/SharedTripPage';
 import { BudgetPage } from '../pages/BudgetPage';
 import { MemoriesPage } from '../pages/MemoriesPage';
 import { MemoryDetailPage } from '../pages/MemoryDetailPage';
@@ -35,6 +36,8 @@ const NotFound = () => (
 
 // HashRouter => refresh on any route never 404s on GitHub Pages
 export const router = createHashRouter([
+  // public read-only share page: OUTSIDE the app shell (no menu, no cart bar, no sign-in needed)
+  { path: '/s/:token', element: <SharedTripPage /> },
   {
     element: <AppShell />,
     children: [

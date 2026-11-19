@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  ArrowLeft, CalendarDays, Copy, Coffee, Download, List, Map as MapIcon, Plus, Route, Settings, TriangleAlert, Users, Rows3, Wallet,
+  ArrowLeft, CalendarDays, Copy, Coffee, Download, List, Map as MapIcon, Plus, Route, Settings, Share2, TriangleAlert, Users, Rows3, Wallet,
 } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthProvider';
 import {
@@ -14,6 +14,7 @@ import { AddItemSheet } from '../features/trips/AddItemSheet';
 import { TripSettingsSheet, type TripSettings } from '../features/trips/TripSettingsSheet';
 import { RouteMap, type RoutePoint } from '../features/trips/RouteMap';
 import { ItemIcon } from '../features/trips/itemIcons';
+import { ShareSheet } from '../features/share/ShareSheet';
 import { buildTripIcs, downloadIcs, icsFileName } from '../features/calendar/tripIcs';
 import { MODE_LABEL } from '../features/routing/provider';
 import { speedNote } from '../features/routing/scheduler';
@@ -42,6 +43,7 @@ export function TripPage() {
   const [editing, setEditing] = useState<TripItem | null>(null);
   const [adding, setAdding] = useState(false);
   const [settings, setSettings] = useState(false);
+  const [sharing, setSharing] = useState(false);
   const [confirmReplan, setConfirmReplan] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -198,15 +200,21 @@ export function TripPage() {
       </section>
       <p className="text-xs text-muted">ⓘ เส้นทางแนะนำเบื้องต้น — {speedNote(trip.mode, Number(trip.road_factor) || 1.3)} ไม่ใช่เส้นทางถนนจริง</p>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className={`grid gap-2 ${isOwner ? 'grid-cols-3' : 'grid-cols-2'}`}>
         <Link to={`/calendar?m=${trip.start_date.slice(0, 7)}&d=${trip.start_date}`}
-          className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line bg-surface text-sm">
-          <CalendarDays size={18} /> ดูในปฏิทิน
+          className="flex min-h-12 items-center justify-center gap-1.5 rounded-xl border border-line bg-surface px-1 text-xs sm:text-sm">
+          <CalendarDays size={18} /> ปฏิทิน
         </Link>
         <button type="button" onClick={exportIcs}
-          className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-primary text-sm text-primary">
+          className="flex min-h-12 items-center justify-center gap-1.5 rounded-xl border border-line bg-surface px-1 text-xs sm:text-sm">
           <Download size={18} /> ส่งออก .ics
         </button>
+        {isOwner && (
+          <button type="button" onClick={() => setSharing(true)}
+            className="flex min-h-12 items-center justify-center gap-1.5 rounded-xl border border-primary px-1 text-xs text-primary sm:text-sm">
+            <Share2 size={18} /> แชร์ทริป
+          </button>
+        )}
       </div>
 
       {unscheduled.length > 0 && (
@@ -326,6 +334,7 @@ export function TripPage() {
       <AddItemSheet open={adding} onClose={() => setAdding(false)} onAdd={addItem} />
       <TripSettingsSheet open={settings} trip={trip} isOwner={isOwner} onClose={() => setSettings(false)} onSave={saveSettings}
         onDelete={async () => { await deleteTrip(trip.id); toast('ลบทริปแล้ว', 'success'); nav('/trips', { replace: true }); }} />
+      {isOwner && <ShareSheet open={sharing} tripId={trip.id} tripName={trip.name} onClose={() => setSharing(false)} />}
       <ConfirmDialog open={confirmReplan} busy={busy} title="จัดเส้นทางและสร้างแผนเที่ยวใหม่?" confirmText="จัดใหม่"
         message={'ระบบจะเรียงสถานที่ทั้งหมดใหม่และกระจายไปแต่ละวัน\n• มื้ออาหารอัตโนมัติจะถูกสร้างใหม่\n• กิจกรรมที่เพิ่มเองจะอยู่วันเดิม (ที่ล็อกเวลาไว้จะถูกแทรกตามเวลา)\n• กด “คำนวณจากแผน” ในหน้างบเพื่ออัปเดตค่าใช้จ่าย'}
         onCancel={() => setConfirmReplan(false)} onConfirm={() => void doReplan()} />
