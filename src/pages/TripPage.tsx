@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  ArrowLeft, CalendarDays, Copy, Coffee, List, Map as MapIcon, Plus, Route, Settings, TriangleAlert, Users, Rows3, Wallet,
+  ArrowLeft, CalendarDays, Copy, Coffee, Download, List, Map as MapIcon, Plus, Route, Settings, TriangleAlert, Users, Rows3, Wallet,
 } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthProvider';
 import {
@@ -14,6 +14,7 @@ import { AddItemSheet } from '../features/trips/AddItemSheet';
 import { TripSettingsSheet, type TripSettings } from '../features/trips/TripSettingsSheet';
 import { RouteMap, type RoutePoint } from '../features/trips/RouteMap';
 import { ItemIcon } from '../features/trips/itemIcons';
+import { buildTripIcs, downloadIcs, icsFileName } from '../features/calendar/tripIcs';
 import { MODE_LABEL } from '../features/routing/provider';
 import { speedNote } from '../features/routing/scheduler';
 import { fmtDateTh, fmtDuration, fmtMin } from '../features/routing/time';
@@ -71,6 +72,14 @@ export function TripPage() {
   // ---------- mutations (optimistic where cheap) ----------
   const run = async (fn: () => Promise<unknown>, ok?: string) => {
     try { await fn(); if (ok) toast(ok, 'success'); } catch (e) { toast((e as Error).message || 'ไม่สำเร็จ', 'error'); await reload(); }
+  };
+
+  const exportIcs = () => {
+    try {
+      const text = buildTripIcs(trip, days, items);
+      downloadIcs(icsFileName(trip.name, trip.start_date), text);
+      toast('ส่งออกไฟล์ปฏิทินแล้ว — เปิดไฟล์เพื่อเพิ่มลง Google / Apple / Outlook Calendar', 'success');
+    } catch { toast('ส่งออกไม่สำเร็จ ลองใหม่', 'error'); }
   };
 
   const reorder = (dayId: string, ids: string[]) => {
@@ -189,6 +198,17 @@ export function TripPage() {
       </section>
       <p className="text-xs text-muted">ⓘ เส้นทางแนะนำเบื้องต้น — {speedNote(trip.mode, Number(trip.road_factor) || 1.3)} ไม่ใช่เส้นทางถนนจริง</p>
 
+      <div className="grid grid-cols-2 gap-2">
+        <Link to={`/calendar?m=${trip.start_date.slice(0, 7)}&d=${trip.start_date}`}
+          className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line bg-surface text-sm">
+          <CalendarDays size={18} /> ดูในปฏิทิน
+        </Link>
+        <button type="button" onClick={exportIcs}
+          className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-primary text-sm text-primary">
+          <Download size={18} /> ส่งออก .ics
+        </button>
+      </div>
+
       {unscheduled.length > 0 && (
         <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-3 text-amber-900 dark:bg-amber-950 dark:text-amber-100">
           <p className="flex-1 text-sm">มี {unscheduled.length} รายการที่ยังไม่จัดวัน</p>
@@ -290,7 +310,7 @@ export function TripPage() {
               ) : view.items.length === 0 ? (
                 <EmptyState icon={<CalendarDays size={36} />} title={view.day.is_rest_day ? 'วันพัก 🛌' : 'ยังไม่มีกิจกรรม'} text="เพิ่มกิจกรรม หรือย้ายสถานที่มาวันนี้" />
               ) : (
-                <TimelineView view={view} onOpen={setEditing} onReorder={(ids) => reorder(view.day.id, ids)} />
+                <TimelineView view={view} mode={trip.mode} onOpen={setEditing} onReorder={(ids) => reorder(view.day.id, ids)} />
               )}
 
               <p className="text-xs text-muted">

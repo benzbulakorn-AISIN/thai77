@@ -7,6 +7,7 @@ import { ProvincePage } from '../pages/ProvincePage';
 import { PlaceDetailPage } from '../pages/PlaceDetailPage';
 import { CartPage } from '../pages/CartPage';
 import { TripsPage } from '../pages/TripsPage';
+import { CalendarPage } from '../pages/CalendarPage';
 import { TripPage } from '../pages/TripPage';
 import { BudgetPage } from '../pages/BudgetPage';
 import { MemoriesPage } from '../pages/MemoriesPage';
@@ -44,6 +45,7 @@ export const router = createHashRouter([
       { path: '/place/:id', element: <PlaceDetailPage /> },
       { path: '/cart', element: <CartPage /> },
       { path: '/trips', element: <TripsPage /> },
+      { path: '/calendar', element: <CalendarPage /> },
       { path: '/trips/:id', element: <TripPage /> },
       { path: '/trips/:id/budget', element: <BudgetPage /> },
       { path: '/memories', element: <MemoriesPage /> },

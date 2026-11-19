@@ -68,9 +68,14 @@ export function TripsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <h1 className="text-2xl font-bold">ทริปของฉัน</h1>
-        <Link to="/cart"><Button icon={<Plus size={20} />}>สร้างทริป{cart.items.length ? ` (${cart.items.length})` : ''}</Button></Link>
+        <div className="flex items-center gap-2">
+          <Link to="/calendar" className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-line bg-surface px-3 text-sm font-medium">
+            <CalendarDays size={18} /> ปฏิทิน
+          </Link>
+          <Link to="/cart"><Button icon={<Plus size={20} />}>สร้างทริป{cart.items.length ? ` (${cart.items.length})` : ''}</Button></Link>
+        </div>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
       {!trips && !error && <div className="space-y-2"><Skeleton className="h-20" /><Skeleton className="h-20" /></div>}
