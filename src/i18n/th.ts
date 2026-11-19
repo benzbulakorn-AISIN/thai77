@@ -2,7 +2,7 @@ export const th = {
   appName: 'เที่ยวไทย 77',
   slogan: 'เที่ยวให้ครบ 77 จังหวัด',
   nav: {
-    home: 'หน้าแรก', explore: 'สำรวจ', trips: 'ทริป', memories: 'ความทรงจำ', profile: 'โปรไฟล์',
+    home: 'หน้าแรก', explore: 'สำรวจ', trips: 'ทริป', memories: 'ความทรงจำ', profile: 'โปรไฟล์', search: 'ค้นหา',
     main: 'เมนูหลัก', side: 'เมนูข้าง', collapse: 'พับเมนู', expand: 'ขยายเมนู',
   },
   common: { loading: 'กำลังโหลด…', retry: 'ลองใหม่', save: 'บันทึก', cancel: 'ยกเลิก', offline: 'ออฟไลน์อยู่ ข้อมูลอาจไม่อัปเดต' },

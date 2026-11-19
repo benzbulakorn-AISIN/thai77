@@ -2,6 +2,7 @@ import { createHashRouter, Link } from 'react-router-dom';
 import { AppShell } from '../components/layout/AppShell';
 import { HomePage } from '../pages/HomePage';
 import { ExplorePage } from '../pages/ExplorePage';
+import { SearchPage } from '../pages/SearchPage';
 import { ProvincePage } from '../pages/ProvincePage';
 import { PlaceDetailPage } from '../pages/PlaceDetailPage';
 import { CartPage } from '../pages/CartPage';
@@ -38,6 +39,7 @@ export const router = createHashRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/explore', element: <ExplorePage /> },
+      { path: '/search', element: <SearchPage /> },
       { path: '/province/:slug', element: <ProvincePage /> },
       { path: '/place/:id', element: <PlaceDetailPage /> },
       { path: '/cart', element: <CartPage /> },

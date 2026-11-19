@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { ChevronsLeft, ChevronsRight, MapPinned, User, WifiOff } from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, MapPinned, Search, User, WifiOff } from 'lucide-react';
 import { NAV_ITEMS } from './navItems';
 import { t } from '../../i18n/th';
 import { env } from '../../lib/env';
@@ -54,6 +54,7 @@ export function AppShell() {
   const cartCount = items.length;
   // the Explore page fills the whole area between the top bar and the bottom menu (map + sheet)
   const bleed = pathname === '/explore';
+  const onSearch = pathname === '/search';
 
   return (
     <div className="min-h-dvh bg-bg text-fg lg:flex" style={{ '--nav-w': collapsed ? '72px' : '240px' } as CSSProperties}>
@@ -94,6 +95,10 @@ export function AppShell() {
             </span>
           </Link>
           <p className="hidden min-w-0 flex-1 truncate text-sm text-muted lg:block">{t.slogan}</p>
+          <Link to="/search" aria-label={t.nav.search} aria-current={onSearch ? 'page' : undefined}
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${onSearch ? 'bg-primary text-on-primary' : 'text-fg hover:bg-surface-2'}`}>
+            <Search size={22} />
+          </Link>
           <ProfileButton />
         </header>
 
