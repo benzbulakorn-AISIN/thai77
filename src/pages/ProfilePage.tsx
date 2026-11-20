@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useAuth } from '../features/auth/AuthProvider';
-import { ThemePicker } from '../features/settings/ThemePicker';
+
+
+
 import { Link } from 'react-router-dom';
 import { Camera, ChevronRight, DatabaseBackup, LogIn, LogOut, MapPinPlus, Palette, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthProvider';
@@ -59,6 +59,7 @@ export function ProfilePage() {
         <h2 className="mb-3 flex items-center gap-2 font-semibold"><Palette size={18} /> ธีม</h2>
         <ThemePicker />
       </section>
+      
       <InstallCard />
 
       {user && (
