@@ -26,6 +26,25 @@ export class BudgetConflictError extends Error {
   }
 }
 
+export type AutoBudgetRowInput = {
+  category_id: string;
+  day_id: string | null;
+  trip_item_id: string | null;
+  label: string;
+  estimated: number;
+};
+
+/**
+ * Carries the complete intended replacement so the UI can verify the database
+ * after a lost/ambiguous network response instead of retrying the mutation.
+ */
+export class BudgetAutoReplaceError extends Error {
+  constructor(message: string, public readonly expected: AutoBudgetRowInput[]) {
+    super(message);
+    this.name = 'BudgetAutoReplaceError';
+  }
+}
+
 function normalizeBudgetItem(data: Record<string, unknown>): BudgetItem {
   return {
     ...(data as unknown as BudgetItem),
@@ -175,18 +194,60 @@ export async function deleteBudgetItem(item: BudgetItem): Promise<void> {
   }
 }
 
-/** Replace all auto rows of a trip with freshly computed ones. */
-export async function replaceAutoRows(tripId: string, userId: string, rows: AutoRow[], cats: BudgetCategory[]) {
-  const del = await supabase.from('budget_items').delete().eq('trip_id', tripId).eq('is_auto', true);
-  if (del.error) fail('คำนวณใหม่ไม่สำเร็จ', del.error);
+/** Convert every calculated row to the exact payload accepted by the atomic RPC. */
+export function prepareAutoRows(rows: AutoRow[], cats: BudgetCategory[]): AutoBudgetRowInput[] {
   const bySlug = new Map(cats.map((c) => [c.slug, c.id]));
-  const ins = rows
-    .filter((r) => bySlug.has(r.slug))
-    .map((r) => ({
-      trip_id: tripId, category_id: bySlug.get(r.slug), day_id: r.day_id, trip_item_id: r.trip_item_id,
-      label: r.label.slice(0, 200), estimated: r.estimated, is_shared: true, is_auto: true, created_by: userId,
-    }));
-  if (!ins.length) return;
-  const { error } = await supabase.from('budget_items').insert(ins);
-  if (error) fail('คำนวณใหม่ไม่สำเร็จ', error);
+  return rows.map((r) => {
+    const categoryId = bySlug.get(r.slug);
+    if (!categoryId) throw new Error(`ไม่พบหมวดงบสำหรับรายการอัตโนมัติ: ${r.slug}`);
+    return {
+      category_id: categoryId,
+      day_id: r.day_id,
+      trip_item_id: r.trip_item_id,
+      label: r.label.slice(0, 200),
+      estimated: r.estimated,
+    };
+  });
+}
+
+const autoRowSignature = (r: AutoBudgetRowInput) => JSON.stringify([
+  r.category_id, r.day_id, r.trip_item_id, r.label, Math.round(r.estimated * 100),
+]);
+
+/** Compare multisets, not database ids/order: the transaction creates new ids. */
+export function autoRowsMatchExpected(items: BudgetItem[], expected: AutoBudgetRowInput[]): boolean {
+  const actual = items.filter((item) => item.is_auto);
+  if (actual.length !== expected.length || actual.some((item) => (
+    !item.is_shared || item.actual != null || item.paid_by != null || item.spent_at != null || item.notes != null
+  ))) return false;
+  const a = actual.map(autoRowSignature).sort();
+  const b = expected.map(autoRowSignature).sort();
+  return a.every((signature, index) => signature === b[index]);
+}
+
+/**
+ * Replace all auto rows with one PostgreSQL RPC call. The migration performs
+ * DELETE + INSERT in the same transaction, so an invalid row rolls everything
+ * back and the previous estimates remain intact.
+ */
+export async function replaceAutoRows(
+  tripId: string,
+  rows: AutoRow[],
+  cats: BudgetCategory[],
+): Promise<AutoBudgetRowInput[]> {
+  const expected = prepareAutoRows(rows, cats);
+  const { data, error } = await supabase.rpc('replace_budget_auto_items', {
+    p_trip_id: tripId,
+    p_rows: expected,
+  });
+  if (error) {
+    console.error('[thai77] คำนวณใหม่ไม่สำเร็จ', (error as { message?: string })?.message);
+    throw new BudgetAutoReplaceError('คำนวณใหม่ไม่สำเร็จ', expected);
+  }
+
+  const inserted = ((data ?? []) as Record<string, unknown>[]).map(normalizeBudgetItem);
+  if (!autoRowsMatchExpected(inserted, expected)) {
+    throw new BudgetAutoReplaceError('ตรวจสอบผลคำนวณใหม่ไม่สำเร็จ', expected);
+  }
+  return expected;
 }

@@ -6,8 +6,9 @@ import { loadTrip, updateTrip } from '../features/trips/tripsApi';
 import { computeTrip } from '../features/trips/schedule';
 import { fmtDateTh } from '../features/routing/time';
 import {
-  addBudgetItem, clearBudgetActual, deleteBudgetItem, fetchBudgetCategories, fetchBudgetItems, fetchFuelDefaults, fetchMembers, replaceAutoRows,
-  updateBudgetItem, type BudgetCategory, type BudgetItem, type BudgetItemInput, type Member,
+  addBudgetItem, autoRowsMatchExpected, BudgetAutoReplaceError, clearBudgetActual, deleteBudgetItem, fetchBudgetCategories,
+  fetchBudgetItems, fetchFuelDefaults, fetchMembers, replaceAutoRows, updateBudgetItem,
+  type AutoBudgetRowInput, type BudgetCategory, type BudgetItem, type BudgetItemInput, type Member,
 } from '../features/budget/budgetApi';
 import {
   applyPendingBudgetAction, BUDGET_UNDO_MS, createPendingBudgetAction, databaseHasActionResult,
@@ -63,6 +64,7 @@ export function BudgetPage() {
   const [confirmCalc, setConfirmCalc] = useState(false);
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState<PendingState | null>(null);
+  const [recalcUncertain, setRecalcUncertain] = useState<AutoBudgetRowInput[] | null>(null);
   const [undoSeconds, setUndoSeconds] = useState(Math.ceil(BUDGET_UNDO_MS / 1000));
   const pendingRef = useRef<PendingState | null>(null);
   const undoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -95,6 +97,7 @@ export function BudgetPage() {
     undoTimerRef.current = null;
     pendingRef.current = null;
     setPending(null);
+    setRecalcUncertain(null);
   }, [id]);
   useEffect(() => {
     if (pending?.phase !== 'undoable') return;
@@ -104,14 +107,14 @@ export function BudgetPage() {
     return () => clearInterval(interval);
   }, [pending]);
   useEffect(() => {
-    if (!pending) return;
+    if (!pending && !recalcUncertain) return;
     const warnBeforeClose = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = '';
     };
     window.addEventListener('beforeunload', warnBeforeClose);
     return () => window.removeEventListener('beforeunload', warnBeforeClose);
-  }, [pending]);
+  }, [pending, recalcUncertain]);
 
   const clearPendingState = useCallback((token: string) => {
     if (pendingRef.current?.action.token !== token) return;
@@ -226,10 +229,12 @@ export function BudgetPage() {
   const fp = fuelParams(trip, defaults);
   const headStatus: BudgetStatus = s.actual > 0 ? s.spendStatus : s.planStatus;
   const autoCount = lines.filter((l) => l.is_auto).length;
+  const actionsLocked = pending !== null || recalcUncertain !== null;
 
   // ---------- actions ----------
   const recalc = async () => {
     setBusy(true);
+    let expected: AutoBudgetRowInput[] | null = null;
     try {
       const manual = lines.filter((l) => !l.is_auto);
       const fuelCat = cats.find((c) => c.slug === 'fuel')?.id;
@@ -239,11 +244,53 @@ export function BudgetPage() {
         manualItemIds: new Set(manual.map((l) => l.trip_item_id).filter(Boolean) as string[]),
         manualFuelDays: new Set(manual.filter((l) => l.category_id === fuelCat && l.day_id).map((l) => l.day_id as string)),
       });
-      await replaceAutoRows(trip.id, user.id, rows, cats);
-      setLines(await fetchBudgetItems(trip.id));
-      toast(`คำนวณแล้ว ${rows.length} รายการ`, 'success');
-    } catch (e) { toast((e as Error).message, 'error'); }
+      expected = await replaceAutoRows(trip.id, rows, cats);
+      const fresh = await fetchBudgetItems(trip.id);
+      if (!autoRowsMatchExpected(fresh, expected)) throw new BudgetAutoReplaceError('ตรวจสอบผลคำนวณใหม่ไม่สำเร็จ', expected);
+      setLines(fresh);
+      setRecalcUncertain(null);
+      toast(`คำนวณแล้ว ${expected.length} รายการ`, 'success');
+    } catch (e) {
+      const intended = e instanceof BudgetAutoReplaceError ? e.expected : expected;
+      if (!intended) {
+        toast((e as Error).message, 'error');
+      } else {
+        try {
+          // A response can be lost after PostgreSQL committed. Read first;
+          // never retry the replacement blindly.
+          const fresh = await fetchBudgetItems(trip.id);
+          setLines(fresh);
+          if (autoRowsMatchExpected(fresh, intended)) {
+            toast(`ตรวจสอบแล้ว: คำนวณใหม่สำเร็จ ${intended.length} รายการ`, 'success');
+          } else {
+            toast('คำนวณใหม่ไม่สำเร็จหรือมีการคำนวณชุดใหม่กว่า ระบบโหลดข้อมูลล่าสุดแล้ว', 'error');
+          }
+        } catch {
+          setRecalcUncertain(intended);
+          toast('การเชื่อมต่อขาดช่วง ยังยืนยันผลคำนวณใหม่ไม่ได้ กรุณากด “ตรวจสอบอีกครั้ง”', 'error');
+        }
+      }
+    }
     finally { setBusy(false); setConfirmCalc(false); }
+  };
+
+  const verifyRecalculation = async () => {
+    if (!recalcUncertain) return;
+    setBusy(true);
+    try {
+      const fresh = await fetchBudgetItems(trip.id);
+      setLines(fresh);
+      if (autoRowsMatchExpected(fresh, recalcUncertain)) {
+        toast(`ตรวจสอบแล้ว: คำนวณใหม่สำเร็จ ${recalcUncertain.length} รายการ`, 'success');
+      } else {
+        toast('คำสั่งไม่สำเร็จหรือถูกแทนที่ ระบบโหลดรายการล่าสุดแล้ว', 'error');
+      }
+      setRecalcUncertain(null);
+    } catch {
+      toast('ยังเชื่อมต่อฐานข้อมูลไม่ได้ กรุณาลองตรวจสอบอีกครั้ง', 'error');
+    } finally {
+      setBusy(false);
+    }
   };
 
   const saveLine = async (v: BudgetItemInput, lineId: string | null) => {
@@ -301,7 +348,7 @@ export function BudgetPage() {
             <span className="block text-muted">{l.estimated ? baht(l.estimated) : '—'}</span>
             <span className={`block font-semibold ${over ? 'text-red-600' : ''}`}>{l.actual != null ? baht(l.actual) : ''}</span>
           </span>
-           <button type="button" onClick={() => setSheet({ item: l, spend: false })} disabled={pending !== null}
+           <button type="button" onClick={() => setSheet({ item: l, spend: false })} disabled={actionsLocked}
             aria-label={`แก้ไข ${l.label}`}
              className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-xl border border-primary px-3 text-sm font-semibold text-primary hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-50">
              {pending?.action.item.id === l.id ? <LoaderCircle size={16} className="animate-spin" /> : <Pencil size={16} />} <span>{pending?.action.item.id === l.id ? 'กำลังดำเนินการ' : 'แก้ไข'}</span>
@@ -348,10 +395,10 @@ export function BudgetPage() {
       </section>
 
       <div className="grid grid-cols-2 gap-2">
-        <Button variant="secondary" icon={<Calculator size={18} />} disabled={busy || pending !== null} onClick={() => (autoCount ? setConfirmCalc(true) : void recalc())}>
+        <Button variant="secondary" icon={<Calculator size={18} />} disabled={busy || actionsLocked} onClick={() => (autoCount ? setConfirmCalc(true) : void recalc())}>
           {busy ? 'กำลังคำนวณ…' : 'คำนวณจากแผน'}
         </Button>
-        <Button icon={<Receipt size={18} />} disabled={pending !== null} onClick={() => setSheet({ item: null, spend: true })}>บันทึกจ่ายจริง</Button>
+        <Button icon={<Receipt size={18} />} disabled={actionsLocked} onClick={() => setSheet({ item: null, spend: true })}>บันทึกจ่ายจริง</Button>
       </div>
 
       {lines.length === 0 ? (
@@ -441,7 +488,7 @@ export function BudgetPage() {
         </>
       )}
 
-      <Button variant="ghost" className="w-full border border-line" icon={<Plus size={18} />} disabled={pending !== null} onClick={() => setSheet({ item: null, spend: false })}>
+      <Button variant="ghost" className="w-full border border-line" icon={<Plus size={18} />} disabled={actionsLocked} onClick={() => setSheet({ item: null, spend: false })}>
         เพิ่มรายการประมาณการ
       </Button>
 
@@ -461,6 +508,21 @@ export function BudgetPage() {
             {pending.phase === 'uncertain' && <Button variant="secondary" onClick={() => void verifyUncertainAction()}>ตรวจสอบอีกครั้ง</Button>}
           </div>
           {pending.phase === 'undoable' && <p className="mt-1 text-xs text-muted">ถ้าออกจากหน้านี้ก่อนหมดเวลา คำสั่งจะถูกยกเลิกและไม่ส่งไปฐานข้อมูล</p>}
+        </section>
+      )}
+
+      {recalcUncertain && (
+        <section role="status" aria-live="polite" className="sticky bottom-3 z-40 rounded-2xl border border-primary bg-surface p-3 shadow-lg">
+          <div className="flex items-center gap-3">
+            <TriangleAlert className="shrink-0 text-amber-600" />
+            <div className="min-w-0 flex-1 text-sm">
+              <p className="font-semibold">ยังยืนยันผลคำนวณจากแผนไม่ได้</p>
+              <p className="text-muted">รายการเดิมจะไม่หายเป็นบางส่วน เพราะฐานข้อมูลแทนที่ทั้งชุดแบบ atomic</p>
+            </div>
+            <Button variant="secondary" disabled={busy} onClick={() => void verifyRecalculation()}>
+              {busy ? 'กำลังตรวจ…' : 'ตรวจสอบอีกครั้ง'}
+            </Button>
+          </div>
         </section>
       )}
 
