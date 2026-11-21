@@ -16,34 +16,6 @@ export type BudgetLine = {
 
 export type FuelInput = { km: number; kmPerL: number; pricePerL: number; vehicles: number };
 
-/**
- * Parse user-entered baht without silently rounding an invalid third decimal.
- * null means the field is empty; NaN means the value is invalid.
- */
-export function parseMoneyInput(s: string): number | null | typeof NaN {
-  const t = s.replace(/[,\s฿]/g, '');
-  if (!t) return null;
-  if (!/^(?:\d+|\d*\.\d{1,2})$/.test(t)) return NaN;
-  const n = Number(t);
-  return Number.isFinite(n) && n >= 0 && n < 10_000_000 ? Math.round(n * 100) / 100 : NaN;
-}
-
-/** Convert an ISO timestamp to the browser's local datetime-local value. */
-export function toDateTimeLocal(iso: string | null | undefined): string {
-  if (!iso) return '';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
-/** Convert a datetime-local value to the UTC ISO value stored by Supabase. */
-export function localDateTimeToIso(value: string): string | null {
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) return null;
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? null : d.toISOString();
-}
-
 /** litres and cost, both rounded; 0 when inputs are invalid */
 export function fuelCost({ km, kmPerL, pricePerL, vehicles }: FuelInput) {
   if (!(km > 0) || !(kmPerL > 0) || !(pricePerL >= 0) || !(vehicles > 0)) return { litres: 0, cost: 0 };
@@ -136,8 +108,4 @@ export function settlement(lines: BudgetLine[], memberIds: string[]) {
   return [...paid.entries()].map(([id, p]) => ({ id, paid: p, share: Math.round(share), balance: Math.round(p - share) }));
 }
 
-/** Always show satang so the UI never hides or rounds a saved amount. */
-export const baht = (n: number) => `฿${(Number.isFinite(n) ? n : 0).toLocaleString('th-TH', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})}`;
+export const baht = (n: number) => `฿${Math.round(n).toLocaleString('th-TH')}`;
