@@ -1,0 +1,482 @@
+[
+  {
+    "province_pcode": "58",
+    "province_name_th": "แม่ฮ่องสอน",
+    "candidate_order": 1,
+    "candidate_name_th": "วัดพระธาตุดอยกองมู",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะพระธาตุบนดอยเหนือเมืองที่สะท้อนศิลปะแบบไทใหญ่และมองเห็นภูมิทัศน์แม่ฮ่องสอน มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดแม่ฮ่องสอนอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "58",
+    "province_name_th": "แม่ฮ่องสอน",
+    "candidate_order": 2,
+    "candidate_name_th": "ปางอุ๋ง",
+    "recommendation": "alternative",
+    "strengths": "ธรรมชาติเด่นและเป็นภาพจำยอดนิยม",
+    "limitations": "อยู่ไกลและภาพจำอาจเน้นแหล่งเดียวมากกว่าทั้งจังหวัด",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "58",
+    "province_name_th": "แม่ฮ่องสอน",
+    "candidate_order": 3,
+    "candidate_name_th": "สะพานซูตองเป้",
+    "recommendation": "alternative",
+    "strengths": "วิถีชุมชนและศาสนา",
+    "limitations": "ความเป็นตัวแทนระดับจังหวัดอาจรองจากดอยกองมู",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "53",
+    "province_name_th": "อุตรดิตถ์",
+    "candidate_order": 1,
+    "candidate_name_th": "วัดพระแท่นศิลาอาสน์",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะศาสนสถานสำคัญที่ประดิษฐานพระแท่นศิลาอาสน์และมีงานนมัสการสืบเนื่อง มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดอุตรดิตถ์อย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "53",
+    "province_name_th": "อุตรดิตถ์",
+    "candidate_order": 2,
+    "candidate_name_th": "เขื่อนสิริกิติ์",
+    "recommendation": "alternative",
+    "strengths": "โครงสร้างสำคัญและทิวทัศน์เด่น",
+    "limitations": "อยู่ไกลตัวเมืองและภาพจำด้านประวัติศาสตร์น้อยกว่า",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "53",
+    "province_name_th": "อุตรดิตถ์",
+    "candidate_order": 3,
+    "candidate_name_th": "เมืองลับแล",
+    "recommendation": "alternative",
+    "strengths": "สะท้อนวัฒนธรรมและวิถีท้องถิ่น",
+    "limitations": "เป็นพื้นที่กว้าง ต้องกำหนดจุด landmark ให้ชัด",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "13",
+    "province_name_th": "ปทุมธานี",
+    "candidate_order": 1,
+    "candidate_name_th": "องค์การพิพิธภัณฑ์วิทยาศาสตร์แห่งชาติ",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะกลุ่มพิพิธภัณฑ์วิทยาศาสตร์ระดับชาติที่เป็นแหล่งเรียนรู้เด่นของจังหวัด มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดปทุมธานีอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "13",
+    "province_name_th": "ปทุมธานี",
+    "candidate_order": 2,
+    "candidate_name_th": "วัดเจดีย์หอย",
+    "recommendation": "alternative",
+    "strengths": "เอกลักษณ์ทางวัฒนธรรมเฉพาะพื้นที่",
+    "limitations": "ชื่อเสียงระดับประเทศอาจน้อยกว่า",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "13",
+    "province_name_th": "ปทุมธานี",
+    "candidate_order": 3,
+    "candidate_name_th": "พิพิธภัณฑ์การเกษตรเฉลิมพระเกียรติฯ",
+    "recommendation": "alternative",
+    "strengths": "แหล่งเรียนรู้ระดับชาติและเข้าถึงง่าย",
+    "limitations": "ภาพจำจังหวัดยังไม่เด่นเท่ากลุ่มพิพิธภัณฑ์วิทยาศาสตร์",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "20",
+    "province_name_th": "ชลบุรี",
+    "candidate_order": 1,
+    "candidate_name_th": "ปราสาทสัจธรรม",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะอาคารไม้แกะสลักขนาดใหญ่ริมทะเลซึ่งเป็นภาพจำเด่นของพัทยาและชลบุรี มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดชลบุรีอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "20",
+    "province_name_th": "ชลบุรี",
+    "candidate_order": 2,
+    "candidate_name_th": "เขาพระตำหนัก/จุดชมวิวพัทยา",
+    "recommendation": "alternative",
+    "strengths": "เห็นภาพเมืองชายฝั่งชัด",
+    "limitations": "เป็นจุดชมวิวมากกว่าสถานที่มรดก",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "20",
+    "province_name_th": "ชลบุรี",
+    "candidate_order": 3,
+    "candidate_name_th": "เกาะล้าน",
+    "recommendation": "alternative",
+    "strengths": "ธรรมชาติทางทะเลและเข้าถึงจากพัทยา",
+    "limitations": "อาจซ้ำกับภาพจำทะเลของจังหวัดภาคตะวันออกอื่น",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "25",
+    "province_name_th": "ปราจีนบุรี",
+    "candidate_order": 1,
+    "candidate_name_th": "โบราณสถานสระมรกต",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะแหล่งโบราณคดีเมืองศรีมโหสถที่สะท้อนชุมชนโบราณในภาคตะวันออก มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดปราจีนบุรีอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "25",
+    "province_name_th": "ปราจีนบุรี",
+    "candidate_order": 2,
+    "candidate_name_th": "อุทยานแห่งชาติเขาใหญ่",
+    "recommendation": "alternative",
+    "strengths": "ธรรมชาติระดับประเทศ",
+    "limitations": "พื้นที่อุทยานครอบคลุมหลายจังหวัด ทำให้ความเป็นตัวแทนเฉพาะปราจีนบุรีไม่ชัด",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "25",
+    "province_name_th": "ปราจีนบุรี",
+    "candidate_order": 3,
+    "candidate_name_th": "ตึกเจ้าพระยาอภัยภูเบศร",
+    "recommendation": "alternative",
+    "strengths": "ประวัติศาสตร์ สถาปัตยกรรม และสมุนไพรไทย",
+    "limitations": "การเข้าถึงบางส่วนสัมพันธ์กับพื้นที่โรงพยาบาล",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "32",
+    "province_name_th": "สุรินทร์",
+    "candidate_order": 1,
+    "candidate_name_th": "ปราสาทศีขรภูมิ",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะกลุ่มปรางค์อิฐศิลปะเขมรที่โดดเด่นและสะท้อนมรดกวัฒนธรรมของสุรินทร์ มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดสุรินทร์อย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "32",
+    "province_name_th": "สุรินทร์",
+    "candidate_order": 2,
+    "candidate_name_th": "ศูนย์คชศึกษา",
+    "recommendation": "alternative",
+    "strengths": "ช้างและวิถีกูยเป็นอัตลักษณ์จังหวัดที่ชัดมาก",
+    "limitations": "ต้องตรวจสถานะการเข้าชมและสวัสดิภาพสัตว์อย่างรอบคอบ",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "32",
+    "province_name_th": "สุรินทร์",
+    "candidate_order": 3,
+    "candidate_name_th": "อนุสาวรีย์พระยาสุรินทรภักดีศรีณรงค์จางวาง",
+    "recommendation": "alternative",
+    "strengths": "สัญลักษณ์เมืองและเข้าถึงง่าย",
+    "limitations": "คุณค่าด้านแหล่งท่องเที่ยวอาจน้อยกว่าปราสาทศีขรภูมิ",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "43",
+    "province_name_th": "หนองคาย",
+    "candidate_order": 1,
+    "candidate_name_th": "ศาลาแก้วกู่",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะอุทยานประติมากรรมคอนกรีตขนาดใหญ่ที่ผสมคติพุทธ ฮินดู และความเชื่อท้องถิ่น มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดหนองคายอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "43",
+    "province_name_th": "หนองคาย",
+    "candidate_order": 2,
+    "candidate_name_th": "พระธาตุกลางน้ำ",
+    "recommendation": "alternative",
+    "strengths": "สัมพันธ์กับแม่น้ำโขงและศรัทธาท้องถิ่น",
+    "limitations": "การมองเห็นขึ้นกับระดับน้ำ",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "43",
+    "province_name_th": "หนองคาย",
+    "candidate_order": 3,
+    "candidate_name_th": "ลานพญานาคริมโขง",
+    "recommendation": "alternative",
+    "strengths": "เข้าถึงง่ายและเชื่อมโยงภาพจำพญานาค",
+    "limitations": "เป็นพื้นที่เมืองมากกว่าสถานที่ประวัติศาสตร์เฉพาะแห่ง",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "34",
+    "province_name_th": "อุบลราชธานี",
+    "candidate_order": 1,
+    "candidate_name_th": "อุทยานแห่งชาติผาแต้ม",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะหน้าผาริมโขงและภาพเขียนสีก่อนประวัติศาสตร์ที่รวมคุณค่าธรรมชาติกับโบราณคดี มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดอุบลราชธานีอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "34",
+    "province_name_th": "อุบลราชธานี",
+    "candidate_order": 2,
+    "candidate_name_th": "สามพันโบก",
+    "recommendation": "alternative",
+    "strengths": "ภูมิประเทศริมโขงโดดเด่น",
+    "limitations": "การเข้าชมขึ้นกับฤดูกาลและระดับน้ำ",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "34",
+    "province_name_th": "อุบลราชธานี",
+    "candidate_order": 3,
+    "candidate_name_th": "วัดสิรินธรวรารามภูพร้าว",
+    "recommendation": "alternative",
+    "strengths": "ศิลปกรรมและจุดชมวิวเด่น",
+    "limitations": "ความเป็นตัวแทนระยะยาวควรเทียบกับผาแต้ม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "11",
+    "province_name_th": "สมุทรปราการ",
+    "candidate_order": 1,
+    "candidate_name_th": "เมืองโบราณ",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะพื้นที่รวบรวมแบบจำลองและงานสถาปัตยกรรมสำคัญจากภูมิภาคต่าง ๆ ของไทย มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดสมุทรปราการอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "11",
+    "province_name_th": "สมุทรปราการ",
+    "candidate_order": 2,
+    "candidate_name_th": "สถานตากอากาศบางปู",
+    "recommendation": "alternative",
+    "strengths": "ธรรมชาติชายฝั่งและดูนกใกล้กรุงเทพฯ",
+    "limitations": "ภาพจำด้านประวัติศาสตร์/วัฒนธรรมน้อยกว่าเมืองโบราณ",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "11",
+    "province_name_th": "สมุทรปราการ",
+    "candidate_order": 3,
+    "candidate_name_th": "พิพิธภัณฑ์ช้างเอราวัณ",
+    "recommendation": "alternative",
+    "strengths": "สถาปัตยกรรมสัญลักษณ์เด่น",
+    "limitations": "เป็นสถานที่เอกชนและต้องตรวจเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "67",
+    "province_name_th": "เพชรบูรณ์",
+    "candidate_order": 1,
+    "candidate_name_th": "วัดพระธาตุผาซ่อนแก้ว",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะศาสนสถานบนภูเขาที่โดดเด่นด้วยงานประดับกระเบื้องสีและทิวทัศน์เขาค้อ มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดเพชรบูรณ์อย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "67",
+    "province_name_th": "เพชรบูรณ์",
+    "candidate_order": 2,
+    "candidate_name_th": "ภูทับเบิก",
+    "recommendation": "alternative",
+    "strengths": "ภูมิทัศน์ภูเขาและวิถีเกษตร",
+    "limitations": "ปัญหาความหนาแน่นและการจัดการพื้นที่ควรพิจารณา",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "67",
+    "province_name_th": "เพชรบูรณ์",
+    "candidate_order": 3,
+    "candidate_name_th": "อนุสรณ์สถานผู้เสียสละเขาค้อ",
+    "recommendation": "alternative",
+    "strengths": "คุณค่าประวัติศาสตร์ชัด",
+    "limitations": "ภาพจำด้านท่องเที่ยวทั่วไปอาจรองจากวัดผาซ่อนแก้ว",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "77",
+    "province_name_th": "ประจวบคีรีขันธ์",
+    "candidate_order": 1,
+    "candidate_name_th": "ถ้ำพระยานคร",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะถ้ำในอุทยานแห่งชาติเขาสามร้อยยอดซึ่งมีพระที่นั่งคูหาคฤหาสน์เป็นภาพจำเด่น มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดประจวบคีรีขันธ์อย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "77",
+    "province_name_th": "ประจวบคีรีขันธ์",
+    "candidate_order": 2,
+    "candidate_name_th": "สถานีรถไฟหัวหิน",
+    "recommendation": "alternative",
+    "strengths": "สถาปัตยกรรมและภาพจำเมืองตากอากาศ",
+    "limitations": "เป็นตัวแทนหัวหินมากกว่าจังหวัดทั้งจังหวัด",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "77",
+    "province_name_th": "ประจวบคีรีขันธ์",
+    "candidate_order": 3,
+    "candidate_name_th": "อุทยานราชภักดิ์",
+    "recommendation": "alternative",
+    "strengths": "อนุสรณ์สถานขนาดใหญ่และเข้าถึงง่าย",
+    "limitations": "ควรตรวจเงื่อนไขพื้นที่และการเข้าชมล่าสุด",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "81",
+    "province_name_th": "กระบี่",
+    "candidate_order": 1,
+    "candidate_name_th": "อ่าวมาหยา",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะอ่าวโอบล้อมด้วยหน้าผาหินปูนบนเกาะพีพีเลซึ่งเป็นภาพจำระดับโลกของทะเลกระบี่ มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดกระบี่อย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "81",
+    "province_name_th": "กระบี่",
+    "candidate_order": 2,
+    "candidate_name_th": "หาดไร่เลย์",
+    "recommendation": "alternative",
+    "strengths": "ภูมิประเทศหินปูนและกิจกรรมปีนผา",
+    "limitations": "อยู่ในพื้นที่ท่องเที่ยวหนาแน่นและเข้าถึงทางเรือ",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "81",
+    "province_name_th": "กระบี่",
+    "candidate_order": 3,
+    "candidate_name_th": "เกาะห้อง",
+    "recommendation": "alternative",
+    "strengths": "ธรรมชาติทางทะเลและลากูนเด่น",
+    "limitations": "อาจเป็นตัวแทนรองเมื่อเทียบกับชื่อเสียงอ่าวมาหยา",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "83",
+    "province_name_th": "ภูเก็ต",
+    "candidate_order": 1,
+    "candidate_name_th": "ย่านเมืองเก่าภูเก็ต",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะย่านอาคารเก่าและชุมชนการค้าที่สะท้อนมรดกพหุวัฒนธรรมของเมืองภูเก็ต มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดภูเก็ตอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "83",
+    "province_name_th": "ภูเก็ต",
+    "candidate_order": 2,
+    "candidate_name_th": "แหลมพรหมเทพ",
+    "recommendation": "alternative",
+    "strengths": "จุดชมพระอาทิตย์ตกที่เป็นภาพจำคลาสสิก",
+    "limitations": "เน้นทิวทัศน์มากกว่ามรดกพหุวัฒนธรรม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "83",
+    "province_name_th": "ภูเก็ต",
+    "candidate_order": 3,
+    "candidate_name_th": "วัดฉลอง",
+    "recommendation": "alternative",
+    "strengths": "ศาสนสถานสำคัญและเข้าถึงง่าย",
+    "limitations": "เป็นตัวแทนด้านศาสนามากกว่าภาพรวมจังหวัด",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "84",
+    "province_name_th": "สุราษฎร์ธานี",
+    "candidate_order": 1,
+    "candidate_name_th": "อุทยานแห่งชาติเขาสก",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะผืนป่าดิบและภูเขาหินปูนที่เป็นแหล่งธรรมชาติเด่นระดับประเทศของสุราษฎร์ธานี มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดสุราษฎร์ธานีอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "84",
+    "province_name_th": "สุราษฎร์ธานี",
+    "candidate_order": 2,
+    "candidate_name_th": "อุทยานแห่งชาติหมู่เกาะอ่างทอง",
+    "recommendation": "alternative",
+    "strengths": "หมู่เกาะและทะเลสวยงามระดับประเทศ",
+    "limitations": "เข้าถึงทางเรือและขึ้นกับสภาพอากาศ",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "84",
+    "province_name_th": "สุราษฎร์ธานี",
+    "candidate_order": 3,
+    "candidate_name_th": "เกาะสมุย",
+    "recommendation": "alternative",
+    "strengths": "ชื่อเสียงระดับนานาชาติและเศรษฐกิจท่องเที่ยวสูง",
+    "limitations": "เป็นพื้นที่กว้าง ไม่ใช่จุด landmark เดี่ยว",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "95",
+    "province_name_th": "ยะลา",
+    "candidate_order": 1,
+    "candidate_name_th": "จุดชมทะเลหมอกอัยเยอร์เวง",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะจุดชมทะเลหมอกบนภูเขาเบตงที่เป็นภาพจำการท่องเที่ยวธรรมชาติของยะลา มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดยะลาอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "95",
+    "province_name_th": "ยะลา",
+    "candidate_order": 2,
+    "candidate_name_th": "อุโมงค์ปิยะมิตร",
+    "recommendation": "alternative",
+    "strengths": "ประวัติศาสตร์ท้องถิ่นและธรรมชาติ",
+    "limitations": "ภาพจำระดับจังหวัดอาจรองจากทะเลหมอกอัยเยอร์เวง",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "95",
+    "province_name_th": "ยะลา",
+    "candidate_order": 3,
+    "candidate_name_th": "หอนาฬิกาเบตง",
+    "recommendation": "alternative",
+    "strengths": "สัญลักษณ์เมืองและเข้าถึงง่าย",
+    "limitations": "เป็นตัวแทนเมืองเบตงมากกว่าจังหวัดทั้งจังหวัด",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "96",
+    "province_name_th": "นราธิวาส",
+    "candidate_order": 1,
+    "candidate_name_th": "วัดชลธาราสิงเห",
+    "recommendation": "recommended_rank_1",
+    "strengths": "เสนอเป็น Landmark อันดับ 1 เพราะวัดเก่าแก่ที่มีสถาปัตยกรรมและจิตรกรรมโดดเด่นและสัมพันธ์กับประวัติศาสตร์ชายแดนใต้ มีความเชื่อมโยงกับภาพจำและอัตลักษณ์ของจังหวัดนราธิวาสอย่างชัดเจน; รอ Admin ยืนยันก่อนเผยแพร่",
+    "limitations": "ยังรอ Admin ตรวจแหล่งข้อมูลรายแห่ง พิกัด และเงื่อนไขเข้าชม",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "96",
+    "province_name_th": "นราธิวาส",
+    "candidate_order": 2,
+    "candidate_name_th": "อ่าวมะนาว",
+    "recommendation": "alternative",
+    "strengths": "ชายหาดและภูมิทัศน์เมืองนราธิวาส",
+    "limitations": "คุณค่าประวัติศาสตร์น้อยกว่าวัดชลธาราสิงเห",
+    "admin_decision": ""
+  },
+  {
+    "province_pcode": "96",
+    "province_name_th": "นราธิวาส",
+    "candidate_order": 3,
+    "candidate_name_th": "มัสยิด 300 ปี ตะโละมาเนาะ",
+    "recommendation": "alternative",
+    "strengths": "สถาปัตยกรรมศาสนาและอัตลักษณ์ชุมชน",
+    "limitations": "ต้องบริหารการเยี่ยมชมให้เคารพศาสนสถานและชุมชน",
+    "admin_decision": ""
+  }
+]

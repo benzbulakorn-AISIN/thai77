@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-11-21",
+  "counts": {
+    "places": 77,
+    "place_sources": 231,
+    "place_images": 77,
+    "admin_candidates": 48
+  },
+  "files": {
+    "README_thai77.md": {
+      "bytes": 2619,
+      "sha256": "08652cd96fbc43a9511d529923ac61506bc178cd7266213b2ce20ab8e5fbebbe"
+    },
+    "admin_candidates.csv": {
+      "bytes": 23064,
+      "sha256": "af47597af734d3a11dc989a20033abaa78df475e2e2474cb38e9581c40694358"
+    },
+    "admin_candidates.json": {
+      "bytes": 32688,
+      "sha256": "d90f09e2171c249e9f9ac787e4cbc46882ba0b2e3a8bbeb6aa9fe378f1d71975"
+    },
+    "place_images.csv": {
+      "bytes": 36697,
+      "sha256": "1b1f346a0a710d347409d8a71b72d85d69caa032480360601c42ac04b7ed4e90"
+    },
+    "place_images.json": {
+      "bytes": 64294,
+      "sha256": "359759f2ee86328ebad08ad39323d4ff820eded3f7589ca4348e1f91916aaeb4"
+    },
+    "place_sources.csv": {
+      "bytes": 113567,
+      "sha256": "eaaa787580799f88c05ae68ef3a78d201b4df1a69992a740c8dcf94bf93b8d4f"
+    },
+    "place_sources.json": {
+      "bytes": 164030,
+      "sha256": "c3671428c44648d7f829265fc0cb00e23d01987cc37dd645696a1bcfbc756cb3"
+    },
+    "places.csv": {
+      "bytes": 166073,
+      "sha256": "8ebb215f964ea3a6860f8eb49f5d04db86bbe083e87862e81e868ddb5dd8e222"
+    },
+    "places.json": {
+      "bytes": 241952,
+      "sha256": "1330e3a8f04192d2561930182b28ad34c9e7b26c51872d57f245ea5ce2da7b70"
+    }
+  }
+}
