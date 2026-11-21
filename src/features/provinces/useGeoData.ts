@@ -9,7 +9,12 @@ export type Province = {
   region_id: string; best_season: string | null; summary: string | null;
 };
 export type District = { id: string; pcode: string; name_th: string; name_en: string };
-export type ProvinceStat = { total: number; planned: number; visited: number; target: number };
+export type ProvinceLandmarkStatus = 'building' | 'never_visited' | 'stopped_by' | 'arrived';
+export type ProvinceStat = {
+  total: number; planned: number; visited: number; target: number;
+  landmarkStatus?: ProvinceLandmarkStatus;
+  hasPublishedLandmark?: boolean;
+};
 
 // reference data rarely changes -> cache for the session
 let refCache: Promise<{ regions: Region[]; provinces: Province[] }> | null = null;
@@ -53,8 +58,19 @@ export function useProvinceStats() {
       const acc: Record<string, ProvinceStat> = {};
       const get = (id: string) => (acc[id] ??= { total: 0, planned: 0, visited: 0, target: 0 });
 
-      const places = await supabase.from('places').select('province_id').range(0, 9999);
+       const [places, landmarkStates] = await Promise.all([
+         supabase.from('places').select('province_id').range(0, 9999),
+         supabase.from('my_province_landmark_status').select('province_id,has_published_landmark,province_status'),
+       ]);
       ((places.data ?? []) as { province_id: string }[]).forEach((r) => { get(r.province_id).total++; });
+       type LandmarkRow = { province_id: string; has_published_landmark: boolean; province_status: ProvinceLandmarkStatus };
+       if (!landmarkStates.error) {
+         ((landmarkStates.data ?? []) as unknown as LandmarkRow[]).forEach((r) => {
+           const s = get(r.province_id);
+           s.landmarkStatus = r.province_status;
+           s.hasPublishedLandmark = r.has_published_landmark;
+         });
+       }
 
       if (user) {
         const [st, vis] = await Promise.all([
@@ -90,6 +106,10 @@ export function useProvinceStats() {
 
 export function statusOf(s: ProvinceStat | undefined, goalPct = 80): MapStatus {
   if (!s) return 'none';
+  if (s.landmarkStatus === 'building') return 'building';
+  if (s.landmarkStatus === 'never_visited') return 'never';
+  if (s.landmarkStatus === 'stopped_by') return 'stopped';
+  if (s.landmarkStatus === 'arrived') return 'arrived';
   if (s.visited > 0 && s.target > 0 && (s.visited / s.target) * 100 >= goalPct) return 'goal';
   if (s.visited > 0) return 'visited';
   if (s.planned > 0) return 'planned';

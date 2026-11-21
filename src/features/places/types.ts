@@ -32,6 +32,13 @@ export type Place = {
   verification: 'verified' | 'pending' | 'outdated' | 'demo';
   verified_at: string | null;
   is_demo: boolean;
+  place_key: string | null;
+  region_name_th: string | null;
+  landmark_rank: number | null;
+  landmark_category: string | null;
+  landmark_reason_th: string | null;
+  is_landmark: boolean;
+  landmark_status: 'draft' | 'pending' | 'published' | 'rejected';
 };
 
 export type UserStatus = 'none' | 'want' | 'planned' | 'visited';
