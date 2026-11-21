@@ -60,11 +60,32 @@ export async function fetchFuelDefaults(userId: string | undefined) {
   return { kmPerL: Number(d?.fuel_km_per_l) || fallback.kmPerL, pricePerL: d?.fuel_price_per_l != null ? Number(d.fuel_price_per_l) : fallback.pricePerL };
 }
 
-export type BudgetItemInput = Pick<BudgetItem, 'category_id' | 'day_id' | 'label' | 'estimated' | 'actual' | 'is_shared' | 'paid_by' | 'notes'>;
+export type BudgetItemInput = Pick<
+  BudgetItem,
+  | 'category_id'
+  | 'day_id'
+  | 'label'
+  | 'estimated'
+  | 'actual'
+  | 'is_shared'
+  | 'paid_by'
+  | 'notes'
+> & {
+  spent_at?: string | null;
+};
 
 export async function addBudgetItem(tripId: string, userId: string, v: BudgetItemInput): Promise<BudgetItem> {
   const { data, error } = await supabase.from('budget_items')
-    .insert({ ...v, trip_id: tripId, created_by: userId, is_auto: false, spent_at: v.actual != null ? new Date().toISOString() : null })
+    .insert({
+  ...v,
+  trip_id: tripId,
+  created_by: userId,
+  is_auto: false,
+  spent_at:
+    v.spent_at === undefined
+      ? (v.actual != null ? new Date().toISOString() : null)
+      : v.spent_at,
+})
     .select(COLS).single();
   if (error || !data) fail('บันทึกไม่สำเร็จ', error);
   return { ...(data as unknown as BudgetItem), estimated: Number((data as BudgetItem).estimated) || 0, actual: num((data as BudgetItem).actual) };
