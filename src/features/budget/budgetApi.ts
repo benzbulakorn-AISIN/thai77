@@ -19,6 +19,32 @@ function fail(msg: string, error: unknown): never {
 }
 const num = (v: unknown) => (v == null ? null : Number(v));
 
+function normalizeBudgetItem(data: Record<string, unknown>): BudgetItem {
+  return {
+    ...(data as unknown as BudgetItem),
+    estimated: Number(data.estimated) || 0,
+    actual: num(data.actual),
+  };
+}
+
+function sameTimestamp(a: string | null, b: string | null) {
+  if (a == null || b == null) return a === b;
+  return new Date(a).getTime() === new Date(b).getTime();
+}
+
+/** Verify that the row returned by PostgREST contains the values we asked it to save. */
+export function budgetItemMatchesInput(item: BudgetItem, v: BudgetItemInput): boolean {
+  return item.category_id === v.category_id
+    && item.day_id === v.day_id
+    && item.label === v.label
+    && Math.abs(item.estimated - v.estimated) < 0.005
+    && (item.actual == null || v.actual == null ? item.actual === v.actual : Math.abs(item.actual - v.actual) < 0.005)
+    && item.is_shared === v.is_shared
+    && item.paid_by === v.paid_by
+    && item.notes === v.notes
+    && (v.spent_at === undefined || sameTimestamp(item.spent_at, v.spent_at));
+}
+
 let catCache: Promise<BudgetCategory[]> | null = null;
 export function fetchBudgetCategories() {
   if (!catCache) {
@@ -35,11 +61,7 @@ export function fetchBudgetCategories() {
 export async function fetchBudgetItems(tripId: string): Promise<BudgetItem[]> {
   const { data, error } = await supabase.from('budget_items').select(COLS).eq('trip_id', tripId).order('created_at');
   if (error) fail('โหลดงบประมาณไม่สำเร็จ', error);
-  return ((data ?? []) as Record<string, unknown>[]).map((r) => ({
-    ...(r as unknown as BudgetItem),
-    estimated: Number(r.estimated) || 0,
-    actual: num(r.actual),
-  }));
+  return ((data ?? []) as Record<string, unknown>[]).map(normalizeBudgetItem);
 }
 
 export async function fetchMembers(tripId: string): Promise<Member[]> {
@@ -60,20 +82,29 @@ export async function fetchFuelDefaults(userId: string | undefined) {
   return { kmPerL: Number(d?.fuel_km_per_l) || fallback.kmPerL, pricePerL: d?.fuel_price_per_l != null ? Number(d.fuel_price_per_l) : fallback.pricePerL };
 }
 
-export type BudgetItemInput = Pick<BudgetItem, 'category_id' | 'day_id' | 'label' | 'estimated' | 'actual' | 'is_shared' | 'paid_by' | 'notes'>;
+export type BudgetItemInput = Pick<BudgetItem, 'category_id' | 'day_id' | 'label' | 'estimated' | 'actual' | 'is_shared' | 'paid_by' | 'notes'> & {
+  /** Optional only for backward compatibility with existing callers; the edit sheet always sends it. */
+  spent_at?: string | null;
+};
 
 export async function addBudgetItem(tripId: string, userId: string, v: BudgetItemInput): Promise<BudgetItem> {
+  const input = { ...v, spent_at: v.spent_at === undefined ? (v.actual != null ? new Date().toISOString() : null) : v.spent_at };
   const { data, error } = await supabase.from('budget_items')
-    .insert({ ...v, trip_id: tripId, created_by: userId, is_auto: false, spent_at: v.actual != null ? new Date().toISOString() : null })
+    .insert({ ...input, trip_id: tripId, created_by: userId, is_auto: false })
     .select(COLS).single();
   if (error || !data) fail('บันทึกไม่สำเร็จ', error);
-  return { ...(data as unknown as BudgetItem), estimated: Number((data as BudgetItem).estimated) || 0, actual: num((data as BudgetItem).actual) };
+  const saved = normalizeBudgetItem(data as Record<string, unknown>);
+  if (!budgetItemMatchesInput(saved, input)) fail('ตรวจสอบผลบันทึกไม่สำเร็จ', null);
+  return saved;
 }
 
-export async function updateBudgetItem(id: string, v: BudgetItemInput) {
+export async function updateBudgetItem(id: string, v: BudgetItemInput): Promise<BudgetItem> {
   // editing an auto row makes it manual, so re-estimation will not overwrite it
-  const { error } = await supabase.from('budget_items').update({ ...v, is_auto: false }).eq('id', id);
-  if (error) fail('บันทึกไม่สำเร็จ', error);
+  const { data, error } = await supabase.from('budget_items').update({ ...v, is_auto: false }).eq('id', id).select(COLS).single();
+  if (error || !data) fail('บันทึกไม่สำเร็จ', error);
+  const saved = normalizeBudgetItem(data as Record<string, unknown>);
+  if (saved.id !== id || saved.is_auto || !budgetItemMatchesInput(saved, v)) fail('ตรวจสอบผลบันทึกไม่สำเร็จ', null);
+  return saved;
 }
 
 export async function deleteBudgetItem(id: string) {

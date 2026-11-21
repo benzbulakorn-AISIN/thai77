@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { fmtDateTh } from '../routing/time';
 import { BudgetIcon } from './BudgetIcon';
+import { localDateTimeToIso, parseMoneyInput, toDateTimeLocal } from './calc';
 import type { BudgetCategory, BudgetItem, BudgetItemInput, Member } from './budgetApi';
 import type { TripDay } from '../trips/types';
 
@@ -24,13 +25,6 @@ type Props = {
   onDelete: (id: string) => Promise<void>;
 };
 
-const parseMoney = (s: string): number | null | typeof NaN => {
-  const t = s.replace(/[,\s฿]/g, '');
-  if (!t) return null;
-  const n = Number(t);
-  return Number.isFinite(n) && n >= 0 && n < 10_000_000 ? Math.round(n * 100) / 100 : NaN;
-};
-
 export function BudgetItemSheet(p: Props) {
   const [cat, setCat] = useState('');
   const [label, setLabel] = useState('');
@@ -39,6 +33,7 @@ export function BudgetItemSheet(p: Props) {
   const [day, setDay] = useState('');
   const [shared, setShared] = useState(true);
   const [paidBy, setPaidBy] = useState('');
+  const [spentAt, setSpentAt] = useState('');
   const [notes, setNotes] = useState('');
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -54,6 +49,7 @@ export function BudgetItemSheet(p: Props) {
     setDay(it ? it.day_id ?? '' : p.defaultDayId ?? '');
     setShared(it?.is_shared ?? true);
     setPaidBy(it?.paid_by ?? p.currentUserId);
+    setSpentAt(toDateTimeLocal(it?.spent_at) || (p.spendMode && !it ? toDateTimeLocal(new Date().toISOString()) : ''));
     setNotes(it?.notes ?? '');
     setErr(null);
   }, [p.open, p.item, p.categories, p.defaultDayId, p.currentUserId]);
@@ -62,10 +58,14 @@ export function BudgetItemSheet(p: Props) {
   const catName = p.categories.find((c) => c.id === cat)?.name_th ?? '';
 
   const save = async () => {
-    const e = parseMoney(est), a = parseMoney(act);
-    if (Number.isNaN(e) || Number.isNaN(a)) { setErr('จำนวนเงินไม่ถูกต้อง'); return; }
+    const e = parseMoneyInput(est), a = parseMoneyInput(act);
+    if (Number.isNaN(e) || Number.isNaN(a)) { setErr('จำนวนเงินต้องไม่ติดลบ และมีทศนิยมได้ไม่เกิน 2 ตำแหน่ง'); return; }
+    const requiresActual = p.spendMode || p.item?.actual != null;
+    if (requiresActual && a == null) { setErr('กรอกจำนวนเงินที่จ่ายจริง'); return; }
     if (e == null && a == null) { setErr(p.spendMode ? 'กรอกจำนวนเงินที่จ่าย' : 'กรอกค่าประมาณหรือค่าใช้จ่ายจริง'); return; }
     if (!cat) { setErr('เลือกหมวด'); return; }
+    const spentAtIso = a == null ? null : localDateTimeToIso(spentAt);
+    if (a != null && !spentAtIso) { setErr('เลือกวันที่และเวลาที่จ่ายจริง'); return; }
     setBusy(true);
     try {
       await p.onSave({
@@ -76,6 +76,7 @@ export function BudgetItemSheet(p: Props) {
         actual: a,
         is_shared: shared,
         paid_by: a != null ? paidBy || null : null,
+        spent_at: spentAtIso,
         notes: notes.trim().slice(0, 1000) || null,
       }, p.item?.id ?? null);
       p.onClose();
@@ -87,8 +88,11 @@ export function BudgetItemSheet(p: Props) {
 
   const actualField = (
     <label className="block text-sm">จ่ายจริง (บาท)
-      <input inputMode="decimal" className="input mt-1 text-lg font-semibold" placeholder="0" value={act}
-        autoFocus={moneyFirst} onChange={(e) => setAct(e.target.value)} />
+      <input inputMode="decimal" type="text" className="input mt-1 text-lg font-semibold" placeholder="0.00" value={act}
+        min="0" step="0.01" autoFocus={moneyFirst} onChange={(e) => {
+          setAct(e.target.value);
+          if (e.target.value.trim() && !spentAt) setSpentAt(toDateTimeLocal(new Date().toISOString()));
+        }} />
     </label>
   );
 
@@ -116,10 +120,17 @@ export function BudgetItemSheet(p: Props) {
 
       <div className="grid grid-cols-2 gap-2">
         <label className="block text-sm">ค่าประมาณ (บาท)
-          <input inputMode="decimal" className="input mt-1" placeholder="0" value={est} onChange={(e) => setEst(e.target.value)} />
+          <input inputMode="decimal" type="text" className="input mt-1" placeholder="0.00" value={est}
+            min="0" step="0.01" onChange={(e) => setEst(e.target.value)} />
         </label>
         {!moneyFirst ? actualField : <div />}
       </div>
+
+      {act.trim() !== '' && (
+        <label className="block text-sm">วันที่และเวลาที่จ่ายจริง
+          <input type="datetime-local" className="input mt-1" value={spentAt} onChange={(e) => setSpentAt(e.target.value)} />
+        </label>
+      )}
 
       <label className="block text-sm">วัน
         <select className="input mt-1" value={day} onChange={(e) => setDay(e.target.value)}>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Calculator, Info, Plus, Receipt, Settings, TriangleAlert, Wallet } from 'lucide-react';
+import { ArrowLeft, Calculator, Info, Pencil, Plus, Receipt, Settings, TriangleAlert, Wallet } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthProvider';
 import { loadTrip, updateTrip } from '../features/trips/tripsApi';
 import { computeTrip } from '../features/trips/schedule';
@@ -106,8 +106,8 @@ export function BudgetPage() {
 
   const saveLine = async (v: BudgetItemInput, lineId: string | null) => {
     if (lineId) {
-      await updateBudgetItem(lineId, v);
-      setLines((xs) => xs.map((l) => (l.id === lineId ? { ...l, ...v, is_auto: false } : l)));
+      const saved = await updateBudgetItem(lineId, v);
+      setLines((xs) => xs.map((l) => (l.id === lineId ? saved : l)));
     } else {
       const created = await addBudgetItem(trip.id, user.id, v);
       setLines((xs) => [...xs, created]);
@@ -138,9 +138,13 @@ export function BudgetPage() {
   const lineRow = (l: BudgetItem) => {
     const c = catById.get(l.category_id);
     const over = l.actual != null && l.estimated > 0 && l.actual > l.estimated;
+    const spentAtDate = l.spent_at ? new Date(l.spent_at) : null;
+    const spentAtText = spentAtDate && !Number.isNaN(spentAtDate.getTime())
+      ? new Intl.DateTimeFormat('th-TH', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(spentAtDate)
+      : null;
     return (
       <li key={l.id}>
-        <button type="button" onClick={() => setSheet({ item: l, spend: false })} className="flex w-full items-center gap-3 py-2 text-left">
+        <div className="flex w-full items-center gap-3 py-2 text-left">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white" style={{ background: c?.color ?? '#64748B' }}>
             <BudgetIcon name={c?.icon} size={16} />
           </span>
@@ -151,13 +155,19 @@ export function BudgetPage() {
               {!l.is_shared && ' · ส่วนตัว'}
               {l.is_auto && ' · อัตโนมัติ'}
               {l.paid_by && members.length > 1 && ` · ${memberName.get(l.paid_by) ?? ''} จ่าย`}
+              {l.actual != null && spentAtText && ` · ${spentAtText}`}
             </span>
           </span>
           <span className="shrink-0 text-right text-sm">
             <span className="block text-muted">{l.estimated ? baht(l.estimated) : '—'}</span>
             <span className={`block font-semibold ${over ? 'text-red-600' : ''}`}>{l.actual != null ? baht(l.actual) : ''}</span>
           </span>
-        </button>
+          <button type="button" onClick={() => setSheet({ item: l, spend: false })}
+            aria-label={`แก้ไข ${l.label}`}
+            className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-xl border border-primary px-3 text-sm font-semibold text-primary hover:bg-surface-2">
+            <Pencil size={16} /> <span>แก้ไข</span>
+          </button>
+        </div>
       </li>
     );
   };
