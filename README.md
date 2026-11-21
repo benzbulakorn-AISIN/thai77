@@ -38,11 +38,17 @@
 | 5 | `…000005_trip_items_auto.sql` | คอลัมน์ `is_auto` |
 | 6 | `…000006_budget.sql` | ค่าอาหารต่อคนของทริป |
 | 7 | `…000007_admin_review.sql` | ฟังก์ชันตรวจสถานที่ที่ผู้ใช้เสนอ (ไม่เปิดเผยบันทึกลับ) |
-| 8 | `supabase/seed.sql` | 6 ภาค, 26 หมวดสถานที่, 13 หมวดงบ |
-| 9 | `supabase/seed_geo.sql` | 77 จังหวัด + อำเภอ (ได้จาก workflow **Build Geo Data** — ดูข้อ 3.4) |
-| 10 | `supabase/seed_places.sql` | สถานที่ตัวอย่าง (Demo) (ได้จาก workflow **Build Place Seed**) |
+| 8 | `…000008_search.sql` | ระบบค้นหาสถานที่ |
+| 9 | `…000010_trip_share_preview.sql` | ตัวอย่างทริปที่แชร์ |
+| 10 | `…000012_landmarks.sql` | Landmark 77 จังหวัด, ตราจังหวัด และคิวตรวจรูป |
+| 11 | `supabase/seed.sql` | 6 ภาค, 26 หมวดสถานที่, 13 หมวดงบ |
+| 12 | `supabase/seed_geo.sql` | 77 จังหวัด + อำเภอ (ได้จาก workflow **Build Geo Data** — ดูข้อ 3.4) |
+| 13 | `supabase/seed_places.sql` | สถานที่ตัวอย่าง (Demo) (ได้จาก workflow **Build Place Seed**) |
+| 14 | `supabase/seed_landmarks.sql` | Landmark หลักอันดับ 1 ครบ 77 จังหวัด (เริ่มเป็น draft/unpublished) |
 
 ทุกไฟล์รันซ้ำได้โดยไม่เสียหายเฉพาะไฟล์ seed ส่วน migration ให้รันแต่ละไฟล์ครั้งเดียว
+
+วิธีตรวจและเผยแพร่ Landmark ทีละจังหวัด รวมกฎรูป Wikimedia Commons และตราจังหวัด: [`docs/LANDMARKS.md`](docs/LANDMARKS.md)
 
 ### 2.2 ตั้งค่า Auth
 **Authentication → Sign In / Providers → Email:** เปิดไว้ และ (ถ้าใช้กัน 2 คน) **ปิด "Allow new users to sign up"**
