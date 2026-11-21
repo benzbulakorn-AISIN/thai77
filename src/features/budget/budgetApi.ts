@@ -19,6 +19,13 @@ function fail(msg: string, error: unknown): never {
 }
 const num = (v: unknown) => (v == null ? null : Number(v));
 
+export class BudgetConflictError extends Error {
+  constructor(message = 'รายการนี้มีการเปลี่ยนแปลงจากอุปกรณ์อื่น ระบบจึงไม่เขียนทับข้อมูลล่าสุด') {
+    super(message);
+    this.name = 'BudgetConflictError';
+  }
+}
+
 function normalizeBudgetItem(data: Record<string, unknown>): BudgetItem {
   return {
     ...(data as unknown as BudgetItem),
@@ -64,6 +71,12 @@ export async function fetchBudgetItems(tripId: string): Promise<BudgetItem[]> {
   return ((data ?? []) as Record<string, unknown>[]).map(normalizeBudgetItem);
 }
 
+export async function fetchBudgetItem(id: string): Promise<BudgetItem | null> {
+  const { data, error } = await supabase.from('budget_items').select(COLS).eq('id', id).maybeSingle();
+  if (error) fail('ตรวจสอบรายการงบไม่สำเร็จ', error);
+  return data ? normalizeBudgetItem(data as Record<string, unknown>) : null;
+}
+
 export async function fetchMembers(tripId: string): Promise<Member[]> {
   const m = await supabase.from('trip_members').select('user_id').eq('trip_id', tripId);
   if (m.error) fail('โหลดสมาชิกไม่สำเร็จ', m.error);
@@ -107,9 +120,59 @@ export async function updateBudgetItem(id: string, v: BudgetItemInput): Promise<
   return saved;
 }
 
-export async function deleteBudgetItem(id: string) {
-  const { error } = await supabase.from('budget_items').delete().eq('id', id);
+/**
+ * Add every mutable value from the row we displayed to the mutation filter.
+ * If another device edits even one value during the Undo window, PostgREST
+ * returns no row and we refresh instead of overwriting/deleting their change.
+ */
+function matchBudgetSnapshot(query: any, item: BudgetItem) {
+  let q = query
+    .eq('id', item.id)
+    .eq('trip_id', item.trip_id)
+    .eq('category_id', item.category_id)
+    .eq('label', item.label)
+    .eq('estimated', item.estimated)
+    .eq('is_shared', item.is_shared)
+    .eq('is_auto', item.is_auto);
+  q = item.day_id == null ? q.is('day_id', null) : q.eq('day_id', item.day_id);
+  q = item.trip_item_id == null ? q.is('trip_item_id', null) : q.eq('trip_item_id', item.trip_item_id);
+  q = item.actual == null ? q.is('actual', null) : q.eq('actual', item.actual);
+  q = item.paid_by == null ? q.is('paid_by', null) : q.eq('paid_by', item.paid_by);
+  q = item.spent_at == null ? q.is('spent_at', null) : q.eq('spent_at', item.spent_at);
+  q = item.notes == null ? q.is('notes', null) : q.eq('notes', item.notes);
+  return q;
+}
+
+/** Clear only actual-payment fields and keep the estimate and the whole row. */
+export async function clearBudgetActual(item: BudgetItem): Promise<BudgetItem> {
+  if (item.actual == null) throw new BudgetConflictError('รายการนี้ไม่มียอดจ่ายจริงให้ล้างแล้ว');
+  const mutation = matchBudgetSnapshot(
+    supabase.from('budget_items').update({ actual: null, spent_at: null, paid_by: null }),
+    item,
+  );
+  const { data, error } = await mutation.select(COLS).maybeSingle();
+  if (error) fail('ล้างยอดจ่ายจริงไม่สำเร็จ', error);
+  if (!data) throw new BudgetConflictError();
+
+  // Re-read from the database before the UI reports success.
+  const confirmed = await fetchBudgetItem(item.id);
+  if (!confirmed || confirmed.actual != null || confirmed.spent_at != null || confirmed.paid_by != null) {
+    throw new BudgetConflictError('ตรวจสอบแล้วพบว่ายอดจ่ายจริงยังไม่ถูกล้าง กรุณาลองใหม่');
+  }
+  return confirmed;
+}
+
+/** Delete only when the current database row still matches the displayed snapshot. */
+export async function deleteBudgetItem(item: BudgetItem): Promise<void> {
+  const mutation = matchBudgetSnapshot(supabase.from('budget_items').delete(), item);
+  const { data, error } = await mutation.select(COLS).maybeSingle();
   if (error) fail('ลบไม่สำเร็จ', error);
+  if (!data) throw new BudgetConflictError();
+
+  // A returned DELETE row is useful, but a second read proves the row is gone now.
+  if (await fetchBudgetItem(item.id)) {
+    throw new BudgetConflictError('ตรวจสอบแล้วพบว่ารายการยังไม่ถูกลบ กรุณาลองใหม่');
+  }
 }
 
 /** Replace all auto rows of a trip with freshly computed ones. */

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Save, Trash2 } from 'lucide-react';
+import { Eraser, Save, Trash2 } from 'lucide-react';
 import { BottomSheet } from '../../components/ui/BottomSheet';
 import { Button } from '../../components/ui/Button';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
@@ -22,7 +22,8 @@ type Props = {
   currentUserId: string;
   onClose: () => void;
   onSave: (v: BudgetItemInput, id: string | null) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
+  onClearActual: (item: BudgetItem) => Promise<void>;
+  onDelete: (item: BudgetItem) => Promise<void>;
 };
 
 export function BudgetItemSheet(p: Props) {
@@ -37,7 +38,7 @@ export function BudgetItemSheet(p: Props) {
   const [notes, setNotes] = useState('');
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [confirm, setConfirm] = useState(false);
+  const [confirm, setConfirm] = useState<'clear-actual' | 'delete-item' | null>(null);
 
   useEffect(() => {
     if (!p.open) return;
@@ -160,17 +161,35 @@ export function BudgetItemSheet(p: Props) {
       {err && <p className="text-sm text-red-600">{err}</p>}
 
       {p.item && (
-        <button type="button" onClick={() => setConfirm(true)} className="inline-flex min-h-10 items-center gap-1 text-sm text-red-600">
-          <Trash2 size={16} /> ลบรายการ
-        </button>
+        <div className="grid gap-2 border-t border-line pt-3">
+          {p.item.actual != null && (
+            <button type="button" onClick={() => setConfirm('clear-actual')}
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-amber-500 px-3 text-sm font-semibold text-amber-700">
+              <Eraser size={17} /> ล้างเฉพาะยอดจ่ายจริง
+            </button>
+          )}
+          <button type="button" onClick={() => setConfirm('delete-item')}
+            className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-red-500 px-3 text-sm font-semibold text-red-600">
+            <Trash2 size={17} /> ลบทั้งรายการ
+          </button>
+          <p className="text-xs text-muted">ทั้งสองคำสั่งมีเวลาให้กด “เลิกทำ” ก่อนส่งไปฐานข้อมูล</p>
+        </div>
       )}
-      <ConfirmDialog open={confirm} danger busy={busy} title="ลบรายการ?" confirmText="ลบ"
-        message={`ลบ “${p.item?.label ?? ''}” ออกจากงบประมาณ`}
-        onCancel={() => setConfirm(false)}
+      <ConfirmDialog open={confirm === 'clear-actual'} busy={busy} title="ล้างยอดจ่ายจริง?" confirmText="ล้างยอดจ่ายจริง"
+        message={`ล้างยอดจ่ายจริง วันเวลา และผู้จ่ายของ “${p.item?.label ?? ''}”\nค่าประมาณ ${p.item ? p.item.estimated.toFixed(2) : '0.00'} บาท และรายการนี้จะยังอยู่`}
+        onCancel={() => setConfirm(null)}
         onConfirm={async () => {
           if (!p.item) return;
           setBusy(true);
-          try { await p.onDelete(p.item.id); setConfirm(false); p.onClose(); } catch (x) { setErr((x as Error).message); } finally { setBusy(false); }
+          try { await p.onClearActual(p.item); setConfirm(null); p.onClose(); } catch (x) { setErr((x as Error).message); } finally { setBusy(false); }
+        }} />
+      <ConfirmDialog open={confirm === 'delete-item'} danger busy={busy} title="ลบทั้งรายการ?" confirmText="ลบทั้งรายการ"
+        message={`ลบ “${p.item?.label ?? ''}” ทั้งค่าประมาณและยอดจ่ายจริงออกจากงบประมาณ`}
+        onCancel={() => setConfirm(null)}
+        onConfirm={async () => {
+          if (!p.item) return;
+          setBusy(true);
+          try { await p.onDelete(p.item); setConfirm(null); p.onClose(); } catch (x) { setErr((x as Error).message); } finally { setBusy(false); }
         }} />
     </BottomSheet>
   );
