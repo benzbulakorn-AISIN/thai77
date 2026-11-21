@@ -150,6 +150,13 @@ export function PlaceDetailPage() {
       </div>
 
       <VerificationBadge place={p} />
+      {p.is_landmark && p.landmark_status === 'published' && (
+        <section className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-amber-950">
+          <p className="font-semibold">Landmark หลักของจังหวัด · อันดับ {p.landmark_rank ?? 1}</p>
+          {p.landmark_reason_th && <p className="mt-1 text-sm">{p.landmark_reason_th}</p>}
+          {p.landmark_category && <p className="mt-2 text-xs">ประเภท Landmark: {p.landmark_category}</p>}
+        </section>
+      )}
       {p.state !== 'active' && (
         <p className="rounded-xl bg-red-100 p-3 text-sm text-red-800">
           {p.state === 'permanently_closed' ? 'ปิดถาวร' : p.state === 'temporarily_closed' ? 'ปิดชั่วคราว' : 'เปิดเฉพาะบางฤดู'}

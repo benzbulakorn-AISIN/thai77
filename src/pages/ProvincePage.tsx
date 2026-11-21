@@ -6,8 +6,8 @@ import { supabase } from '../lib/supabase';
 import { escapeHtml } from '../lib/escapeHtml';
 import { GeoMap, type MapPoint } from '../features/map/GeoMap';
 import { loadDistrictShapes, type DistrictGeoProps } from '../features/map/geoLoader';
-import { primaryColor } from '../features/map/colors';
-import { useReference, type District } from '../features/provinces/useGeoData';
+import { primaryColor, STATUS_LABEL } from '../features/map/colors';
+import { statusOf, useProvinceStats, useReference, type District } from '../features/provinces/useGeoData';
 import { fetchCategories, fetchPlacesByProvince } from '../features/places/placesApi';
 import { useMyPlaces } from '../features/places/useMyPlaces';
 import { PlaceList } from '../features/places/PlaceList';
@@ -22,6 +22,7 @@ export function ProvincePage() {
   const { provinces, regions, loading } = useReference();
   const province = provinces.find((p) => p.slug === slug);
   const region = regions.find((r) => r.id === province?.region_id);
+  const provinceStats = useProvinceStats();
   const my = useMyPlaces();
 
   const [districts, setDistricts] = useState<District[] | null>(null);
@@ -70,6 +71,11 @@ export function ProvincePage() {
       color: catById.get(p.category_id)?.color ?? '#64748B', highlight: p.id === highlight,
     })), [places, selectedDistrictId, catById, highlight]);
 
+  const publishedLandmark = (places ?? []).find((p) => p.is_landmark && p.landmark_status === 'published');
+  const landmarkMapStatus = places !== null && !publishedLandmark
+    ? 'building'
+    : statusOf(province ? provinceStats[province.id] : undefined);
+
   if (loading) return <Skeleton className="h-96" />;
   if (!province) {
     return (
@@ -95,6 +101,17 @@ export function ProvincePage() {
           <p className="text-sm text-muted">{province.name_en} · {region?.name_th}</p>
         </div>
       </header>
+
+      {placesError ? null : places === null ? <Skeleton className="h-20" /> : (
+        <section className={`rounded-2xl border p-4 ${landmarkMapStatus === 'building' ? 'border-amber-300 bg-amber-50 text-amber-950' : 'border-line bg-surface'}`}>
+          <p className="flex items-center gap-2 font-semibold"><Landmark size={18} /> {STATUS_LABEL[landmarkMapStatus]}</p>
+          {landmarkMapStatus === 'building' ? (
+            <p className="mt-1 text-sm">จังหวัดนี้ยังไม่มี Landmark ที่ Admin ตรวจและเผยแพร่ จึงยังไม่นับว่า “ยังไม่ถึง”</p>
+          ) : publishedLandmark ? (
+            <p className="mt-1 text-sm">Landmark หลัก: <Link to={`/place/${publishedLandmark.id}`} className="text-primary underline">{publishedLandmark.name_th}</Link></p>
+          ) : null}
+        </section>
+      )}
 
       <section className="grid grid-cols-3 gap-2">
         <div className="rounded-2xl border border-line bg-surface p-3">

@@ -25,6 +25,7 @@ import { AdminPlaceImagesPage } from '../pages/admin/AdminPlaceImagesPage';
 import { AdminCategoriesPage } from '../pages/admin/AdminCategoriesPage';
 import { AdminReviewPage } from '../pages/admin/AdminReviewPage';
 import { AdminImportPage } from '../pages/admin/AdminImportPage';
+import { AdminLandmarksPage } from '../pages/admin/AdminLandmarksPage';
 import { LoginPage } from '../features/auth/LoginPage';
 import { ResetPasswordPage } from '../features/auth/ResetPasswordPage';
 
@@ -68,6 +69,7 @@ export const router = createHashRouter([
           { path: 'places/:id/images', element: <AdminPlaceImagesPage /> },
           { path: 'places/:id', element: <AdminPlaceEditPage /> },
           { path: 'import', element: <AdminImportPage /> },
+          { path: 'landmarks', element: <AdminLandmarksPage /> },
           { path: 'categories', element: <AdminCategoriesPage /> },
           { path: 'review', element: <AdminReviewPage /> },
         ],
