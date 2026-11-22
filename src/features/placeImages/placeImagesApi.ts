@@ -18,7 +18,7 @@ export const publicUrlOf = (path: string) => supabase.storage.from(PLACE_IMAGE_B
 // ---------------- read (everyone) ----------------
 export async function fetchPlaceImageSet(placeId: string): Promise<{ images: PlaceImage[]; coverId: string | null }> {
   const [i, p] = await Promise.all([
-    supabase.from('place_images').select(COLS).eq('place_id', placeId).order('sort_order').order('created_at'),
+    supabase.from('place_images').select(COLS).eq('place_id', placeId).eq('image_status', 'approved').order('sort_order').order('created_at'),
     supabase.from('places').select('cover_image_id').eq('id', placeId).maybeSingle(),
   ]);
   if (i.error) fail('โหลดรูปไม่สำเร็จ', i.error);
@@ -35,7 +35,7 @@ export async function fetchCovers(placeIds: string[]): Promise<Map<string, Place
   for (let k = 0; k < ids.length; k += 100) {
     const chunk = ids.slice(k, k + 100);
     const [imgs, covers] = await Promise.all([
-      supabase.from('place_images').select(COLS).in('place_id', chunk),
+      supabase.from('place_images').select(COLS).in('place_id', chunk).eq('image_status', 'approved'),
       supabase.from('places').select('id,cover_image_id').in('id', chunk),
     ]);
     if (imgs.error) fail('โหลดรูปไม่สำเร็จ', imgs.error);
