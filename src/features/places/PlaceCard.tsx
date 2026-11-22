@@ -34,11 +34,6 @@ export function PlaceCard({ place, category, districtName, distanceKm, cover, st
       </Link>
       {cover && <ImageCredit image={cover} className="px-3 pt-1" />}
       <div className="p-3">
-        {place.is_landmark && place.landmark_status === 'published' && (
-          <p className="mb-2 inline-flex rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-900">
-            Landmark หลัก · อันดับ {place.landmark_rank ?? 1}
-          </p>
-        )}
         <div className="flex items-start gap-3">
           <Link to={`/place/${place.id}`} className="min-w-0 flex-1">
             <h3 className="font-semibold leading-snug">{place.name_th}</h3>

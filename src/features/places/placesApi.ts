@@ -4,8 +4,7 @@ import type { Category, Place, PlaceSource } from './types';
 const PLACE_COLS =
   'id,name_th,name_en,province_id,district_id,category_id,short_description,highlights,lat,lng,address,' +
   'opening_hours_text,closed_days_text,fee_thai,fee_foreigner,parking_fee,est_cost_per_person,suggested_minutes,' +
-  'best_time_of_day,best_months,phone,website_url,social_url,google_maps_url,popularity,state,verification,verified_at,is_demo,' +
-  'place_key,region_name_th,landmark_rank,landmark_category,landmark_reason_th,is_landmark,landmark_status';
+  'best_time_of_day,best_months,phone,website_url,social_url,google_maps_url,popularity,state,verification,verified_at,is_demo';
 
 let catCache: Promise<Category[]> | null = null;
 export function fetchCategories(): Promise<Category[]> {
