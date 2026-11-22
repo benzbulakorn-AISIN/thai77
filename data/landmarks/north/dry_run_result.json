@@ -1,0 +1,434 @@
+{
+  "engine": "actual current OneDrive thai77-main/src/features/admin/importModel.ts compiled locally with tsc",
+  "context": "complete 77-row supplied Export used as existing-place context; seed_geo.sql used only for province/district reference; no Supabase connection",
+  "source_hashes": {
+    "src/features/admin/importModel.ts": "646bedeb9a24a341dfe538e07c2286b5bba07b59bf270628dc5f57662836e5d1",
+    "src/features/admin/importApi.ts": "a5a5b96a3e0c7a68dff78eee7c1a92be64640677e121d77d7f675daebe6ee265",
+    "src/features/admin/csv.ts": "cc05b42745db1ec67f59b9b67e732c312f47a134ddadc63fa3a3c61966b27b4a",
+    "src/features/admin/placeForm.ts": "dbe1227394f676bec5960eef17ea5c9c6d5b89dae393eafa7e645cd4b803296d",
+    "src/pages/admin/AdminImportPage.tsx": "a36f8443f14131b2611b097c2e370b907338092f1aa91c64a64696c268469af0",
+    "supabase/seed_places.sql": "bf2e228e931ae47029bfa09c3728cdcb69deac839c4e06737fbe8072640bf79b",
+    "supabase/seed_geo.sql": "fe131565399b9d7723b0b80d6cd31b292929ff15621e7a3e86a18ba954848a55"
+  },
+  "production_database_accessed": false,
+  "write_actions_performed": false,
+  "runImport_called": false,
+  "full18Diagnostic": {
+    "input_file": "northern_places_full18_DRY_RUN_ONLY.csv",
+    "parser": "parseFile",
+    "analyzer": "analyze",
+    "runImport_called": false,
+    "unknownColumns": [],
+    "newOnly": {
+      "total": 18,
+      "insert": 16,
+      "update": 0,
+      "skip": 2,
+      "error": 0,
+      "warn": 0
+    },
+    "mergeDiagnosticOnly": {
+      "total": 18,
+      "insert": 16,
+      "update": 2,
+      "skip": 0,
+      "error": 0,
+      "warn": 0
+    },
+    "rows": [
+      {
+        "line": 2,
+        "name": "วัดร่องขุ่น",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 3,
+        "name": "ภูมิทัศน์โครงการพัฒนาดอยตุง",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 4,
+        "name": "วัดพระธาตุดอยสุเทพราชวรวิหาร",
+        "kind": "match",
+        "errors": [],
+        "warnings": [],
+        "matchId": "b7cf4a41-440f-5930-805c-803304cfa2e3",
+        "matchReason": "ชื่อซ้ำในจังหวัดเดียวกัน",
+        "patchKeys": [
+          "name_th",
+          "name_en",
+          "province_id",
+          "district_id",
+          "category_id",
+          "short_description",
+          "address",
+          "website_url",
+          "popularity",
+          "state",
+          "verification",
+          "is_demo",
+          "is_published"
+        ]
+      },
+      {
+        "line": 5,
+        "name": "อุทยานแห่งชาติดอยอินทนนท์",
+        "kind": "match",
+        "errors": [],
+        "warnings": [],
+        "matchId": "8b4978da-715e-5a35-8c17-24634c833aab",
+        "matchReason": "ชื่อซ้ำในจังหวัดเดียวกัน",
+        "patchKeys": [
+          "name_th",
+          "name_en",
+          "province_id",
+          "district_id",
+          "category_id",
+          "short_description",
+          "address",
+          "website_url",
+          "popularity",
+          "state",
+          "verification",
+          "is_demo",
+          "is_published"
+        ]
+      },
+      {
+        "line": 6,
+        "name": "วัดภูมินทร์",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 7,
+        "name": "อุทยานแห่งชาติดอยภูคา",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 8,
+        "name": "กว๊านพะเยา",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 9,
+        "name": "วัดศรีโคมคำ (วัดพระเจ้าตนหลวง)",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 10,
+        "name": "วัดพระธาตุช่อแฮ พระอารามหลวง",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 11,
+        "name": "วนอุทยานแพะเมืองผี",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 12,
+        "name": "วัดพระธาตุดอยกองมู",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 13,
+        "name": "ศูนย์ศึกษาธรรมชาติและสัตว์ป่าถ้ำน้ำลอด",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 14,
+        "name": "วัดพระธาตุลำปางหลวง",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 15,
+        "name": "อุทยานแห่งชาติแจ้ซ้อน",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 16,
+        "name": "วัดพระธาตุหริภุญชัยวรมหาวิหาร",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 17,
+        "name": "วัดจามเทวี",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 18,
+        "name": "วัดพระแท่นศิลาอาสน์",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 19,
+        "name": "เขื่อนสิริกิติ์",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      }
+    ]
+  },
+  "safeNewOnlyPreview": {
+    "input_file": "northern_places_import_preview.csv",
+    "parser": "parseFile",
+    "analyzer": "analyze",
+    "runImport_called": false,
+    "unknownColumns": [],
+    "newOnly": {
+      "total": 16,
+      "insert": 16,
+      "update": 0,
+      "skip": 0,
+      "error": 0,
+      "warn": 0
+    },
+    "mergeDiagnosticOnly": {
+      "total": 16,
+      "insert": 16,
+      "update": 0,
+      "skip": 0,
+      "error": 0,
+      "warn": 0
+    },
+    "rows": [
+      {
+        "line": 2,
+        "name": "วัดร่องขุ่น",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 3,
+        "name": "ภูมิทัศน์โครงการพัฒนาดอยตุง",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 4,
+        "name": "วัดภูมินทร์",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 5,
+        "name": "อุทยานแห่งชาติดอยภูคา",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 6,
+        "name": "กว๊านพะเยา",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 7,
+        "name": "วัดศรีโคมคำ (วัดพระเจ้าตนหลวง)",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 8,
+        "name": "วัดพระธาตุช่อแฮ พระอารามหลวง",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 9,
+        "name": "วนอุทยานแพะเมืองผี",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 10,
+        "name": "วัดพระธาตุดอยกองมู",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 11,
+        "name": "ศูนย์ศึกษาธรรมชาติและสัตว์ป่าถ้ำน้ำลอด",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 12,
+        "name": "วัดพระธาตุลำปางหลวง",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 13,
+        "name": "อุทยานแห่งชาติแจ้ซ้อน",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 14,
+        "name": "วัดพระธาตุหริภุญชัยวรมหาวิหาร",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 15,
+        "name": "วัดจามเทวี",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 16,
+        "name": "วัดพระแท่นศิลาอาสน์",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      },
+      {
+        "line": 17,
+        "name": "เขื่อนสิริกิติ์",
+        "kind": "new",
+        "errors": [],
+        "warnings": [],
+        "matchId": null,
+        "matchReason": null,
+        "patchKeys": []
+      }
+    ]
+  }
+}
