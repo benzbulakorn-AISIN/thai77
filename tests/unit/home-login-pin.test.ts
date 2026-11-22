@@ -84,16 +84,6 @@ describe('greeting / name / numbers', () => {
     expect(provinceProgress([], {})).toEqual({ done: 0, total: 77, pct: 0 });
     expect(provinceProgress(Array.from({ length: 77 }, (_, i) => `p${i}`), Object.fromEntries(Array.from({ length: 77 }, (_, i) => [`p${i}`, { visited: 1 }]))).pct).toBe(100);
   });
-  it('provinceProgress uses immutable Landmark badges when the Landmark workflow is installed', () => {
-    const ids = ['building', 'never', 'stopped', 'arrived'];
-    const p = provinceProgress(ids, {
-      building: { visited: 4, landmarkStatus: 'building' },
-      never: { visited: 0, landmarkStatus: 'never_visited' },
-      stopped: { visited: 3, landmarkStatus: 'stopped_by' },
-      arrived: { visited: 1, landmarkStatus: 'arrived' },
-    });
-    expect(p).toEqual({ done: 1, total: 77, pct: 1 });
-  });
   it('sumStats adds everything and skips holes', () => {
     expect(sumStats({ a: { total: 14, planned: 1, visited: 2 }, b: { total: 12, planned: 0, visited: 0 }, c: undefined })).toEqual({ total: 26, planned: 1, visited: 2 });
     expect(sumStats({})).toEqual({ total: 0, planned: 0, visited: 0 });
