@@ -6,9 +6,10 @@ import { supabase } from '../lib/supabase';
 import { escapeHtml } from '../lib/escapeHtml';
 import { GeoMap, type MapPoint } from '../features/map/GeoMap';
 import { loadDistrictShapes, type DistrictGeoProps } from '../features/map/geoLoader';
-import { primaryColor, STATUS_LABEL } from '../features/map/colors';
-import { statusOf, useProvinceStats, useReference, type District } from '../features/provinces/useGeoData';
+import { primaryColor } from '../features/map/colors';
+import { useReference, type District } from '../features/provinces/useGeoData';
 import { fetchCategories, fetchPlacesByProvince } from '../features/places/placesApi';
+import { fetchPublishedLandmarksByProvince, type PublishedProvinceLandmark } from '../features/places/landmarksApi';
 import { useMyPlaces } from '../features/places/useMyPlaces';
 import { PlaceList } from '../features/places/PlaceList';
 import type { Category, Place } from '../features/places/types';
@@ -22,13 +23,13 @@ export function ProvincePage() {
   const { provinces, regions, loading } = useReference();
   const province = provinces.find((p) => p.slug === slug);
   const region = regions.find((r) => r.id === province?.region_id);
-  const provinceStats = useProvinceStats();
   const my = useMyPlaces();
 
   const [districts, setDistricts] = useState<District[] | null>(null);
   const [places, setPlaces] = useState<Place[] | null>(null);
   const [placesError, setPlacesError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [landmarks, setLandmarks] = useState<PublishedProvinceLandmark[]>([]);
   const [shapes, setShapes] = useState<FeatureCollection<Geometry, DistrictGeoProps> | null>(null);
   const [geoError, setGeoError] = useState(false);
   const [selected, setSelected] = useState<string | null>(null); // district pcode
@@ -39,12 +40,15 @@ export function ProvincePage() {
   useEffect(() => {
     if (!province) return;
     let alive = true;
-    setDistricts(null); setShapes(null); setGeoError(false); setSelected(null); setPlaces(null); setPlacesError(null);
+    setDistricts(null); setShapes(null); setGeoError(false); setSelected(null); setPlaces(null); setPlacesError(null); setLandmarks([]);
     supabase.from('districts').select('id,pcode,name_th,name_en').eq('province_id', province.id).order('name_th')
       .then(({ data }) => alive && setDistricts((data ?? []) as District[]));
     fetchPlacesByProvince(province.id)
       .then((d) => alive && setPlaces(d))
       .catch((e: Error) => alive && setPlacesError(e.message));
+    fetchPublishedLandmarksByProvince(province.id)
+      .then((d) => alive && setLandmarks(d))
+      .catch(() => alive && setLandmarks([]));
     loadDistrictShapes(province.pcode).then((d) => alive && setShapes(d)).catch(() => alive && setGeoError(true));
     return () => { alive = false; };
   }, [province]);
@@ -70,11 +74,6 @@ export function ProvincePage() {
       id: p.id, lat: p.lat as number, lng: p.lng as number, title: p.name_th,
       color: catById.get(p.category_id)?.color ?? '#64748B', highlight: p.id === highlight,
     })), [places, selectedDistrictId, catById, highlight]);
-
-  const publishedLandmark = (places ?? []).find((p) => p.is_landmark && p.landmark_status === 'published');
-  const landmarkMapStatus = places !== null && !publishedLandmark
-    ? 'building'
-    : statusOf(province ? provinceStats[province.id] : undefined);
 
   if (loading) return <Skeleton className="h-96" />;
   if (!province) {
@@ -102,17 +101,6 @@ export function ProvincePage() {
         </div>
       </header>
 
-      {placesError ? null : places === null ? <Skeleton className="h-20" /> : (
-        <section className={`rounded-2xl border p-4 ${landmarkMapStatus === 'building' ? 'border-amber-300 bg-amber-50 text-amber-950' : 'border-line bg-surface'}`}>
-          <p className="flex items-center gap-2 font-semibold"><Landmark size={18} /> {STATUS_LABEL[landmarkMapStatus]}</p>
-          {landmarkMapStatus === 'building' ? (
-            <p className="mt-1 text-sm">จังหวัดนี้ยังไม่มี Landmark ที่ Admin ตรวจและเผยแพร่ จึงยังไม่นับว่า “ยังไม่ถึง”</p>
-          ) : publishedLandmark ? (
-            <p className="mt-1 text-sm">Landmark หลัก: <Link to={`/place/${publishedLandmark.id}`} className="text-primary underline">{publishedLandmark.name_th}</Link></p>
-          ) : null}
-        </section>
-      )}
-
       <section className="grid grid-cols-3 gap-2">
         <div className="rounded-2xl border border-line bg-surface p-3">
           <p className="flex items-center gap-1 text-xs text-muted"><CalendarDays size={14} /> ช่วงที่เหมาะ</p>
@@ -128,6 +116,19 @@ export function ProvincePage() {
         </div>
       </section>
       {province.summary && <p className="text-sm">{province.summary}</p>}
+
+      {landmarks.length > 0 && (
+        <section className="space-y-2 rounded-2xl border border-line bg-surface p-4">
+          <h2 className="flex items-center gap-2 font-semibold"><Landmark size={18} /> Landmark ประจำจังหวัด</h2>
+          {landmarks.map((item) => (
+            <article key={item.id} className="rounded-xl bg-surface-2 p-3">
+              <p className="text-xs font-medium text-primary">อันดับ {item.rank}</p>
+              <Link to={`/place/${item.place_id}`} className="font-semibold underline">{item.name_th}</Link>
+              <p className="mt-1 text-sm text-muted">{item.landmark_reason_th}</p>
+            </article>
+          ))}
+        </section>
+      )}
 
       {geoError ? (
         <p className="rounded-xl bg-amber-100 p-3 text-sm text-amber-900">ยังไม่มีไฟล์ขอบเขตอำเภอของจังหวัดนี้</p>
