@@ -1,0 +1,625 @@
+{
+  "version": 1,
+  "region": "north",
+  "generated_at": "2026-11-22",
+  "instructions": "Import the 16 new places first. Preview this bundle; all 18 rows must resolve to real place IDs. Linking forces pending/unpublished and never approves images.",
+  "landmarks": [
+    {
+      "place_key": "NORTH-57-R1-WAT-RONG-KHUN",
+      "province_pcode": "TH57",
+      "province_name_th": "เชียงราย",
+      "landmark_rank": 1,
+      "place_name_th": "วัดร่องขุ่น",
+      "place_name_en": "Wat Rong Khun",
+      "landmark_reason_th": "เป็นภาพจำร่วมสมัยที่แยกเชียงรายออกจากจังหวัดล้านนาอื่นได้ชัด",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A3%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%82%E0%B8%B8%E0%B9%88%E0%B8%99",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Wat_Rong_Khun%3B_White_Temple_North_Thailand.jpg",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Wat_Rong_Khun;_White_Temple_North_Thailand.jpg",
+        "file_name": "Wat Rong Khun; White Temple North Thailand.jpg",
+        "width_px": 4256,
+        "height_px": 2832,
+        "author": "Hans-Jürgen Neubert",
+        "license_code": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution_text": "Hans-Jürgen Neubert, Wat Rong Khun; White Temple North Thailand.jpg, CC BY-SA 4.0, via Wikimedia Commons",
+        "alt_text_th": "พระอุโบสถสีขาวและสะพานเข้าสู่วัดร่องขุ่น จังหวัดเชียงราย",
+        "sharealike_required": true,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-57-R2-DOI-TUNG",
+      "province_pcode": "TH57",
+      "province_name_th": "เชียงราย",
+      "landmark_rank": 2,
+      "place_name_th": "ภูมิทัศน์โครงการพัฒนาดอยตุง",
+      "place_name_en": "Doi Tung Development Project Landscape",
+      "landmark_reason_th": "เสริมมิติชุมชน การพัฒนาที่ยั่งยืน และภูมิทัศน์ป่าให้ต่างจากศิลปะร่วมสมัยของอันดับ 1",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://www.maefahluang.org/en/doitung-development-project/",
+          "source_name": "มูลนิธิแม่ฟ้าหลวง ในพระบรมราชูปถัมภ์",
+          "source_type": "other",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        },
+        {
+          "source_url": "https://www.maefahluang.org/en/contact/",
+          "source_name": "มูลนิธิแม่ฟ้าหลวง — Contact Us",
+          "source_type": "other",
+          "checked_at": "2026-11-22",
+          "note": "จุดนำทาง Multi-Purpose Hall และลิงก์แผนที่ 20.267451,99.801423 — ใช้เป็นจุดนำทางอ้างอิง ไม่ใช่การยืนยัน production geocode"
+        }
+      ],
+      "image": {
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Doi_Tung_flags.jpg",
+        "file_name": "Doi Tung flags.jpg",
+        "width_px": 1152,
+        "height_px": 1728,
+        "author": "Ahoerstemeier",
+        "license_code": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "sharealike_required": true,
+        "image_status": "rejected_as_cover",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "ภาพแนวตั้งและเป็นรายละเอียดธง ไม่แทนภูมิทัศน์โครงการโดยรวม; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-50-R1-DOI-SUTHEP",
+      "production_place_id": "b7cf4a41-440f-5930-805c-803304cfa2e3",
+      "province_pcode": "TH50",
+      "province_name_th": "เชียงใหม่",
+      "landmark_rank": 1,
+      "place_name_th": "วัดพระธาตุดอยสุเทพราชวรวิหาร",
+      "place_name_en": "Wat Phra That Doi Suthep",
+      "landmark_reason_th": "รวมศรัทธา สถาปัตยกรรมล้านนา และภาพมองเมืองเชียงใหม่ไว้ในจุดเดียว",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%98%E0%B8%B2%E0%B8%95%E0%B8%B8%E0%B8%94%E0%B8%AD%E0%B8%A2%E0%B8%AA%E0%B8%B8%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A3%E0%B8%B2%E0%B8%8A%E0%B8%A7%E0%B8%A3%E0%B8%A7%E0%B8%B4%E0%B8%AB%E0%B8%B2%E0%B8%A3",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Wat_Phrathat_Doi_Suthep_08.jpg",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Wat_Phrathat_Doi_Suthep_08.jpg",
+        "file_name": "Wat Phrathat Doi Suthep 08.jpg",
+        "width_px": 4000,
+        "height_px": 2667,
+        "author": "Kittipong khunnen",
+        "license_code": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "attribution_text": "Kittipong khunnen, Wat Phrathat Doi Suthep 08.jpg, CC BY-SA 3.0, via Wikimedia Commons",
+        "alt_text_th": "องค์พระธาตุสีทองภายในวัดพระธาตุดอยสุเทพ จังหวัดเชียงใหม่",
+        "sharealike_required": true,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-50-R2-DOI-INTHANON",
+      "production_place_id": "8b4978da-715e-5a35-8c17-24634c833aab",
+      "province_pcode": "TH50",
+      "province_name_th": "เชียงใหม่",
+      "landmark_rank": 2,
+      "place_name_th": "อุทยานแห่งชาติดอยอินทนนท์",
+      "place_name_en": "Doi Inthanon National Park",
+      "landmark_reason_th": "เป็นตัวแทนธรรมชาติระดับประเทศและทำให้ชุดเชียงใหม่ไม่จำกัดเฉพาะวัดหรือเมืองเก่า",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://booking.dnp.go.th/parksdetail.php?id=121",
+          "source_name": "กรมอุทยานแห่งชาติ สัตว์ป่า และพันธุ์พืช",
+          "source_type": "national_park",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Near_the_Top_of_Doi_Inthanon_2014.jpg",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Near_the_Top_of_Doi_Inthanon_2014.jpg",
+        "file_name": "Near the Top of Doi Inthanon 2014.jpg",
+        "width_px": 5472,
+        "height_px": 3648,
+        "author": "Yimsurawut",
+        "license_code": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "attribution_text": "Yimsurawut, Near the Top of Doi Inthanon 2014.jpg, CC BY-SA 3.0, via Wikimedia Commons",
+        "alt_text_th": "พระมหาธาตุคู่ท่ามกลางภูเขาบนดอยอินทนนท์ จังหวัดเชียงใหม่",
+        "sharealike_required": true,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-55-R1-WAT-PHUMIN",
+      "province_pcode": "TH55",
+      "province_name_th": "น่าน",
+      "landmark_rank": 1,
+      "place_name_th": "วัดภูมินทร์",
+      "place_name_en": "Wat Phumin",
+      "landmark_reason_th": "เชื่อมสถาปัตยกรรม จิตรกรรม และภาพจำเมืองน่านไว้ในจุดเดียว",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A0%E0%B8%B9%E0%B8%A1%E0%B8%B4%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_status": "missing",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "ยังไม่มีไฟล์ภาพผู้สมัครที่เปิดตรวจหน้า File และใบอนุญาตครบ; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-55-R2-DOI-PHU-KHA",
+      "province_pcode": "TH55",
+      "province_name_th": "น่าน",
+      "landmark_rank": 2,
+      "place_name_th": "อุทยานแห่งชาติดอยภูคา",
+      "place_name_en": "Doi Phu Kha National Park",
+      "landmark_reason_th": "เพิ่มตัวแทนภูเขา ป่า และความหลากหลายทางชีวภาพ ตัดกับศิลปวัฒนธรรมของอันดับ 1",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://booking.dnp.go.th/parksdetail.php?id=96",
+          "source_name": "กรมอุทยานแห่งชาติ สัตว์ป่า และพันธุ์พืช",
+          "source_type": "national_park",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_status": "missing",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "ยังไม่มีไฟล์ภาพผู้สมัครที่เปิดตรวจหน้า File และใบอนุญาตครบ; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-56-R1-KWAN-PHAYAO",
+      "province_pcode": "TH56",
+      "province_name_th": "พะเยา",
+      "landmark_rank": 1,
+      "place_name_th": "กว๊านพะเยา",
+      "place_name_en": "Kwan Phayao (Phayao Lake)",
+      "landmark_reason_th": "ผูกธรรมชาติ เมือง และวิถีชีวิตริมน้ำเข้าด้วยกัน เป็นภาพจำที่จำแนกพะเยาได้ทันที",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%81%E0%B8%A7%E0%B9%8A%E0%B8%B2%E0%B8%99%E0%B8%9E%E0%B8%B0%E0%B9%80%E0%B8%A2%E0%B8%B2",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Phayao-Lake.JPG",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Phayao-Lake.JPG",
+        "file_name": "Phayao-Lake.JPG",
+        "width_px": 6808,
+        "height_px": 1121,
+        "author": "เทวประภาส มากคล้าย",
+        "license_code": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0/",
+        "attribution_text": "เทวประภาส มากคล้าย, Phayao-Lake.JPG, CC BY 3.0, via Wikimedia Commons",
+        "alt_text_th": "ทิวทัศน์กว๊านพะเยาและแนวภูเขา จังหวัดพะเยา",
+        "sharealike_required": false,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-56-R2-WAT-SI-KHOM-KHAM",
+      "province_pcode": "TH56",
+      "province_name_th": "พะเยา",
+      "landmark_rank": 2,
+      "place_name_th": "วัดศรีโคมคำ (วัดพระเจ้าตนหลวง)",
+      "place_name_en": "Wat Si Khom Kham",
+      "landmark_reason_th": "เพิ่มมิติศรัทธาและประเพณีท้องถิ่นโดยยังเชื่อมโยงกับภูมิทัศน์กว๊านพะเยา",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B9%82%E0%B8%84%E0%B8%A1%E0%B8%84%E0%B8%B3-%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%95%E0%B8%99%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_status": "missing",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "ยังไม่มีไฟล์ภาพผู้สมัครที่เปิดตรวจหน้า File และใบอนุญาตครบ; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-54-R1-WAT-CHO-HAE",
+      "province_pcode": "TH54",
+      "province_name_th": "แพร่",
+      "landmark_rank": 1,
+      "place_name_th": "วัดพระธาตุช่อแฮ พระอารามหลวง",
+      "place_name_en": "Wat Phra That Cho Hae",
+      "landmark_reason_th": "เป็นตัวแทนศรัทธา ประวัติศาสตร์ และอัตลักษณ์เมืองแพร่ตามอันดับที่ผู้ใช้ยืนยัน",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%98%E0%B8%B2%E0%B8%95%E0%B8%B8%E0%B8%8A%E0%B9%88%E0%B8%AD%E0%B9%81%E0%B8%AE-%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%AD%E0%B8%B2%E0%B8%A3%E0%B8%B2%E0%B8%A1%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Phra_That_Cho_Hae.jpg",
+        "file_name": "Phra That Cho Hae.jpg",
+        "width_px": 500,
+        "height_px": 667,
+        "author": "Oatz (assumed on Commons file page)",
+        "license_code": "Public Domain (PD-self)",
+        "license_url": "https://commons.wikimedia.org/wiki/Template:PD-self",
+        "sharealike_required": false,
+        "image_status": "rejected_as_cover",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "ภาพแนวตั้ง ความละเอียด 500×667 พิกเซล ไม่เหมาะกับปกแนวนอน; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-54-R2-PHAE-MUEANG-PHI",
+      "province_pcode": "TH54",
+      "province_name_th": "แพร่",
+      "landmark_rank": 2,
+      "place_name_th": "วนอุทยานแพะเมืองผี",
+      "place_name_en": "Phae Mueang Phi Forest Park",
+      "landmark_reason_th": "เพิ่มภูมิประเทศเฉพาะตัวและความหลากหลายจากศาสนสถานอันดับ 1",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%99%E0%B8%AD%E0%B8%B8%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%99%E0%B9%81%E0%B8%9E%E0%B8%B0%E0%B9%80%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%87%E0%B8%9C%E0%B8%B5",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Phae_Mueang_Phi_Forest_Park1.jpg",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Phae_Mueang_Phi_Forest_Park1.jpg",
+        "file_name": "Phae Mueang Phi Forest Park1.jpg",
+        "width_px": 1277,
+        "height_px": 850,
+        "author": "LannaPhoto",
+        "license_code": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution_text": "LannaPhoto, Phae Mueang Phi Forest Park1.jpg, CC BY-SA 4.0, via Wikimedia Commons",
+        "alt_text_th": "เสาดินจากการกัดเซาะในวนอุทยานแพะเมืองผี จังหวัดแพร่",
+        "sharealike_required": true,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-58-R1-DOI-KONG-MU",
+      "province_pcode": "TH58",
+      "province_name_th": "แม่ฮ่องสอน",
+      "landmark_rank": 1,
+      "place_name_th": "วัดพระธาตุดอยกองมู",
+      "place_name_en": "Wat Phrathat Doi Kong Mu",
+      "landmark_reason_th": "รวมอัตลักษณ์ไทใหญ่-พม่า ภูเขา และภาพเมืองแม่ฮ่องสอนไว้ด้วยกัน",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%98%E0%B8%B2%E0%B8%95%E0%B8%B8%E0%B8%94%E0%B8%AD%E0%B8%A2%E0%B8%81%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B9",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Mae_Hong_Son%2C_Stupas%2C_Thailand.jpg",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Mae_Hong_Son,_Stupas,_Thailand.jpg",
+        "file_name": "Mae Hong Son, Stupas, Thailand.jpg",
+        "width_px": 3072,
+        "height_px": 2048,
+        "author": "Vyacheslav Argenberg",
+        "license_code": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "attribution_text": "Vyacheslav Argenberg, Mae Hong Son, Stupas, Thailand.jpg, CC BY 4.0, via Wikimedia Commons",
+        "alt_text_th": "เจดีย์สีขาวของวัดพระธาตุดอยกองมู จังหวัดแม่ฮ่องสอน",
+        "sharealike_required": false,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-58-R2-THAM-NAM-LOD",
+      "province_pcode": "TH58",
+      "province_name_th": "แม่ฮ่องสอน",
+      "landmark_rank": 2,
+      "place_name_th": "ศูนย์ศึกษาธรรมชาติและสัตว์ป่าถ้ำน้ำลอด",
+      "place_name_en": "Tham Nam Lod Nature and Wildlife Education Centre",
+      "landmark_reason_th": "เพิ่มภูมิประเทศถ้ำและโบราณคดีก่อนประวัติศาสตร์ ซึ่งแตกต่างจากวัดบนดอย",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A8%E0%B8%B9%E0%B8%99%E0%B8%A2%E0%B9%8C%E0%B8%A8%E0%B8%B6%E0%B8%81%E0%B8%A9%E0%B8%B2%E0%B8%98%E0%B8%A3%E0%B8%A3%E0%B8%A1%E0%B8%8A%E0%B8%B2%E0%B8%95%E0%B8%B4%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AA%E0%B8%B1%E0%B8%95%E0%B8%A7%E0%B9%8C%E0%B8%9B%E0%B9%88%E0%B8%B2%E0%B8%96%E0%B9%89%E0%B8%B3%E0%B8%99%E0%B9%89%E0%B8%B3%E0%B8%A5%E0%B8%AD%E0%B8%94",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        },
+        {
+          "source_url": "https://catalog.dnp.go.th/dataset/67_dnp09_11_01/resource/0b039ee4-acfd-4b0d-a791-1d8b339b4da6",
+          "source_name": "DNP Data Catalog — ที่ตั้งหน่วยงานด้านอนุรักษ์สัตว์ป่า",
+          "source_type": "national_park",
+          "checked_at": "2026-11-22",
+          "note": "แหล่งข้อมูลที่ตั้งหน่วยงาน — ยังดึงแถวศูนย์ถ้ำน้ำลอดไม่ได้ จึงไม่กรอกพิกัด"
+        }
+      ],
+      "image": {
+        "image_status": "missing",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "ยังไม่มีไฟล์ภาพผู้สมัครที่เปิดตรวจหน้า File และใบอนุญาตครบ; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-52-R1-WAT-LAMPANG-LUANG",
+      "province_pcode": "TH52",
+      "province_name_th": "ลำปาง",
+      "landmark_rank": 1,
+      "place_name_th": "วัดพระธาตุลำปางหลวง",
+      "place_name_en": "Wat Phra That Lampang Luang",
+      "landmark_reason_th": "เป็นชุดสถาปัตยกรรมล้านนาที่เด่นและสัมพันธ์กับภาพจำจังหวัดลำปางโดยตรง",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%98%E0%B8%B2%E0%B8%95%E0%B8%B8%E0%B8%A5%E0%B8%B3%E0%B8%9B%E0%B8%B2%E0%B8%87%E0%B8%AB%E0%B8%A5%E0%B8%A7%E0%B8%87",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_status": "missing",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "ยังไม่มีไฟล์ภาพผู้สมัครที่เปิดตรวจหน้า File และใบอนุญาตครบ; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-52-R2-CHAE-SON",
+      "province_pcode": "TH52",
+      "province_name_th": "ลำปาง",
+      "landmark_rank": 2,
+      "place_name_th": "อุทยานแห่งชาติแจ้ซ้อน",
+      "place_name_en": "Chae Son National Park",
+      "landmark_reason_th": "เพิ่มตัวแทนธรรมชาติและธรณีความร้อน ทำให้ลำปางไม่ถูกแทนด้วยศาสนสถานเพียงประเภทเดียว",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "http://npv-app.dnp.go.th/front/about/83/23?lang=th",
+          "source_name": "กรมอุทยานแห่งชาติ สัตว์ป่า และพันธุ์พืช",
+          "source_type": "national_park",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Chae_Son_Waterfall%2C_Chae_Son_National_Park%2C_Lampang_Thailand.jpg",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Chae_Son_Waterfall,_Chae_Son_National_Park,_Lampang_Thailand.jpg",
+        "file_name": "Chae Son Waterfall, Chae Son National Park, Lampang Thailand.jpg",
+        "width_px": 4288,
+        "height_px": 2848,
+        "author": "Apijate Rungwijitsin",
+        "license_code": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution_text": "Apijate Rungwijitsin, Chae Son Waterfall, Chae Son National Park, Lampang Thailand.jpg, CC BY-SA 4.0, via Wikimedia Commons",
+        "alt_text_th": "น้ำตกแจ้ซ้อนในอุทยานแห่งชาติแจ้ซ้อน จังหวัดลำปาง",
+        "sharealike_required": true,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-51-R1-HARIPHUNCHAI",
+      "province_pcode": "TH51",
+      "province_name_th": "ลำพูน",
+      "landmark_rank": 1,
+      "place_name_th": "วัดพระธาตุหริภุญชัยวรมหาวิหาร",
+      "place_name_en": "Wat Phra That Hariphunchai",
+      "landmark_reason_th": "เป็นจุดเชื่อมตรงที่สุดระหว่างเมืองลำพูน ศรัทธา และประวัติศาสตร์หริภุญชัย",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%98%E0%B8%B2%E0%B8%95%E0%B8%B8%E0%B8%AB%E0%B8%A3%E0%B8%B4%E0%B8%A0%E0%B8%B8%E0%B8%8D%E0%B8%8A%E0%B8%B1%E0%B8%A2%E0%B8%A7%E0%B8%A3%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%AB%E0%B8%B2%E0%B8%A3",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/29/Wat_Phra_That_Hariphunchai_%28II%29.jpg",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Wat_Phra_That_Hariphunchai_(II).jpg",
+        "file_name": "Wat Phra That Hariphunchai (II).jpg",
+        "width_px": 4856,
+        "height_px": 3237,
+        "author": "Supanut Arunoprayote",
+        "license_code": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "attribution_text": "Supanut Arunoprayote, Wat Phra That Hariphunchai (II).jpg, CC BY 4.0, via Wikimedia Commons",
+        "alt_text_th": "องค์พระบรมธาตุหริภุญชัยสีทอง จังหวัดลำพูน",
+        "sharealike_required": false,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-51-R2-CHAM-THEWI",
+      "province_pcode": "TH51",
+      "province_name_th": "ลำพูน",
+      "landmark_rank": 2,
+      "place_name_th": "วัดจามเทวี",
+      "place_name_en": "Wat Cham Thewi (Wat Ku Kut)",
+      "landmark_reason_th": "ช่วยเล่าเรื่องรากฐานหริภุญชัยผ่านโบราณสถานรูปทรงจำเพาะ",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://www.lamphun.go.th/th/attractions/10/Wat%20Cham%20Devi",
+          "source_name": "จังหวัดลำพูน",
+          "source_type": "province",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        },
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%88%E0%B8%B2%E0%B8%A1%E0%B9%80%E0%B8%97%E0%B8%A7%E0%B8%B5",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย — วัดจามเทวี",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ข้อความอธิบายระบุตำบลในเมือง แต่ช่องที่อยู่ระบุต้นธง — เลือกตำบลในเมืองตามเว็บไซต์จังหวัดลำพูนและข้อความอธิบายของ ททท.; เก็บข้อขัดแย้งไว้"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/db/ThaiLamphunKukut05.jpg",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:ThaiLamphunKukut05.jpg",
+        "file_name": "ThaiLamphunKukut05.jpg",
+        "width_px": 3013,
+        "height_px": 1710,
+        "author": "Ziegler175",
+        "license_code": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "attribution_text": "Ziegler175, ThaiLamphunKukut05.jpg, CC BY-SA 3.0, via Wikimedia Commons",
+        "alt_text_th": "เจดีย์กู่กุดภายในวัดจามเทวี จังหวัดลำพูน",
+        "sharealike_required": true,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-53-R1-PHRA-THAEN",
+      "province_pcode": "TH53",
+      "province_name_th": "อุตรดิตถ์",
+      "landmark_rank": 1,
+      "place_name_th": "วัดพระแท่นศิลาอาสน์",
+      "place_name_en": "Wat Phra Thaen Sila At",
+      "landmark_reason_th": "เชื่อมศรัทธา ประวัติศาสตร์ลับแล และมรดกวัฒนธรรมของจังหวัดได้ชัด",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%81%E0%B8%97%E0%B9%88%E0%B8%99%E0%B8%A8%E0%B8%B4%E0%B8%A5%E0%B8%B2%E0%B8%AD%E0%B8%B2%E0%B8%AA%E0%B8%99%E0%B9%8C",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย (ททท.)",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Wat_Phra_Thaen_Sila_At%2C_Uttaradit.jpg",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Wat_Phra_Thaen_Sila_At,_Uttaradit.jpg",
+        "file_name": "Wat Phra Thaen Sila At, Uttaradit.jpg",
+        "width_px": 1363,
+        "height_px": 1000,
+        "author": "ผู้สร้างต้นฉบับไม่ทราบ; ผู้ใช้อัปโหลดเป็นผู้สกัดภาพ",
+        "license_code": "Public Domain (PD-Thailand)",
+        "license_url": "https://commons.wikimedia.org/wiki/Template:PD-Thailand",
+        "attribution_text": "ผู้สร้างต้นฉบับไม่ทราบ; ผู้ใช้อัปโหลดเป็นผู้สกัดภาพ, Wat Phra Thaen Sila At, Uttaradit.jpg, Public Domain (PD-Thailand), via Wikimedia Commons",
+        "alt_text_th": "อาคารและบริเวณวัดพระแท่นศิลาอาสน์ จังหวัดอุตรดิตถ์",
+        "sharealike_required": false,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    },
+    {
+      "place_key": "NORTH-53-R2-SIRIKIT",
+      "province_pcode": "TH53",
+      "province_name_th": "อุตรดิตถ์",
+      "landmark_rank": 2,
+      "place_name_th": "เขื่อนสิริกิติ์",
+      "place_name_en": "Sirikit Dam",
+      "landmark_reason_th": "เพิ่มมิติวิศวกรรม พลังงาน และภูมิทัศน์ ซึ่งแตกต่างจากศาสนสถานอันดับ 1",
+      "landmark_status": "pending",
+      "is_published": false,
+      "sources": [
+        {
+          "source_url": "https://www.egat.co.th/home/sirikit-dm-travel/",
+          "source_name": "การไฟฟ้าฝ่ายผลิตแห่งประเทศไทย (กฟผ.)",
+          "source_type": "other",
+          "checked_at": "2026-11-22",
+          "note": "ชื่อ สถานที่ตั้ง ขอบเขต คำอธิบาย และเหตุผลคัดเลือกตามที่หน้าแหล่งรองรับ — ข้อมูลบริการที่เปลี่ยนแปลงได้ยังเว้นว่างตามคำสั่งผู้ใช้"
+        },
+        {
+          "source_url": "https://thai.tourismthailand.org/Attraction/%E0%B9%80%E0%B8%82%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%99%E0%B8%AA%E0%B8%B4%E0%B8%A3%E0%B8%B4%E0%B8%81%E0%B8%B4%E0%B8%95%E0%B8%B4%E0%B9%8C",
+          "source_name": "การท่องเที่ยวแห่งประเทศไทย — เขื่อนสิริกิติ์",
+          "source_type": "tat",
+          "checked_at": "2026-11-22",
+          "note": "ที่อยู่และข้อมูลติดต่อระดับสถานที่ — ยังไม่ยืนยันว่าจุดใดเป็นทางเข้าหรือศูนย์บริการ จึงไม่กรอกพิกัด"
+        }
+      ],
+      "image": {
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/55/Sirikitdam_01.jpg",
+        "commons_page_url": "https://commons.wikimedia.org/wiki/File:Sirikitdam_01.jpg",
+        "file_name": "Sirikitdam 01.jpg",
+        "width_px": 819,
+        "height_px": 584,
+        "author": "เทวประภาส มากคล้าย",
+        "license_code": "Public Domain (PD-self)",
+        "license_url": "https://commons.wikimedia.org/wiki/Template:PD-self",
+        "attribution_text": "เทวประภาส มากคล้าย, Sirikitdam 01.jpg, Public Domain (PD-self), via Wikimedia Commons",
+        "alt_text_th": "แนวเขื่อนสิริกิติ์และภูมิทัศน์โดยรอบ จังหวัดอุตรดิตถ์",
+        "sharealike_required": false,
+        "image_status": "license_verified_visual_pending",
+        "temporary_cover_label": "ภาพประกอบ",
+        "review_note": "เปิดตรวจหน้า File ผู้สร้าง ใบอนุญาต และขนาดแล้ว; ยังไม่อนุมัติใช้จริงเพราะไม่สามารถดึงไบนารีภาพเต็มขนาดมาตรวจองค์ประกอบ ลายน้ำ บุคคล ป้าย และครอปในรอบนี้; ไม่อนุมัติใช้จริงจนกว่าจะเปิดไฟล์ต้นฉบับเต็มขนาดและตรวจองค์ประกอบ/ลายน้ำ/บุคคล/ป้าย/ครอป"
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "export_file": "thai77-places-2026-11-22.csv",
+  "export_rows": 77,
+  "export_provinces": [
+    "กาญจนบุรี",
+    "ชลบุรี",
+    "ภูเก็ต",
+    "ระยอง",
+    "หนองคาย",
+    "เชียงใหม่"
+  ],
+  "candidate_landmarks": 18,
+  "exact_matches": 2,
+  "possible_duplicates": 0,
+  "not_found_in_export": 16,
+  "safe_preview_rows": 16,
+  "excluded_existing_rows": 2,
+  "production_database_accessed": false,
+  "write_actions_performed": false,
+  "important_scope_note": "Not found in the supplied Export is not evidence that a record is absent from any live database or from data outside the Export."
+}
