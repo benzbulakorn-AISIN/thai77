@@ -34,6 +34,8 @@ export type Place = {
   is_demo: boolean;
   is_landmark?: boolean;
   landmark_rank?: number | null;
+  landmark_category?: string | null;
+  landmark_reason_th?: string | null;
   landmark_status?: 'draft' | 'pending' | 'published' | 'rejected' | null;
 };
 
