@@ -80,9 +80,9 @@ export function HomePage() {
         <div className="flex items-center gap-4">
           <ProgressRing pct={progress.pct} />
           <div className="min-w-0 flex-1">
-            <p className="text-sm text-muted">ตราจังหวัดที่ถึงแล้ว</p>
+            <p className="text-sm text-muted">ไปแล้ว</p>
             <p className="text-2xl font-bold">{progress.done}/{TOTAL_PROVINCES} <span className="text-base font-normal">จังหวัด</span></p>
-            <p className="text-sm text-muted">ถึง Landmark ที่เผยแพร่แล้ว {progress.done} จังหวัด · เคยไป {totals.visited} สถานที่</p>
+            <p className="text-sm text-muted">{totals.visited} สถานที่ที่เคยไป · ในระบบ {totals.total} แห่ง</p>
             {!authLoading && !user && totals.visited > 0 && (
               <p className="mt-1 text-xs text-muted">นับจากที่บันทึกไว้ในเครื่องนี้ · เข้าสู่ระบบเพื่อเก็บถาวร</p>
             )}

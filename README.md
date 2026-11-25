@@ -3,6 +3,9 @@
 เว็บแอปวางแผนเที่ยวทั่วไทย: แผนที่ 77 จังหวัด → เลือกสถานที่ → จัดเส้นทางแนะนำเบื้องต้น → Timeline → งบประมาณ → บันทึกความทรงจำ
 สร้างด้วย **React + TypeScript + Vite + Tailwind**, ฐานข้อมูล/Auth/Storage ด้วย **Supabase**, เผยแพร่บน **GitHub Pages** (HashRouter)
 
+## ชุด Top 10 Landmark ครบ 77 จังหวัด
+โครงการรุ่นนี้มีชุดข้อมูล **770 Landmark (77 × 10)** พร้อมภาพปกประกอบ reusable, CSV/JSON สำหรับสำรองหรือนำเข้า และ Migration 013 สำหรับติดตั้งอัตโนมัติ ดูขั้นตอนที่ [`docs/LANDMARKS_TOP10_INSTALL_TH.md`](docs/LANDMARKS_TOP10_INSTALL_TH.md)
+
 > คู่มือนี้เขียนสำหรับตั้งค่า "ตั้งแต่ศูนย์" ผ่านเว็บเบราว์เซอร์ล้วน ๆ (ไม่ต้องติดตั้งโปรแกรมในเครื่อง)
 
 ## สารบัญ
@@ -38,17 +41,11 @@
 | 5 | `…000005_trip_items_auto.sql` | คอลัมน์ `is_auto` |
 | 6 | `…000006_budget.sql` | ค่าอาหารต่อคนของทริป |
 | 7 | `…000007_admin_review.sql` | ฟังก์ชันตรวจสถานที่ที่ผู้ใช้เสนอ (ไม่เปิดเผยบันทึกลับ) |
-| 8 | `…000008_search.sql` | ระบบค้นหาสถานที่ |
-| 9 | `…000010_trip_share_preview.sql` | ตัวอย่างทริปที่แชร์ |
-| 10 | `…000012_landmarks.sql` | Landmark 77 จังหวัด, ตราจังหวัด และคิวตรวจรูป |
-| 11 | `supabase/seed.sql` | 6 ภาค, 26 หมวดสถานที่, 13 หมวดงบ |
-| 12 | `supabase/seed_geo.sql` | 77 จังหวัด + อำเภอ (ได้จาก workflow **Build Geo Data** — ดูข้อ 3.4) |
-| 13 | `supabase/seed_places.sql` | สถานที่ตัวอย่าง (Demo) (ได้จาก workflow **Build Place Seed**) |
-| 14 | `supabase/seed_landmarks.sql` | Landmark หลักอันดับ 1 ครบ 77 จังหวัด (เริ่มเป็น draft/unpublished) |
+| 8 | `supabase/seed.sql` | 6 ภาค, 26 หมวดสถานที่, 13 หมวดงบ |
+| 9 | `supabase/seed_geo.sql` | 77 จังหวัด + อำเภอ (ได้จาก workflow **Build Geo Data** — ดูข้อ 3.4) |
+| 10 | `supabase/seed_places.sql` | สถานที่ตัวอย่าง (Demo) (ได้จาก workflow **Build Place Seed**) |
 
 ทุกไฟล์รันซ้ำได้โดยไม่เสียหายเฉพาะไฟล์ seed ส่วน migration ให้รันแต่ละไฟล์ครั้งเดียว
-
-วิธีตรวจและเผยแพร่ Landmark ทีละจังหวัด รวมกฎรูป Wikimedia Commons และตราจังหวัด: [`docs/LANDMARKS.md`](docs/LANDMARKS.md)
 
 ### 2.2 ตั้งค่า Auth
 **Authentication → Sign In / Providers → Email:** เปิดไว้ และ (ถ้าใช้กัน 2 คน) **ปิด "Allow new users to sign up"**
@@ -182,3 +179,10 @@ Supabase → **Edge Functions → Deploy a new function → Via Editor** → ช
 
 ---
 ข้อมูลพิกัดสถานที่ตัวอย่าง © ผู้ร่วมสร้าง OpenStreetMap (ODbL) · ขอบเขตจังหวัด/อำเภอ: OCHA COD-AB / กรมแผนที่ทหาร — ดู `public/geo/ATTRIBUTION.md`
+
+
+## Landmark ภาคเหนือ (Migration 012)
+
+รอบนำร่องนี้รองรับ `province_landmarks` 9 จังหวัด 18 แห่งแบบแยกขั้น Import places → Preview/Export mapping `place_id` จริง → เชื่อมเป็น pending → Admin ตรวจและ Publish ทีละแห่ง รูปที่ยังไม่ตรวจเต็มขนาดเก็บ metadata ใน `place_images` เดิมแต่ไม่แสดงเป็นรูปจริงและใช้ AutoCover พร้อมป้าย “ภาพประกอบ”
+
+อ่านลำดับติดตั้งผ่านเว็บ GitHub + Supabase และ dry run ที่ [`docs/LANDMARKS_NORTH_INSTALL_TH.md`](docs/LANDMARKS_NORTH_INSTALL_TH.md)

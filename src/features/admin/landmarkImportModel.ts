@@ -43,8 +43,8 @@ export type LandmarkBundleItem = {
 };
 
 export type LandmarkBundle = {
-  version: 1;
-  region: 'north';
+  version: 1 | 2;
+  region: 'north' | 'all';
   generated_at: string;
   instructions?: string;
   landmarks: LandmarkBundleItem[];
@@ -131,7 +131,7 @@ function parseItem(v: unknown, index: number): LandmarkBundleItem {
   const label = `landmarks[${index}]`;
   assertObject(v, label);
   const rank = Number(v.landmark_rank);
-  if (!Number.isInteger(rank) || rank < 1 || rank > 3) throw new Error(`${label}: landmark_rank ต้องเป็น 1–3`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > 10) throw new Error(`${label}: landmark_rank ต้องเป็น 1–10`);
   const productionId = text(v.production_place_id);
   if (productionId && !UUID.test(productionId)) throw new Error(`${label}: production_place_id ไม่ใช่ UUID`);
   const status = text(v.landmark_status);
@@ -162,7 +162,10 @@ export function parseLandmarkBundle(fileName: string, raw: string): LandmarkBund
   let data: unknown;
   try { data = JSON.parse(raw.replace(/^\uFEFF/, '')); } catch { throw new Error('ไฟล์ JSON ไม่ถูกต้อง'); }
   assertObject(data, 'bundle');
-  if (data.version !== 1 || data.region !== 'north') throw new Error('รองรับเฉพาะ bundle version 1 ภาคเหนือ');
+  const version = Number(data.version);
+  const region = text(data.region);
+  const supported = (version === 1 && region === 'north') || (version === 2 && region === 'all');
+  if (!supported) throw new Error('รองรับ bundle version 1 ภาคเหนือ หรือ version 2 ครบ 77 จังหวัด');
   if (!Array.isArray(data.landmarks) || data.landmarks.length === 0) throw new Error('ไม่พบรายการ landmarks');
   const landmarks = data.landmarks.map(parseItem);
   const keySet = new Set<string>();
@@ -175,8 +178,8 @@ export function parseLandmarkBundle(fileName: string, raw: string): LandmarkBund
     rankSet.add(rankKey);
   });
   return {
-    version: 1,
-    region: 'north',
+    version: version as 1 | 2,
+    region: region as 'north' | 'all',
     generated_at: text(data.generated_at),
     instructions: text(data.instructions) || undefined,
     landmarks,

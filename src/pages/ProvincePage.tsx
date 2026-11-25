@@ -121,10 +121,14 @@ export function ProvincePage() {
         <section className="space-y-2 rounded-2xl border border-line bg-surface p-4">
           <h2 className="flex items-center gap-2 font-semibold"><Landmark size={18} /> Landmark ประจำจังหวัด</h2>
           {landmarks.map((item) => (
-            <article key={item.id} className="rounded-xl bg-surface-2 p-3">
-              <p className="text-xs font-medium text-primary">อันดับ {item.rank}</p>
-              <Link to={`/place/${item.place_id}`} className="font-semibold underline">{item.name_th}</Link>
-              <p className="mt-1 text-sm text-muted">{item.landmark_reason_th}</p>
+            <article key={item.id} className="overflow-hidden rounded-xl bg-surface-2">
+              <img src={item.cover_url} alt={`ภาพประกอบ ${item.name_th}`} loading="lazy" className="aspect-[3/2] w-full object-cover sm:max-h-64" />
+              <div className="p-3">
+                <p className="text-xs font-medium text-primary">อันดับ {item.rank}</p>
+                <Link to={`/place/${item.place_id}`} className="font-semibold underline">{item.name_th}</Link>
+                <p className="mt-1 text-sm text-muted">{item.landmark_reason_th}</p>
+                <p className="mt-2 text-[11px] text-muted">ภาพประกอบระบบ ไม่ใช่ภาพถ่ายสถานที่จริง</p>
+              </div>
             </article>
           ))}
         </section>

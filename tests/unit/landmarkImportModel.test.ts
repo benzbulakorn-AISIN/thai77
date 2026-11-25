@@ -7,6 +7,8 @@ import {
 
 const manifestPath = new URL('../../data/landmarks/north/northern_landmark_link_manifest.json', import.meta.url);
 const raw = readFileSync(manifestPath, 'utf8');
+const allManifestPath = new URL('../../data/landmarks/all/all_provinces_landmark_link_manifest.json', import.meta.url);
+const allRaw = readFileSync(allManifestPath, 'utf8');
 
 function contextForBundle(): LandmarkLinkCtx {
   const bundle = parseLandmarkBundle('northern_landmark_link_manifest.json', raw);
@@ -78,5 +80,16 @@ describe('Northern Landmark link bundle', () => {
     const row = analyzed.find((x) => x.item.place_key === target.place_key)!;
     expect(row.kind).toBe('error');
     expect(row.errors.join(' ')).toContain('มากกว่า 1 แห่ง');
+  });
+});
+
+describe('All-province Top 10 Landmark bundle', () => {
+  it('parses 770 rows covering 77 provinces with ranks 1–10', () => {
+    const bundle = parseLandmarkBundle('all_provinces_landmark_link_manifest.json', allRaw);
+    expect(bundle.version).toBe(2);
+    expect(bundle.region).toBe('all');
+    expect(bundle.landmarks).toHaveLength(770);
+    expect(new Set(bundle.landmarks.map((x) => x.province_pcode))).toHaveLength(77);
+    expect(bundle.landmarks.every((x) => x.landmark_rank >= 1 && x.landmark_rank <= 10)).toBe(true);
   });
 });

@@ -55,19 +55,19 @@ begin
   rep := rep || public._lm_chk('ผู้ใช้ทั่วไปสร้าง province_landmarks ตรง ๆ ไม่ได้',
     public._lm_dml(format('insert into public.province_landmarks(province_id,place_id,place_key,landmark_rank,landmark_reason_th) values (%L,%L,%L,1,%L)',prov,place,'ZZ-LM-01','เหตุผล')) <= 0) || E'\n';
   rep := rep || public._lm_chk('ผู้ใช้ทั่วไปเรียกฟังก์ชันเชื่อมไม่ได้',
-    public._lm_dml(format('select public.admin_link_province_landmark(%L,%L,%L,1::smallint,%L,%L::jsonb,%L::jsonb)',
+    public._lm_dml(format('select public.admin_link_province_landmark(%L,%L,%L,1,%L,%L::jsonb,%L::jsonb)',
       place,'TH98','ZZ-LM-01','เหตุผล','[]','null')) <= 0) || E'\n';
 
   perform public._lm_as(adm);
   lm := public.admin_link_province_landmark(
-    place,'TH98','ZZ-LM-01',1::smallint,'เหตุผล Landmark ทดสอบ',
+    place,'TH98','ZZ-LM-01',1,'เหตุผล Landmark ทดสอบ',
     jsonb_build_array(jsonb_build_object(
       'source_url','https://example.invalid/source','source_name','แหล่งทดสอบ','source_type','other','checked_at','2026-11-22','note','บันทึกเดิม')),
     jsonb_build_object(
       'image_url','https://upload.wikimedia.org/example/test.jpg','commons_page_url','https://commons.wikimedia.org/wiki/File:Test.jpg',
       'license_code','CC BY-SA 4.0','author','Tester','image_status','license_verified_visual_pending',
       'temporary_cover_label','ภาพประกอบ','review_note','ยังไม่ตรวจเต็มขนาด')
-  );
+  ) into lm;
   rep := rep || public._lm_chk('Admin เชื่อม place_id จริงได้', lm is not null) || E'\n';
   rep := rep || public._lm_chk('การเชื่อมเริ่ม pending/is_published=false',
     exists(select 1 from public.province_landmarks where id=lm and status='pending' and not is_published)) || E'\n';
@@ -82,7 +82,7 @@ begin
     (select cover_image_id is null from public.places where id=place)) || E'\n';
   rep := rep || public._lm_chk('Admin เห็นแถว pending', public._lm_count(format('select 1 from public.province_landmarks where id=%L',lm))=1) || E'\n';
 
-  perform public.admin_review_province_landmark(lm,1::smallint,'เหตุผลหลังตรวจ','pending','อนุมัติ Candidate แต่ยังไม่ Publish');
+  perform public.admin_review_province_landmark(lm,1,'เหตุผลหลังตรวจ','pending','อนุมัติ Candidate แต่ยังไม่ Publish');
   rep := rep || public._lm_chk('อนุมัติ Candidate ยังคงไม่เผยแพร่',
     exists(select 1 from public.province_landmarks where id=lm and status='pending' and not is_published)) || E'\n';
   rep := rep || public._lm_chk('Publish ถูกปฏิเสธถ้า place ยังไม่ verified/published',
@@ -130,7 +130,7 @@ begin
   perform public._lm_as(adm);
   select source_name into original_name from public.place_sources where place_id=place and source_url='https://example.invalid/source';
   perform public.admin_link_province_landmark(
-    place,'98','ZZ-LM-01',1::smallint,'เหตุผลเชื่อมซ้ำ',
+    place,'98','ZZ-LM-01',1,'เหตุผลเชื่อมซ้ำ',
     jsonb_build_array(jsonb_build_object('source_url','https://example.invalid/source','source_name','','source_type','other','checked_at','2026-11-22')),
     jsonb_build_object('image_status','missing','temporary_cover_label','ภาพประกอบ')
   );

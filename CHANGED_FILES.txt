@@ -1,0 +1,63 @@
+# Files added or changed from OneDrive thai77-main.zip
+
+ADDED   INSTALL_NORTH_LANDMARKS_TH.md
+CHANGED README.md
+ADDED   TEST_REPORT_LANDMARKS_NORTH.md
+ADDED   data/landmarks/north/DRY_RUN_REPORT.md
+ADDED   data/landmarks/north/WEB_IMPORT_GUIDE_BEFORE_CODE_CHANGE.md
+ADDED   data/landmarks/north/dry_run_result.json
+ADDED   data/landmarks/north/export_match_summary.json
+ADDED   data/landmarks/north/northern_existing_matches_REFERENCE_DO_NOT_IMPORT.csv
+ADDED   data/landmarks/north/northern_images_review_pending.csv
+ADDED   data/landmarks/north/northern_landmark_link_manifest.json
+ADDED   data/landmarks/north/northern_landmark_metadata_pending.csv
+ADDED   data/landmarks/north/northern_place_mapping_export.csv
+ADDED   data/landmarks/north/northern_places_import_preview.csv
+ADDED   data/landmarks/north/northern_sources_metadata_pending.csv
+ADDED   data/landmarks/north/reference_thai77-places-2026-11-22.csv
+ADDED   docs/LANDMARKS_NORTH_INSTALL_TH.md
+CHANGED package.json
+CHANGED src/app/router.tsx
+ADDED   src/features/admin/landmarkApi.ts
+ADDED   src/features/admin/landmarkImportModel.ts
+CHANGED src/features/budget/BudgetItemSheet.tsx
+ADDED   src/features/budget/budgetApi.part8_1a.test.ts
+ADDED   src/features/budget/budgetApi.part8_1b.test.ts
+ADDED   src/features/budget/budgetApi.part8_1c.test.ts
+CHANGED src/features/budget/budgetApi.ts
+CHANGED src/features/budget/calc.ts
+ADDED   src/features/budget/part8_1a.test.ts
+ADDED   src/features/budget/pendingBudgetAction.test.ts
+ADDED   src/features/budget/pendingBudgetAction.ts
+CHANGED src/features/placeImages/placeImagesApi.ts
+ADDED   src/features/places/landmarksApi.ts
+CHANGED src/pages/BudgetPage.tsx
+CHANGED src/pages/ProvincePage.tsx
+ADDED   src/pages/admin/AdminLandmarksPage.tsx
+CHANGED src/pages/admin/AdminShell.tsx
+ADDED   supabase/migrations/20261117000001_init_schema.sql
+ADDED   supabase/migrations/20261117000002_rls.sql
+ADDED   supabase/migrations/20261117000003_storage.sql
+ADDED   supabase/migrations/20261121000011_budget_auto_replace_atomic.sql
+ADDED   supabase/migrations/20261122000012_north_province_landmarks.sql
+ADDED   supabase/tests/budget_atomic_replace.part8_1c.test.sql
+ADDED   supabase/tests/landmarks_north.test.sql
+ADDED   tests/unit/landmarkImportModel.test.ts
+
+
+Top 10 landmarks — all 77 provinces (Migration 013)
+supabase/migrations/20261124000013_all_provinces_top10_landmarks.sql
+src/features/admin/landmarkImportModel.ts
+src/features/places/landmarksApi.ts
+src/pages/admin/AdminLandmarksPage.tsx
+src/pages/ProvincePage.tsx
+tests/unit/landmarkImportModel.test.ts
+data/landmarks/all/thailand_top10_landmarks.csv
+data/landmarks/all/thailand_top10_landmarks.json
+data/landmarks/all/all_provinces_places_import.csv
+data/landmarks/all/all_provinces_landmark_link_manifest.json
+public/landmark-covers/*.jpg (770 files)
+docs/LANDMARKS_TOP10_INSTALL_TH.md
+TEST_REPORT_TOP10_ALL_PROVINCES.md
+README.md
+

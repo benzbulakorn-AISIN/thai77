@@ -54,15 +54,12 @@ export function percent(n: number, total: number): number {
   return Math.max(0, Math.min(100, Math.round((n / total) * 100)));
 }
 
-type VisitStat = { visited: number; landmarkStatus?: 'building' | 'never_visited' | 'stopped_by' | 'arrived' };
+type VisitStat = { visited: number };
 type CountStat = { total: number; planned: number; visited: number };
 
 /** how many provinces have at least one visited place (out of 77) */
 export function provinceProgress(provinceIds: string[], stats: Record<string, VisitStat | undefined>) {
-  const hasLandmarkWorkflow = provinceIds.some((id) => stats[id]?.landmarkStatus !== undefined);
-  const done = provinceIds.filter((id) => hasLandmarkWorkflow
-    ? stats[id]?.landmarkStatus === 'arrived'
-    : (stats[id]?.visited ?? 0) > 0).length;
+  const done = provinceIds.filter((id) => (stats[id]?.visited ?? 0) > 0).length;
   return { done, total: TOTAL_PROVINCES, pct: percent(done, TOTAL_PROVINCES) };
 }
 

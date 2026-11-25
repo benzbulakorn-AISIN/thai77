@@ -79,8 +79,8 @@ function LandmarkCard({ row, provinceName, reload }: { row: LandmarkAdminRow; pr
         </span>
       </div>
       <div className="grid gap-2 sm:grid-cols-[7rem_1fr]">
-        <label className="text-xs text-muted">อันดับ 1–3
-          <input type="number" min={1} max={3} value={rank} onChange={(e) => setRank(Number(e.target.value))}
+        <label className="text-xs text-muted">อันดับ 1–10
+          <input type="number" min={1} max={10} value={rank} onChange={(e) => setRank(Number(e.target.value))}
             className="mt-1 min-h-10 w-full rounded-lg border border-line bg-background px-3" />
         </label>
         <label className="text-xs text-muted">เหตุผล Landmark
@@ -102,7 +102,7 @@ function LandmarkCard({ row, provinceName, reload }: { row: LandmarkAdminRow; pr
           {isPublished ? 'ยกเลิกเผยแพร่' : 'เผยแพร่ Landmark'}
         </button>
       </div>
-      <Button disabled={busy || !reason.trim() || rank < 1 || rank > 3} onClick={() => void review('pending')}>บันทึกการตรวจ (ยังไม่เผยแพร่)</Button>
+      <Button disabled={busy || !reason.trim() || rank < 1 || rank > 10} onClick={() => void review('pending')}>บันทึกการตรวจ (ยังไม่เผยแพร่)</Button>
     </article>
   );
 }
@@ -149,11 +149,11 @@ export function AdminLandmarksPage() {
   return (
     <div className="space-y-4">
       <section className="space-y-2 rounded-2xl border border-line bg-surface p-4">
-        <h2 className="flex items-center gap-2 font-semibold"><Landmark size={19} /> Landmark ภาคเหนือ</h2>
+        <h2 className="flex items-center gap-2 font-semibold"><Landmark size={19} /> Top 10 Landmark ครบ 77 จังหวัด</h2>
         <p className="text-sm text-muted">แยกเป็น 2 ขั้น: นำเข้า places ก่อน แล้วอัปโหลด bundle เพื่อจับคู่ place_id จริงและเชื่อมอันดับ/เหตุผล/แหล่งข้อมูล/metadata รูป</p>
         <p className="text-xs text-amber-800">การเชื่อมและการอนุมัติ Candidate ไม่ใช่การเผยแพร่ ทุกแถวถูกบังคับเป็น pending/is_published=false และรูปที่ยังไม่ตรวจเต็มขนาดใช้ AutoCover พร้อมป้าย “ภาพประกอบ”</p>
         <label className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-on-primary">
-          <Upload size={17} /> เลือก northern_landmark_link_manifest.json
+          <Upload size={17} /> เลือกไฟล์ landmark manifest (.json)
           <input type="file" accept="application/json,.json" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) void choose(f); e.currentTarget.value = ''; }} />
         </label>
       </section>
@@ -175,7 +175,7 @@ export function AdminLandmarksPage() {
             </div>)}
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
-            <Button variant="ghost" icon={<Download size={17} />} onClick={() => downloadText('northern_landmark_place_id_mapping.csv', landmarkMappingCsv(preview), 'text/csv;charset=utf-8')}>Export mapping place_id จริง</Button>
+            <Button variant="ghost" icon={<Download size={17} />} onClick={() => downloadText('landmark_place_id_mapping.csv', landmarkMappingCsv(preview), 'text/csv;charset=utf-8')}>Export mapping place_id จริง</Button>
             <Button disabled={summary.error > 0 || Boolean(progress)} onClick={() => setConfirmLink(true)}>{progress ? `${progress.done}/${progress.total}` : 'เชื่อมเป็น pending (ไม่ Publish)'}</Button>
           </div>
         </section>

@@ -86,7 +86,7 @@ alter table public.place_images add column if not exists review_note text;
 alter table public.place_images add column if not exists temporary_cover_label text;
 
 create unique index if not exists place_images_review_key_uq
-on public.place_images (review_key);
+  on public.place_images(review_key) where review_key is not null;
 create index if not exists place_images_approved_place_idx
   on public.place_images(place_id, sort_order) where image_status = 'approved';
 
