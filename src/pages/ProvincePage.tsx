@@ -12,6 +12,8 @@ import { fetchCategories, fetchPlacesByProvince } from '../features/places/place
 import { fetchPublishedLandmarksByProvince, type PublishedProvinceLandmark } from '../features/places/landmarksApi';
 import { useMyPlaces } from '../features/places/useMyPlaces';
 import { PlaceList } from '../features/places/PlaceList';
+import { ImageCredit, PlaceImageView } from '../features/placeImages/PlaceImage';
+import { usePlaceCovers } from '../features/placeImages/usePlaceCovers';
 import type { Category, Place } from '../features/places/types';
 import { Skeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -66,6 +68,13 @@ export function ProvincePage() {
     (places ?? []).forEach((p) => { if (p.district_id) c[p.district_id] = (c[p.district_id] ?? 0) + 1; });
     return c;
   }, [places]);
+  const landmarkCovers = usePlaceCovers(landmarks.map((item) => ({
+    id: item.place_id,
+    nameTh: item.name_th,
+    nameEn: item.name_en,
+    provinceTh: province?.name_th,
+    provinceEn: province?.name_en,
+  })));
 
   const selectedDistrictId = selected ? districtByPcode.get(selected)?.id ?? null : null;
   const points: MapPoint[] = useMemo(() => (places ?? [])
@@ -118,19 +127,31 @@ export function ProvincePage() {
       {province.summary && <p className="text-sm">{province.summary}</p>}
 
       {landmarks.length > 0 && (
-        <section className="space-y-2 rounded-2xl border border-line bg-surface p-4">
-          <h2 className="flex items-center gap-2 font-semibold"><Landmark size={18} /> Landmark ประจำจังหวัด</h2>
-          {landmarks.map((item) => (
-            <article key={item.id} className="overflow-hidden rounded-xl bg-surface-2">
-              <img src={item.cover_url} alt={`ภาพประกอบ ${item.name_th}`} loading="lazy" className="aspect-[3/2] w-full object-cover sm:max-h-64" />
-              <div className="p-3">
-                <p className="text-xs font-medium text-primary">อันดับ {item.rank}</p>
-                <Link to={`/place/${item.place_id}`} className="font-semibold underline">{item.name_th}</Link>
-                <p className="mt-1 text-sm text-muted">{item.landmark_reason_th}</p>
-                <p className="mt-2 text-[11px] text-muted">ภาพประกอบระบบ ไม่ใช่ภาพถ่ายสถานที่จริง</p>
-              </div>
-            </article>
-          ))}
+        <section className="space-y-2 rounded-2xl border border-line bg-surface p-3 sm:p-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-1">
+            <h2 className="flex items-center gap-2 font-semibold"><Landmark size={18} /> Landmark ประจำจังหวัด</h2>
+            <p className="text-[11px] text-muted">ค้นหารูปที่ใช้ซ้ำได้จาก Wikimedia Commons อัตโนมัติ</p>
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+            {landmarks.map((item) => {
+              const cover = landmarkCovers.get(item.place_id) ?? null;
+              return (
+                <article key={item.id} className="overflow-hidden rounded-xl border border-line bg-surface-2">
+                  <div className="relative">
+                    <Link to={`/place/${item.place_id}`} tabIndex={-1} aria-hidden="true" className="block">
+                      <PlaceImageView image={cover} placeName={item.name_th} seed={item.place_id} ratio="4/3" rounded={false} />
+                    </Link>
+                    <span className="absolute left-1.5 top-1.5 rounded-full bg-black/65 px-2 py-0.5 text-[11px] font-medium text-white">#{item.rank}</span>
+                  </div>
+                  {cover && <ImageCredit image={cover} className="line-clamp-1 px-2 pt-1 text-[9px]" />}
+                  <div className="p-2">
+                    <Link to={`/place/${item.place_id}`} className="line-clamp-2 text-sm font-semibold leading-snug underline">{item.name_th}</Link>
+                    <p className="mt-1 line-clamp-2 text-xs text-muted">{item.landmark_reason_th}</p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </section>
       )}
 
@@ -185,6 +206,7 @@ export function ProvincePage() {
         <div className="space-y-3"><Skeleton className="h-32" /><Skeleton className="h-32" /></div>
       ) : (
         <PlaceList places={places} categories={categories} districtNames={districtNames}
+          provinceNameTh={province.name_th} provinceNameEn={province.name_en}
           districtFilter={selectedDistrictId} onClearDistrict={() => setSelected(null)}
           my={my} highlightId={highlight} />
       )}

@@ -34,6 +34,8 @@ type Props = {
   places: Place[];
   categories: Category[];
   districtNames: Map<string, string>;
+  provinceNameTh?: string;
+  provinceNameEn?: string | null;
   districtFilter: string | null;
   onClearDistrict: () => void;
   my: {
@@ -77,7 +79,7 @@ export function filterAndSort(
   return [...list].sort((a, b) => cmp[o.sort](a, b) || a.name_th.localeCompare(b.name_th, 'th'));
 }
 
-export function PlaceList({ places, categories, districtNames, districtFilter, onClearDistrict, my, highlightId }: Props) {
+export function PlaceList({ places, categories, districtNames, provinceNameTh, provinceNameEn, districtFilter, onClearDistrict, my, highlightId }: Props) {
   const toast = useToast();
   const [query, setQuery] = useState('');
   const q = useDebounce(query.trim().toLowerCase(), 250);
@@ -100,7 +102,9 @@ export function PlaceList({ places, categories, districtNames, districtFilter, o
 
   // covers are fetched only for the cards that are on screen
   const visible = list.slice(0, limit);
-  const covers = usePlaceCovers(visible.map((p) => p.id));
+  const covers = usePlaceCovers(visible.map((p) => ({
+    id: p.id, nameTh: p.name_th, nameEn: p.name_en, provinceTh: provinceNameTh, provinceEn: provinceNameEn,
+  })));
 
   const onSort = (k: SortKey) => {
     if (k === 'distance' && !me) {
@@ -176,7 +180,7 @@ export function PlaceList({ places, categories, districtNames, districtFilter, o
         <EmptyState icon={<Search size={36} />} title="ไม่พบสถานที่ตามตัวกรอง"
           action={<Button variant="secondary" onClick={resetAll}>ล้างตัวกรอง</Button>} />
       ) : (
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
           {visible.map((p) => (
             <PlaceCard key={p.id} place={p} category={catById.get(p.category_id)}
               districtName={p.district_id ? districtNames.get(p.district_id) : undefined}
@@ -184,7 +188,7 @@ export function PlaceList({ places, categories, districtNames, districtFilter, o
               cover={covers.get(p.id) ?? null}
               state={my.get(p.id)} signedIn={my.signedIn}
               onStatus={(s) => my.setStatus(p.id, s)} onFavorite={() => my.toggleFavorite(p.id)}
-              highlighted={highlightId === p.id} />
+              highlighted={highlightId === p.id} dense />
           ))}
         </div>
       )}

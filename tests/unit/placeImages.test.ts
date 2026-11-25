@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   LICENSE_CHOICES, OWN_LICENSE, chooseCover, creditText, imageAlt, isWikimediaUploadUrl, orderWithCoverFirst, placeImagePath,
   resolveImageUrl, safeHttpsUrl, sortImages, validateImageMeta, type PlaceImage,
@@ -6,6 +6,12 @@ import {
 import {
   classifyLicense, commonsApiUrl, htmlToText, parseCommonsResponse, parseCommonsTitle,
 } from '../../src/features/placeImages/commons';
+import {
+  automaticCoverArticleTitles, commonsApiUrlForWikipediaPageImage, commonsInfoAsPlaceImage,
+  fetchAutomaticCommonsCover, parseWikidataImageResponse, parseWikipediaLeadImageResponse,
+  wikidataImageApiUrl, wikipediaLeadImageApiUrl,
+} from '../../src/features/placeImages/autoCovers';
+import { joinPendingBatch } from '../../src/features/placeImages/sharedPending';
 
 const U = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 const img = (over: Partial<PlaceImage> = {}): PlaceImage => ({
@@ -13,6 +19,31 @@ const img = (over: Partial<PlaceImage> = {}): PlaceImage => ({
   alt_th: null, sort_order: 0, ...over,
 });
 const pub = (p: string) => `https://cdn.example/${p}`;
+
+describe('automatic-cover request coordination', () => {
+  it('lets a StrictMode remount join an in-flight batch instead of losing its update', async () => {
+    const pending = new Map<string, Promise<void>>();
+    let release: () => void = () => {};
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const start = vi.fn(async () => gate);
+    let firstAlive = true;
+    let firstUpdates = 0;
+    let remountedUpdates = 0;
+
+    const first = joinPendingBatch(pending, ['place-1'], start)
+      .then(() => { if (firstAlive) firstUpdates += 1; });
+    firstAlive = false; // React StrictMode cleanup
+    const remounted = joinPendingBatch(pending, ['place-1'], start)
+      .then(() => { remountedUpdates += 1; });
+
+    expect(start).toHaveBeenCalledTimes(1);
+    release();
+    await Promise.all([first, remounted]);
+    expect(firstUpdates).toBe(0);
+    expect(remountedUpdates).toBe(1);
+    expect(pending.size).toBe(0);
+  });
+});
 
 describe('cover choice', () => {
   const a = img({ id: U(3), sort_order: 2 }), b = img({ id: U(2), sort_order: 1 }), c = img({ id: U(4), sort_order: 1 });
@@ -217,6 +248,193 @@ const answer = (over: Record<string, unknown> = {}, ext: Record<string, unknown>
       }],
     }],
   },
+});
+
+describe('Wikipedia/Wikidata: automatic cover selection', () => {
+  it('tries exact English/verified article titles before the Thai title', () => {
+    expect(automaticCoverArticleTitles({
+      id: U(1), nameTh: 'ปราสาทสัจธรรม', nameEn: 'Sanctuary of Truth', provinceTh: 'ชลบุรี', provinceEn: 'Chon Buri',
+    })).toEqual([
+      'Sanctuary of Truth', 'The Sanctuary of Truth', 'Prasat Sut Ja-Tum', 'Prasat Satchatham', 'ปราสาทสัจธรรม',
+    ]);
+    expect(automaticCoverArticleTitles({ id: U(1), nameTh: 'วัดอรุณ', nameEn: null })).toEqual(['วัดอรุณ']);
+  });
+  it('builds a CORS-enabled exact-title Wikipedia query for a free lead image', () => {
+    const u = new URL(wikipediaLeadImageApiUrl('en', '  Sanctuary   of Truth  '));
+    expect(u.origin + u.pathname).toBe('https://en.wikipedia.org/w/api.php');
+    expect(u.searchParams.get('origin')).toBe('*');
+    expect(u.searchParams.get('titles')).toBe('Sanctuary of Truth');
+    expect(u.searchParams.get('redirects')).toBe('1');
+    expect(u.searchParams.get('prop')).toBe('pageimages|pageprops');
+    expect(u.searchParams.get('piprop')).toBe('name');
+    expect(u.searchParams.get('pilicense')).toBe('free');
+    expect(u.searchParams.has('generator')).toBe(false);
+    expect(u.searchParams.has('gsrsearch')).toBe(false);
+  });
+  it('uses Thai Wikipedia for an exact Thai article title', () => {
+    const u = new URL(wikipediaLeadImageApiUrl('th', 'ปราสาทสัจธรรม'));
+    expect(u.origin + u.pathname).toBe('https://th.wikipedia.org/w/api.php');
+    expect(u.searchParams.get('titles')).toBe('ปราสาทสัจธรรม');
+    expect(u.searchParams.has('generator')).toBe(false);
+  });
+  it('parses the exact article lead image and linked Wikidata item', () => {
+    expect(parseWikipediaLeadImageResponse({ query: { pages: [{
+      pageid: 123, ns: 0, title: 'Sanctuary of Truth', pageimage: 'Sanctuary_of_Truth_2018.jpg',
+      pageprops: { wikibase_item: 'Q1135255' },
+    }] } }, 'en')).toEqual({
+      language: 'en', articleTitle: 'Sanctuary of Truth',
+      fileTitle: 'File:Sanctuary of Truth 2018.jpg', wikidataId: 'Q1135255',
+    });
+  });
+  it('turns Wikipedia pageimage filenames into exact Commons metadata requests', () => {
+    const u = new URL(commonsApiUrlForWikipediaPageImage('Santuaryoftruth2.jpg') ?? '');
+    expect(u.origin + u.pathname).toBe('https://commons.wikimedia.org/w/api.php');
+    expect(u.searchParams.get('titles')).toBe('File:Santuaryoftruth2.jpg');
+    expect(u.searchParams.get('prop')).toBe('imageinfo');
+    expect(u.searchParams.get('iiprop')).toBe('url|mime|extmetadata');
+    expect(u.searchParams.get('iiurlwidth')).toBe('1600');
+  });
+  it('continues from a Wikipedia pageimage to Commons metadata and returns the checked image', async () => {
+    const calls: string[] = [];
+    const fetchMock = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      calls.push(url);
+      if (url.startsWith('https://en.wikipedia.org/')) {
+        return {
+          ok: true,
+          json: async () => ({ query: { pages: [{
+            pageid: 15229884, ns: 0, title: 'Sanctuary of Truth', pageimage: 'Santuaryoftruth2.jpg',
+            pageprops: { wikibase_item: 'Q262459' },
+          }] } }),
+        } as Response;
+      }
+      if (url.startsWith('https://commons.wikimedia.org/')) {
+        return { ok: true, json: async () => answer() } as Response;
+      }
+      throw new Error(`Unexpected request: ${url}`);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    try {
+      const image = await fetchAutomaticCommonsCover({
+        id: U(901), nameTh: 'ปราสาทสัจธรรม', nameEn: 'Sanctuary of Truth',
+        provinceTh: 'ชลบุรี', provinceEn: 'Chon Buri',
+      });
+      expect(calls).toHaveLength(2);
+      expect(new URL(calls[0]).hostname).toBe('en.wikipedia.org');
+      const commonsRequest = new URL(calls[1]);
+      expect(commonsRequest.hostname).toBe('commons.wikimedia.org');
+      expect(commonsRequest.searchParams.get('titles')).toBe('File:Santuaryoftruth2.jpg');
+      expect(image?.external_url).toContain('upload.wikimedia.org');
+      expect(image?.license).toBe('CC BY-SA 4.0');
+      expect(image?.author).toBe('Somchai Jaidee');
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+  it('falls back to the exact linked Wikidata P18 when the Wikipedia pageimage is unavailable on Commons', async () => {
+    const calls: string[] = [];
+    const fetchMock = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      calls.push(url);
+      if (url.startsWith('https://en.wikipedia.org/')) {
+        return { ok: true, json: async () => ({ query: { pages: [{
+          pageid: 15229884, ns: 0, title: 'Sanctuary of Truth', pageimage: 'Local_only.jpg',
+          pageprops: { wikibase_item: 'Q262459' },
+        }] } }) } as Response;
+      }
+      if (url.includes('titles=File%3ALocal+only.jpg')) {
+        return { ok: true, json: async () => ({ query: { pages: [{ ns: 6, title: 'File:Local only.jpg', missing: true }] } }) } as Response;
+      }
+      if (url.startsWith('https://www.wikidata.org/')) {
+        return { ok: true, json: async () => ({ claims: { P18: [{
+          rank: 'preferred', mainsnak: { snaktype: 'value', datavalue: { value: 'Sanctuary of Truth.jpg' } },
+        }] } }) } as Response;
+      }
+      if (url.includes('titles=File%3ASanctuary+of+Truth.jpg')) {
+        return { ok: true, json: async () => answer() } as Response;
+      }
+      throw new Error(`Unexpected request: ${url}`);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    try {
+      const image = await fetchAutomaticCommonsCover({
+        id: U(902), nameTh: 'ปราสาทสัจธรรม', nameEn: 'Sanctuary of Truth',
+      });
+      expect(calls.map((url) => new URL(url).hostname)).toEqual([
+        'en.wikipedia.org', 'commons.wikimedia.org', 'www.wikidata.org', 'commons.wikimedia.org',
+      ]);
+      expect(image?.external_url).toContain('upload.wikimedia.org');
+      expect(image?.license).toBe('CC BY-SA 4.0');
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+  it('reuses a successful automatic cover by place id across card and detail request shapes', async () => {
+    const fetchMock = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.startsWith('https://en.wikipedia.org/')) {
+        return { ok: true, json: async () => ({ query: { pages: [{
+          pageid: 15229884, ns: 0, title: 'Sanctuary of Truth', pageimage: 'Santuaryoftruth2.jpg',
+          pageprops: { wikibase_item: 'Q262459' },
+        }] } }) } as Response;
+      }
+      if (url.startsWith('https://commons.wikimedia.org/')) return { ok: true, json: async () => answer() } as Response;
+      throw new Error(`Unexpected request: ${url}`);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    try {
+      const card = await fetchAutomaticCommonsCover({
+        id: U(903), nameTh: 'ปราสาทสัจธรรม', nameEn: 'Sanctuary of Truth',
+        provinceTh: 'ชลบุรี', provinceEn: 'Chon Buri',
+      });
+      const detail = await fetchAutomaticCommonsCover({ id: U(903), nameTh: 'ปราสาทสัจธรรม' });
+      expect(detail).toEqual(card);
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+  it('allows a linked Wikidata item when Wikipedia has no lead image', () => {
+    expect(parseWikipediaLeadImageResponse({ query: { pages: [{
+      pageid: 123, ns: 0, title: 'Example place', pageprops: { wikibase_item: 'Q42' },
+    }] } }, 'en')).toEqual({
+      language: 'en', articleTitle: 'Example place', fileTitle: null, wikidataId: 'Q42',
+    });
+  });
+  it('rejects missing, non-article, disambiguation, and image-less unlinked pages', () => {
+    for (const page of [
+      { ns: 0, title: 'Missing', missing: true },
+      { ns: 6, title: 'File:X.jpg', pageimage: 'X.jpg' },
+      { ns: 0, title: 'Ambiguous', pageimage: 'X.jpg', pageprops: { disambiguation: '' } },
+      { ns: 0, title: 'No image or item' },
+    ]) expect(parseWikipediaLeadImageResponse({ query: { pages: [page] } }, 'en')).toBeNull();
+  });
+  it('builds the exact P18 Wikidata query and picks the preferred valid image', () => {
+    const u = new URL(wikidataImageApiUrl('Q1135255'));
+    expect(u.origin + u.pathname).toBe('https://www.wikidata.org/w/api.php');
+    expect(u.searchParams.get('entity')).toBe('Q1135255');
+    expect(u.searchParams.get('property')).toBe('P18');
+    expect(() => wikidataImageApiUrl('P18')).toThrow();
+    expect(parseWikidataImageResponse({ claims: { P18: [
+      { rank: 'normal', mainsnak: { snaktype: 'value', datavalue: { value: 'Other.jpg' } } },
+      { rank: 'preferred', mainsnak: { snaktype: 'value', datavalue: { value: 'Sanctuary of Truth.jpg' } } },
+    ] } })).toBe('File:Sanctuary of Truth.jpg');
+  });
+  it('returns null for missing or unusable Wikidata P18 claims', () => {
+    for (const data of [null, {}, { claims: {} }, { claims: { P18: [] } }, { claims: { P18: [
+      { rank: 'normal', mainsnak: { snaktype: 'novalue' } },
+    ] } }]) expect(parseWikidataImageResponse(data)).toBeNull();
+  });
+  it('turns a checked Commons result into a display-only place image with credit', () => {
+    const parsed = parseCommonsResponse(answer());
+    if (!parsed.ok) throw new Error('unexpected fixture');
+    const image = commonsInfoAsPlaceImage(U(100), 'วัดพระธาตุดอยสุเทพ', parsed.info);
+    expect(image.place_id).toBe(U(100));
+    expect(image.external_url).toContain('upload.wikimedia.org');
+    expect(image.source_url).toContain('commons.wikimedia.org');
+    expect(image.license).toBe('CC BY-SA 4.0');
+    expect(image.alt_th).toBe('ภาพวัดพระธาตุดอยสุเทพ');
+  });
 });
 
 describe('Commons: parse the API answer', () => {

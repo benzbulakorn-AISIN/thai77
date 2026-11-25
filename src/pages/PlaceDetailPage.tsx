@@ -19,6 +19,7 @@ import { VisitSheet } from '../features/memories/VisitSheet';
 import { Stars } from '../features/memories/StarRating';
 import { orderWithCoverFirst, type PlaceImage } from '../features/placeImages/imageModel';
 import { fetchPlaceImageSet } from '../features/placeImages/placeImagesApi';
+import { fetchAutomaticCommonsCover } from '../features/placeImages/autoCovers';
 import { ImageCredit, PlaceThumb } from '../features/placeImages/PlaceImage';
 import { PlaceHero } from '../features/placeImages/PlaceHero';
 import { supabase } from '../lib/supabase';
@@ -86,10 +87,24 @@ export function PlaceDetailPage() {
       if (!alive) return;
       setData(d);
       if (!d) return;
-      // pictures are optional: if loading fails the generated cover is shown
-      fetchPlaceImageSet(d.place.id)
-        .then((s) => { if (alive) setImages(orderWithCoverFirst(s.images, s.coverId)); })
-        .catch(() => undefined);
+      // Saved approved pictures win. Otherwise use the same licensed automatic
+      // resolver as the province cards. A saved-image API error must not skip
+      // the safe Wikipedia/Wikidata fallback.
+      void (async () => {
+        try {
+          const s = await fetchPlaceImageSet(d.place.id);
+          const saved = orderWithCoverFirst(s.images, s.coverId);
+          if (saved.length) { if (alive) setImages(saved); return; }
+        } catch {
+          // Continue to the licensed automatic fallback below.
+        }
+        const automatic = await fetchAutomaticCommonsCover({
+          id: d.place.id,
+          nameTh: d.place.name_th,
+          nameEn: d.place.name_en,
+        });
+        if (alive && automatic) setImages([automatic]);
+      })();
       const cats = await fetchCategories();
       if (alive) setCat(cats.find((c) => c.id === d.place.category_id));
       if (d.place.district_id) {
