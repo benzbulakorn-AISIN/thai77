@@ -8,7 +8,7 @@ const RATIO = { '16/9': '16 / 9', '4/3': '4 / 3', '1/1': '1 / 1', '3/1': '3 / 1'
 type Props = {
   image: PlaceImage | null | undefined;
   placeName: string;
-  /** stable id so the automatic cover looks the same every time */
+  /** Stable id so the local fallback illustration looks the same every time. */
   seed: string;
   color?: string | null;
   icon?: string | null;

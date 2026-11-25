@@ -37,17 +37,6 @@ export function commonsApiUrl(title: string, width = 960): string {
   return `https://commons.wikimedia.org/w/api.php?${p.toString()}`;
 }
 
-/** Search Commons' File namespace and return thumbnail + licence metadata in one request. */
-export function commonsSearchApiUrl(query: string, width = 720, limit = 10): string {
-  const clean = query.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160);
-  const p = new URLSearchParams({
-    action: 'query', format: 'json', formatversion: '2', origin: '*', generator: 'search',
-    gsrnamespace: '6', gsrsearch: clean, gsrlimit: String(Math.max(1, Math.min(20, Math.round(limit)))),
-    prop: 'imageinfo', iiprop: 'url|mime|extmetadata', iiurlwidth: String(Math.max(320, Math.min(1600, Math.round(width)))),
-  });
-  return `https://commons.wikimedia.org/w/api.php?${p.toString()}`;
-}
-
 export type LicenseKind = 'cc0' | 'pd' | 'cc-by' | 'cc-by-sa';
 export type LicenseVerdict = { allowed: true; kind: LicenseKind } | { allowed: false; reason: string };
 
@@ -153,39 +142,4 @@ export function parseCommonsResponse(json: unknown): CommonsResult {
       warnings,
     },
   };
-}
-
-function normalizedSearchText(value: string): string {
-  return value.toLocaleLowerCase('th').replace(/[^\p{L}\p{N}]+/gu, ' ').replace(/\s+/g, ' ').trim();
-}
-
-/**
- * Parse a generator=search answer and keep only reusable JPG/PNG/WebP files.
- * Search order is respected, with a small deterministic relevance boost for
- * file titles/descriptions containing the requested place name.
- */
-export function parseCommonsSearchResponse(json: unknown, query: string): CommonsInfo[] {
-  const pagesRaw = isObj(json) && isObj(json.query) ? json.query.pages : undefined;
-  const pages: Obj[] = Array.isArray(pagesRaw) ? pagesRaw.filter(isObj) : isObj(pagesRaw) ? Object.values(pagesRaw).filter(isObj) : [];
-  const q = normalizedSearchText(query);
-  const tokens = q.split(' ').filter((x) => x.length >= 3 && !['thailand', 'thai', 'province'].includes(x));
-  const seen = new Set<string>();
-  return pages
-    .map((page, index) => {
-      const parsed = parseCommonsResponse({ query: { pages: [page] } });
-      if (!parsed.ok || seen.has(parsed.info.pageUrl)) return null;
-      seen.add(parsed.info.pageUrl);
-      const title = normalizedSearchText(parsed.info.title.replace(/^file:/i, ''));
-      const description = normalizedSearchText(parsed.info.description);
-      let score = -index; // preserve Commons relevance order when scores tie
-      if (q && title.includes(q)) score += 100;
-      for (const token of tokens) {
-        if (title.includes(token)) score += 12;
-        else if (description.includes(token)) score += 3;
-      }
-      return { info: parsed.info, score };
-    })
-    .filter((x): x is { info: CommonsInfo; score: number } => x !== null)
-    .sort((a, b) => b.score - a.score)
-    .map((x) => x.info);
 }

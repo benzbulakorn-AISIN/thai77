@@ -130,7 +130,7 @@ export function ProvincePage() {
         <section className="space-y-2 rounded-2xl border border-line bg-surface p-3 sm:p-4">
           <div className="flex flex-wrap items-baseline justify-between gap-1">
             <h2 className="flex items-center gap-2 font-semibold"><Landmark size={18} /> Landmark ประจำจังหวัด</h2>
-            <p className="text-[11px] text-muted">ค้นหารูปที่ใช้ซ้ำได้จาก Wikimedia Commons อัตโนมัติ</p>
+            <p className="text-[11px] text-muted">รูปที่ Admin ตรวจสอบแล้วจากฐานข้อมูล</p>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
             {landmarks.map((item) => {
